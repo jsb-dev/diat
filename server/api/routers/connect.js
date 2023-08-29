@@ -1,4 +1,4 @@
-import connectDb from '../controllers/connectDb.js';
+import connectDb from '../controllers/connect/connectDb.js';
 import express from 'express';
 
 const connectRouter = express.Router();

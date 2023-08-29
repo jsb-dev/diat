@@ -1,4 +1,4 @@
-interface Node {
+export interface Node {
   id: string;
   type: string;
   position: {
@@ -10,7 +10,7 @@ interface Node {
   };
 }
 
-interface Edge {
+export interface Edge {
   source: string;
   sourceHandle: string;
   target: string;
@@ -23,12 +23,12 @@ interface Edge {
   }
 }
 
-interface Content {
+export interface Content {
   nodes: Node[];
   edges: Edge[];
 }
 
-interface Diagram {
+export interface Diagram {
   diagramId: string;
   content: Content;
 }

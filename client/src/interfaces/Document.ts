@@ -1,19 +1,19 @@
-interface TextContent {
+export interface TextContent {
     type: 'text';
     text: string;
   }
   
-interface ParagraphContent {
+export interface ParagraphContent {
     type: 'paragraph';
     content: TextContent[];
 }
   
-interface DocContent {
+export interface DocContent {
     type: 'doc';
     content: ParagraphContent[];
 }
   
-interface Document {
+export interface Document {
     userId: string;
     dateModified: Date;
     content: DocContent;
