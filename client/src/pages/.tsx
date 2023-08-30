@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import AuthToggle from "../components/auth/AuthToggle";
+import PageShell from "@/components/shared/page-shell/PageShell";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -22,10 +22,7 @@ function Root() {
   }, []);
 
   return (
-    <div>
-      <h1>Root</h1>
-      <AuthToggle />
-    </div>
+    <PageShell content={<h1>Root</h1>} />
   );
 }
 

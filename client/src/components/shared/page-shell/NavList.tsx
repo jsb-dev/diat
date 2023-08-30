@@ -3,25 +3,25 @@ import Link from 'next/link';
 
 const NavList: React.FC = () => {
     return (
-        <ul style={{ listStyleType: 'none', position: 'absolute', bottom: '13rem', right: '18rem', padding: 0, margin: 0 }}>
+        <ul style={{ listStyleType: 'none', position: 'absolute', bottom: '13rem', right: '18rem' }}>
             <li style={listItemStyle}>
-                <Link href="/" passHref>
+                <Link href="/" passHref >
                     <Button style={buttonStyle}>Home</Button>
                 </Link>
             </li>
             <li style={{ ...listItemStyle, transform: 'translate(50%, 50%)' }}>
-                <Link href="/info/html" passHref>
-                    <Button style={buttonStyle}>HTML</Button>
+                <Link href="/option1" passHref >
+                    <Button style={buttonStyle}>1</Button>
                 </Link>
             </li>
             <li style={{ ...listItemStyle, transform: 'translateY(100%)' }}>
-                <Link href="/info/css" passHref>
-                    <Button style={buttonStyle}>CSS</Button>
+                <Link href="/option2" passHref >
+                    <Button style={buttonStyle}>2</Button>
                 </Link>
             </li>
             <li style={{ ...listItemStyle, transform: 'translate(-50%, 50%)' }}>
-                <Link href="/info/js" passHref>
-                    <Button style={buttonStyle}>JS</Button>
+                <Link href="/option3" passHref >
+                    <Button style={buttonStyle}>3</Button>
                 </Link>
             </li>
         </ul>
@@ -32,13 +32,11 @@ const listItemStyle: React.CSSProperties = {
     position: 'absolute',
     width: '15rem',
     height: '15rem',
-    transformOrigin: '50% 50%',
 };
 
 const navLinkStyle: React.CSSProperties = {
     textDecoration: 'none',
     color: '#fff',
-    fontSize: 'max(.8rem, 8pt)',
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.2rem',
@@ -53,18 +51,12 @@ const navLinkStyle: React.CSSProperties = {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
     backgroundColor: '#c37ee0',
     cursor: 'pointer'
 };
 
 const buttonStyle: React.CSSProperties = {
     ...navLinkStyle,
-    textDecoration: undefined,
-    position: undefined,
-    top: undefined,
-    left: undefined,
-    transform: undefined
 };
 
 export default NavList;

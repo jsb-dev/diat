@@ -7,9 +7,10 @@ import { setUser } from '@/redux/slices/userSlice';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Diagram } from '../interfaces/Diagram';
 import { User } from '../interfaces/User';
-import AuthToggle from '@/components/auth/AuthToggle';
+import { Node, Edge } from 'reactflow';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import PageShell from '@/components/shared/page-shell/PageShell';
+import Flow from '@/components/diagram/Flow';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -21,30 +22,6 @@ const DashboardPage: FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
-
-  // TESTING
-  const simulateStateUpdate = () => {
-    const simulatedUser: User = {
-      email: 'simulated@example.com',
-      userId: 'simulatedId',
-      diagramId: 'simulatedDiagramId',
-      diagram: {
-        nodes: [{ id: 'node1', type: 'testNode', position: { x: 100, y: 100 }, data: { content: 'Hello World' } }],
-        edges: [{ source: 'sourceEdge', sourceHandle: 'top', target: 'targetEdge', targetHandle: 'bottom', id: 'edge1', deletable: true, focusable: true, style: { stroke: 'black' } }],
-      },
-      authState: {
-        isAuthenticated: true,
-        user: { email: 'HAHAHAHAHAHAHAHAHA', userId: 'HAHAHAHAHAHAHAHAHA' },
-      },
-    };
-
-    dispatch(setUser(simulatedUser));
-  };
-
-  useEffect(() => {
-    console.log('Updated authState:', authState);
-    console.log('Updated diagram:', diagram);
-  }, [authState, diagram]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -78,8 +55,6 @@ const DashboardPage: FC = () => {
               diagram: currentDiagram,
               authState: currentAuthState,
             };
-
-            console.log('userData', userData)
 
             dispatch(setUser(userData));
             dispatch(setAuthState(currentAuthState));
@@ -127,50 +102,76 @@ const DashboardPage: FC = () => {
     }
   };
 
-  const main =
-    <main>
-      <h1>Dashboard</h1>
-      <section>
-        <h2>User</h2>
-        <AuthToggle />
-        <ul>
-          <li>isAuthenticated: {JSON.stringify(isAuthenticated, null, 2)}</li>
-          <li>user: {JSON.stringify(user, null, 2)}</li>
-          <li>authState: {JSON.stringify(authState, null, 2)}</li>
-          <li>diagram: {JSON.stringify(diagram, null, 2)}</li>
-          <li>userCredentials: {JSON.stringify(userCredentials, null, 2)}</li>
-        </ul>
-        {/* TESTING */}
-        <button onClick={simulateStateUpdate}>Simulate User State Update</button>
-      </section>
-    </main>
+  // TESTING
+  const diagramNodes: Node[] = [
+    {
+      id: 'node1',
+      type: 'testNode',
+      position: { x: 100, y: 100 },
+      data: { content: 'Hello World' },
+    },
+    {
+      id: 'node2',
+      type: 'testNode',
+      position: { x: 200, y: 200 },
+      data: { content: 'Hello World' },
+    }
+  ];
+  const diagramEdges: Edge[] = [
+    {
+      source: 'node1',
+      sourceHandle: 'bottom',
+      target: 'node2',
+      targetHandle: 'top',
+      id: 'edge1',
+      deletable: true,
+      focusable: true,
+      style: { stroke: 'black' },
+    },
+    {
+      source: 'node2',
+      sourceHandle: 'bottom',
+      target: 'node1',
+      targetHandle: 'top',
+      id: 'edge2',
+      deletable: true,
+      focusable: true,
+      style: { stroke: 'black' },
+    }
+  ];
 
-  const containerStyles: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+  const nodeTypes = {
+    testNode: ({ data }: any) => {
+      return (
+        <div>
+          <h2>{data.content}</h2>
+        </div>
+      );
+    },
   };
+
+  /////////////////////////////////////////////////////////////////////////
+
+  const main =
+    <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} nodeTypes={nodeTypes} />
 
   if (!isAuthenticated) {
     return (
-      <div style={containerStyles}>
+      <div >
         <LoadingSpinner />
       </div>)
   }
 
   if (loading) {
     return (
-      <div style={containerStyles}>
+      <div >
         <LoadingSpinner />
         <PageShell content={main} />
       </div>)
   }
 
   return (
-    <div style={containerStyles}>
-      <PageShell content={main} />
-    </div>
+    <PageShell content={main} />
   );
 }
 

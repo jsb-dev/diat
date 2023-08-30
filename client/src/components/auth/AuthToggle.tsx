@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch } from 'react-redux';
 import { clearAuthState } from '../../redux/slices/authSlice';
@@ -10,7 +11,6 @@ const AuthToggle: React.FC = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    // Step 1: Clear state in Redux
     dispatch(clearAuthState());
     dispatch(clearDiagram());
     dispatch(clearUser());
@@ -19,12 +19,38 @@ const AuthToggle: React.FC = () => {
 
   if (isAuthenticated) {
     return (
-      <button onClick={handleLogout}>
+      <Button onClick={handleLogout} style={{
+        position: 'absolute',
+        top: '2vh',
+        left: '2vw',
+        padding: 0,
+        margin: 0,
+        zIndex: 1005,
+        width: '8rem',
+        height: '8rem',
+        borderRadius: '1rem',
+        opacity: 0.8,
+        transition: 'all .1s ease-in-out',
+        boxShadow: '0 .5rem 7rem 1rem rgba(0, 0, 0, .7), 0 .5rem 1.8rem 1.5rem rgba(0, 0, 0, 0.5)',
+      }}>
         Log Out
-      </button>
+      </Button>
     );
   } else {
-    return <button onClick={() => loginWithRedirect()}>Log In</button>;
+    return <Button onClick={() => loginWithRedirect()} style={{
+      position: 'absolute',
+      top: '2vh',
+      left: '2vw',
+      padding: 0,
+      margin: 0,
+      zIndex: 1005,
+      width: '8rem',
+      height: '8rem',
+      borderRadius: '1rem',
+      opacity: 0.8,
+      transition: 'all .1s ease-in-out',
+      boxShadow: '0 .5rem 7rem 1rem rgba(0, 0, 0, .7), 0 .5rem 1.8rem 1.5rem rgba(0, 0, 0, 0.5)',
+    }}>Log In</Button>;
   }
 };
 
