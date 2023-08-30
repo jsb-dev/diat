@@ -7,6 +7,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Diagram } from '../interfaces/Diagram';
 import { User } from '../interfaces/User';
 import AuthToggle from '@/components/auth/AuthToggle';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import PageShell from '@/components/shared/PageShell';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -42,7 +44,7 @@ const DashboardPage: FC = () => {
       } else {
         dispatch(initializeAuth());
         dispatch(initializeDiagram());
-        setLoading(false);
+        setLoading(false); // move this to the next useEffect
       }
     }
   }, [user, isAuthenticated, isLoading, authState?.isAuthenticated, diagram, dispatch]);
@@ -61,7 +63,7 @@ const DashboardPage: FC = () => {
       return null;
     }
   };
-  
+
   const getUserDiagram = async (diagramId: string): Promise<Diagram | null> => {
     try {
       const response = await fetch(`${BACKEND_URL}/user/get/diagram?diagramId=${diagramId}`);
@@ -77,16 +79,39 @@ const DashboardPage: FC = () => {
     }
   };
 
-  console.log('DashboardPage', { isAuthenticated, user, authState, diagram });
+  const main =
+    <main>
+      <h1>Dashboard</h1>
+      <section>
+        <h2>User</h2>
+        <AuthToggle />
+        <ul>
+          <li>isAuthenticated: {JSON.stringify(isAuthenticated, null, 2)}</li>
+          <li>user: {JSON.stringify(user, null, 2)}</li>
+          <li>authState: {JSON.stringify(authState, null, 2)}</li>
+          <li>diagram: {JSON.stringify(diagram, null, 2)}</li>
+        </ul>
+      </section>
+    </main>
+
+  const containerStyles: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={containerStyles}>
+        <LoadingSpinner />
+        <PageShell content={main} />
+      </div>)
   }
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <AuthToggle />
+    <div style={containerStyles}>
+      <PageShell content={main} />
     </div>
   );
 }
