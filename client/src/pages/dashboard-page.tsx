@@ -9,7 +9,7 @@ import { Diagram } from '../interfaces/Diagram';
 import { User } from '../interfaces/User';
 import AuthToggle from '@/components/auth/AuthToggle';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import PageShell from '@/components/shared/PageShell';
+import PageShell from '@/components/shared/page-shell/PageShell';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
