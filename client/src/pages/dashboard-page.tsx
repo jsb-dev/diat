@@ -22,6 +22,30 @@ const DashboardPage: FC = () => {
   const [loading, setLoading] = useState(true);
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
 
+  // TESTING
+  const simulateStateUpdate = () => {
+    const simulatedUser: User = {
+      email: 'simulated@example.com',
+      userId: 'simulatedId',
+      diagramId: 'simulatedDiagramId',
+      diagram: {
+        nodes: [{ id: 'node1', type: 'testNode', position: { x: 100, y: 100 }, data: { content: 'Hello World' } }],
+        edges: [{ source: 'sourceEdge', sourceHandle: 'top', target: 'targetEdge', targetHandle: 'bottom', id: 'edge1', deletable: true, focusable: true, style: { stroke: 'black' } }],
+      },
+      authState: {
+        isAuthenticated: true,
+        user: { email: 'HAHAHAHAHAHAHAHAHA', userId: 'HAHAHAHAHAHAHAHAHA' },
+      },
+    };
+
+    dispatch(setUser(simulatedUser));
+  };
+
+  useEffect(() => {
+    console.log('Updated authState:', authState);
+    console.log('Updated diagram:', diagram);
+  }, [authState, diagram]);
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (!isLoading) {
@@ -38,7 +62,10 @@ const DashboardPage: FC = () => {
             if (credentials.diagramId && !diagram) {
               currentDiagram = await getUserDiagram(credentials.diagramId);
               if (currentDiagram) {
+                currentDiagram.nodes = currentDiagram.content.nodes;
+                currentDiagram.edges = currentDiagram.content.edges;
                 delete currentDiagram.diagramId;
+                delete currentDiagram.content;
                 dispatch(setDiagram(currentDiagram));
                 dispatch(setDiagramInCache(currentDiagram));
               }
@@ -113,6 +140,8 @@ const DashboardPage: FC = () => {
           <li>diagram: {JSON.stringify(diagram, null, 2)}</li>
           <li>userCredentials: {JSON.stringify(userCredentials, null, 2)}</li>
         </ul>
+        {/* TESTING */}
+        <button onClick={simulateStateUpdate}>Simulate User State Update</button>
       </section>
     </main>
 
@@ -122,6 +151,13 @@ const DashboardPage: FC = () => {
     alignItems: 'center',
     justifyContent: 'center',
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div style={containerStyles}>
+        <LoadingSpinner />
+      </div>)
+  }
 
   if (loading) {
     return (

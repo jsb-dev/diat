@@ -35,11 +35,12 @@ const authSlice = createSlice({
       state.user = action.payload.user;
 
       Cookies.set('diat-auth', JSON.stringify({ isAuthenticated: action.payload.isAuthenticated, user: action.payload.user }));
+
+      console.log("Auth state updated and Cookie set to:", Cookies.get('diat-auth'));
     },
     clearAuthState: state => {
       state.isAuthenticated = false;
       state.user = null;
-
       Cookies.remove('diat-auth');
     }
   },
@@ -50,6 +51,7 @@ const authSlice = createSlice({
           state.isAuthenticated = action.payload.authState.isAuthenticated;
           state.user = action.payload.authState.user;
           Cookies.set('diat-auth', JSON.stringify(action.payload.authState));
+          console.log("Auth state updated from setUser and Cookie set to:", Cookies.get('diat-auth'));
         }
       })
   }
