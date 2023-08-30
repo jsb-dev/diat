@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { setUser } from './userSlice';
 import Cookies from 'js-cookie';
 
 export const initializeAuth = createAsyncThunk(
@@ -41,6 +42,16 @@ const authSlice = createSlice({
 
       Cookies.remove('diat-auth');
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(setUser, (state, action) => {
+        if (action.payload.authState) {
+          state.isAuthenticated = action.payload.authState.isAuthenticated;
+          state.user = action.payload.authState.user;
+          Cookies.set('diat-auth', JSON.stringify(action.payload.authState));
+        }
+      })
   }
 });
 

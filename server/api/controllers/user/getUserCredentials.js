@@ -1,5 +1,6 @@
 import User from '../../../database/models/User.js';
 import Diagram from '../../../database/models/Diagram.js';
+import { stripModel } from '../controller-utils.js';
 
 const getUserCredentials = async (req, res) => {
   try {
@@ -23,7 +24,7 @@ const getUserCredentials = async (req, res) => {
       user = await User.create(newUser);
     }
 
-    return res.json(user);
+    return res.json(stripModel(user));
   } catch (error) {
     return res.status(500).json({ message: 'Internal Server Error', error });
   }

@@ -1,4 +1,5 @@
 import Diagram from '../../../database/models/Diagram.js';
+import { stripModel } from '../controller-utils.js';
 
 const getUserDiagram = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ const getUserDiagram = async (req, res) => {
       return res.status(404).json({ message: 'Diagram not found' });
     }
 
-    return res.json(diagram);
+    return res.json(stripModel(diagram));
   } catch (error) {
     return res.status(500).json({ message: 'Internal Server Error', error });
   }

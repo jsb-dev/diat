@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Diagram } from '../../interfaces/Diagram';
+import { setUser } from './userSlice';
 
 export const initializeDiagram = createAsyncThunk(
     'diagram/initialize',
@@ -55,10 +56,12 @@ const diagramSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(setDiagramInCache.fulfilled, (state, action) => {
-      state.data = action.payload;
-      state.isCached = true;
-    });
+    builder
+      .addCase(setUser, (state, action) => {
+        if (action.payload.diagram) {
+          state.data = action.payload.diagram;
+        }
+      });
 
     builder.addCase(getDiagramFromCache.fulfilled, (state, action) => {
       if (action.payload) {

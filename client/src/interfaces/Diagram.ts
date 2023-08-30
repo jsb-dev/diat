@@ -23,12 +23,7 @@ export interface Edge {
   }
 }
 
-export interface Content {
+export interface Diagram {
   nodes: Node[];
   edges: Edge[];
-}
-
-export interface Diagram {
-  diagramId: string;
-  content: Content;
 }

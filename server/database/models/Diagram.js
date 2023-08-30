@@ -6,13 +6,11 @@ const contentSchema = new Schema({
   nodes: [
     {
       type: Schema.Types.Mixed,
-      default: {},
     },
   ],
   edges: [
     {
       type: Schema.Types.Mixed,
-      default: {},
     },
   ],
 });
@@ -26,6 +24,11 @@ const diagramSchema = new Schema({
   },
   content: {
     type: contentSchema,
+    default: {
+      nodes: [],
+      edges: [],
+    },
+    _id: false,
   },
 });
 

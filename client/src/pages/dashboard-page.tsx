@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { initializeAuth, setAuthState } from '@/redux/slices/authSlice';
 import { initializeDiagram, setDiagram, setDiagramInCache } from '@/redux/slices/diagramSlice';
+import { setUser } from '@/redux/slices/userSlice';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Diagram } from '../interfaces/Diagram';
 import { User } from '../interfaces/User';
@@ -19,34 +20,54 @@ const DashboardPage: FC = () => {
   const { isAuthenticated, user, isLoading } = useAuth0();
 
   const [loading, setLoading] = useState(true);
+  const [userCredentials, setUserCredentials] = useState<User | null>(null);
 
   useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated && user?.email && !authState?.isAuthenticated) {
-        getUserCredentials(user.email).then(credentials => {
+    const fetchUserDetails = async () => {
+      if (!isLoading) {
+        if (isAuthenticated && user?.email && !authState?.isAuthenticated) {
+          let credentials = await getUserCredentials(user.email);
+
           if (credentials) {
-            dispatch(setAuthState({ isAuthenticated: true, user: credentials }));
+            let currentDiagram = diagram;
+            let currentAuthState = {
+              isAuthenticated: true,
+              user: credentials,
+            };
+
             if (credentials.diagramId && !diagram) {
-              getUserDiagram(credentials.diagramId).then(diagram => {
-                if (diagram) {
-                  dispatch(setDiagram(diagram));
-                  dispatch(setDiagramInCache(diagram));
-                }
-                setLoading(false);
-              });
-            } else {
-              setLoading(false);
+              currentDiagram = await getUserDiagram(credentials.diagramId);
+              if (currentDiagram) {
+                delete currentDiagram.diagramId;
+                dispatch(setDiagram(currentDiagram));
+                dispatch(setDiagramInCache(currentDiagram));
+              }
             }
-          } else {
-            setLoading(false);
+
+            const userData: User = {
+              email: credentials.email,
+              userId: credentials.userId,
+              diagramId: credentials.diagramId,
+              diagram: currentDiagram,
+              authState: currentAuthState,
+            };
+
+            console.log('userData', userData)
+
+            dispatch(setUser(userData));
+            dispatch(setAuthState(currentAuthState));
+            setUserCredentials(credentials);
           }
-        });
-      } else {
-        dispatch(initializeAuth());
-        dispatch(initializeDiagram());
-        setLoading(false); // move this to the next useEffect
+          setLoading(false);
+        } else {
+          dispatch(initializeAuth());
+          dispatch(initializeDiagram());
+          setLoading(false);
+        }
       }
-    }
+    };
+
+    fetchUserDetails();
   }, [user, isAuthenticated, isLoading, authState?.isAuthenticated, diagram, dispatch]);
 
   const getUserCredentials = async (email: string): Promise<User | null> => {
@@ -90,6 +111,7 @@ const DashboardPage: FC = () => {
           <li>user: {JSON.stringify(user, null, 2)}</li>
           <li>authState: {JSON.stringify(authState, null, 2)}</li>
           <li>diagram: {JSON.stringify(diagram, null, 2)}</li>
+          <li>userCredentials: {JSON.stringify(userCredentials, null, 2)}</li>
         </ul>
       </section>
     </main>
