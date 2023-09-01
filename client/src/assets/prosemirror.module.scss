@@ -1,13 +1,6 @@
 .ProseMirror {
 
-    background-color: white;
-    border: 1px solid black;
-    width: 300px;
-    height: 600px;
-
-    > * + * {
-      margin-top: 0.75em;
-    }
+    background-color: #f5f5f5;
 
     p {
       font-size: 12pt;

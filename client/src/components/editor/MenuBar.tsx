@@ -146,8 +146,8 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'fixed',
-                    top: 0,
-                    left: 0,
+                    top: '-12%',
+                    left: '12%',
                     zIndex: 100,
                 }}
             >

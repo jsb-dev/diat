@@ -108,7 +108,31 @@ const DashboardPage: FC = () => {
       id: 'node1',
       type: 'documentNode',
       position: { x: 100, y: 100 },
-      data: { content: "<div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div>" },
+      data: {
+        content: {
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'This is a sample paragraph.'
+                }
+              ]
+            },
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'This is another sample paragraph.'
+                }
+              ]
+            }
+          ]
+        }
+      },
     },
   ];
   const diagramEdges: Edge[] = [];

@@ -11,8 +11,10 @@ import ReactFlow, {
     Edge,
     Connection,
 } from 'reactflow';
+import { useSelector } from 'react-redux';
 import 'reactflow/dist/style.css';
 import DocumentNode from './DocumentNode'
+import { RootState } from '../../redux/store';
 // import requestSaveDiagram
 
 interface FlowProps {
@@ -20,17 +22,19 @@ interface FlowProps {
     diagramEdges: Edge[];
 }
 
-const rfStyle = {
-    backgroundColor: 'rgb(100, 100, 100)',
-};
-
 const nodeTypes = {
     documentNode: DocumentNode,
 }
 
 const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
+    const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
+
+    const rfStyle: React.CSSProperties = {
+        backgroundColor: 'rgb(100, 100, 100)',
+        pointerEvents: editorIsOpen ? 'none' : 'auto',
+    };
 
     // TESTING
     const requestSaveDiagram = (nodes: Node[], edges: Edge[]) => {
@@ -38,6 +42,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         console.log(nodes);
         console.log(edges);
     }
+    /////////////////////////////////////////////////////////////////////////////
 
     const onNodesChange = useCallback(
         (changes: any) => {
@@ -82,8 +87,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
-            fitView={true}
             style={rfStyle}
+
         />
     );
 };
