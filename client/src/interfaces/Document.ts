@@ -14,7 +14,6 @@ export interface DocContent {
 }
   
 export interface Document {
-    userId: string;
     dateModified: Date;
     content: DocContent;
     currentDate: () => string;

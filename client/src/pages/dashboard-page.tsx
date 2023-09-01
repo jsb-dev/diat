@@ -106,54 +106,17 @@ const DashboardPage: FC = () => {
   const diagramNodes: Node[] = [
     {
       id: 'node1',
-      type: 'testNode',
+      type: 'documentNode',
       position: { x: 100, y: 100 },
-      data: { content: 'Hello World' },
+      data: { content: "<div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div><div>Test</div>" },
     },
-    {
-      id: 'node2',
-      type: 'testNode',
-      position: { x: 200, y: 200 },
-      data: { content: 'Hello World' },
-    }
   ];
-  const diagramEdges: Edge[] = [
-    {
-      source: 'node1',
-      sourceHandle: 'bottom',
-      target: 'node2',
-      targetHandle: 'top',
-      id: 'edge1',
-      deletable: true,
-      focusable: true,
-      style: { stroke: 'black' },
-    },
-    {
-      source: 'node2',
-      sourceHandle: 'bottom',
-      target: 'node1',
-      targetHandle: 'top',
-      id: 'edge2',
-      deletable: true,
-      focusable: true,
-      style: { stroke: 'black' },
-    }
-  ];
-
-  const nodeTypes = {
-    testNode: ({ data }: any) => {
-      return (
-        <div>
-          <h2>{data.content}</h2>
-        </div>
-      );
-    },
-  };
+  const diagramEdges: Edge[] = [];
 
   /////////////////////////////////////////////////////////////////////////
 
   const main =
-    <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} nodeTypes={nodeTypes} />
+    <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
 
   if (!isAuthenticated) {
     return (

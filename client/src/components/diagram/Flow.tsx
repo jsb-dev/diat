@@ -12,19 +12,23 @@ import ReactFlow, {
     Connection,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import DocumentNode from './DocumentNode'
 // import requestSaveDiagram
 
 interface FlowProps {
     diagramNodes: Node[];
     diagramEdges: Edge[];
-    nodeTypes: any;
 }
 
 const rfStyle = {
     backgroundColor: 'rgb(100, 100, 100)',
 };
 
-const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges, nodeTypes }) => {
+const nodeTypes = {
+    documentNode: DocumentNode,
+}
+
+const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
 

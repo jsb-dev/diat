@@ -2,10 +2,9 @@ import { mongoose, Schema } from 'mongoose';
 
 const documentSchema = new Schema({
   documentId: {
-    type: Schema.Types.ObjectId,
+    type: string,
     required: true,
     unique: true,
-    auto: true,
   },
   userId: {
     type: String,

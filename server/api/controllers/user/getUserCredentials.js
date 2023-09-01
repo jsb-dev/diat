@@ -5,7 +5,6 @@ import { stripModel } from '../controller-utils.js';
 const getUserCredentials = async (req, res) => {
   try {
     const email = req.query.email;
-    console.log('email', email);
 
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });

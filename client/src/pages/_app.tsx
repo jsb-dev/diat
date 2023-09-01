@@ -3,6 +3,7 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import type { AppProps } from 'next/app';
 import store from '../redux/store';
 import '../assets/globals.css'
+import '../assets/prosemirror.module.scss'
 import 'normalize.css'
 
 const AUTH0_DOMAIN = process.env.NEXT_PUBLIC_AUTH0_DOMAIN!;
