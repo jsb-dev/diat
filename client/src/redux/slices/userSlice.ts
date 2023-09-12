@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../interfaces/User';
-import { setDiagram } from './diagramSlice';
+import { setDiagram } from './flowSlice';
 import { setAuthState } from './authSlice';
 
 const initialState: User = {

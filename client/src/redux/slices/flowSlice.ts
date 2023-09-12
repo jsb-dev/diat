@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Diagram } from '../../interfaces/Diagram';
 import { setUser } from './userSlice';
+import { Node, Edge } from '@reactflow/core';
+
+// This is for maintaining/syncing diagram state, not for handling 
+// user edits to the diagram.
 
 export const initializeDiagram = createAsyncThunk(
     'diagram/initialize',
@@ -15,11 +19,15 @@ export const initializeDiagram = createAsyncThunk(
 interface DiagramState {
   data: Diagram | null;
   isCached: boolean;
+  nodes: Node[];
+  edges: Edge[];
 }
 
 const initialState: DiagramState = {
   data: null,
   isCached: false,
+  nodes: [],
+  edges: [],
 };
 
 export const getDiagramFromCache = createAsyncThunk(
@@ -48,10 +56,10 @@ const diagramSlice = createSlice({
   name: 'diagram',
   initialState,
   reducers: {
-    setDiagram: (state, action: PayloadAction<Diagram>) => {
-      state.data = action.payload;
-
-      console.log("Diagram set to:", state.data);
+    setDiagram: (state, action: PayloadAction<{ nodes: Node[], edges: Edge[] }>) => {
+      state.nodes = action.payload.nodes;
+      state.edges = action.payload.edges;
+      // Don't save the diagram to the cache here, middleware handles this every 60 seconds
     },
     clearDiagram: (state) => {
       state.data = null;

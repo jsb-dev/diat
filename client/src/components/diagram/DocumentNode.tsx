@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
-import RichTextEditor from '../editor/RichTextEditor';
+import RichTextEditor from '../text-editor/RichTextEditor';
 import { DocContent, BlockContent } from '@/interfaces/Document';
-import { useSelector, useDispatch } from 'react-redux';
-import { toggleEditor } from '../../redux/slices/editorSlice';
 import { RootState } from '../../redux/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleEditor } from '../../redux/slices/tiptapSlice';
+import { NodeProps } from '@reactflow/core';
 
-interface DocumentNodeProps {
-    data: {
-        content: DocContent;
-        documentId?: string;
-    };
-}
-
-const DocumentNode: React.FC<DocumentNodeProps> = ({ data }) => {
+const DocumentNode: React.FC<NodeProps> = ({ data }) => {
     const dispatch = useDispatch();
     const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
     const [content, setContent] = useState(data.content);
@@ -22,7 +16,7 @@ const DocumentNode: React.FC<DocumentNodeProps> = ({ data }) => {
         setContent(newContent);
     };
 
-    const toggleEditorHandler = () => {
+    const handleToggleEditor = () => {
         dispatch(toggleEditor());
     };
 
@@ -46,10 +40,8 @@ const DocumentNode: React.FC<DocumentNodeProps> = ({ data }) => {
                     <blockquote key={idx}>
                         {block.content.map((item, textIdx) => {
                             if ("text" in item) {
-                                // It's a TextContent
                                 return <span key={textIdx}>{item.text}</span>;
                             } else {
-                                // It's a ListItemContent
                                 return item.content.map((text, listItemIdx) => <span key={textIdx + '-' + listItemIdx}>{text.text}</span>);
                             }
                         })}
@@ -72,10 +64,8 @@ const DocumentNode: React.FC<DocumentNodeProps> = ({ data }) => {
                     <HeadingTag key={idx}>
                         {block.content.map((item, textIdx) => {
                             if ("text" in item) {
-                                // It's a TextContent
                                 return <span key={textIdx}>{item.text}</span>;
                             } else {
-                                // It's a ListItemContent
                                 return item.content.map((text, listItemIdx) =>
                                     <span key={textIdx + '-' + listItemIdx}>{text.text}</span>
                                 );
@@ -90,7 +80,6 @@ const DocumentNode: React.FC<DocumentNodeProps> = ({ data }) => {
             return (
                 <p key={idx}>
                     {block.content.map((item, textIdx) => {
-                        // Check if it's a TextContent
                         if ("text" in item) {
                             if (item.type === 'bold') {
                                 return <strong key={textIdx}>{item.text}</strong>;
@@ -103,7 +92,7 @@ const DocumentNode: React.FC<DocumentNodeProps> = ({ data }) => {
                             }
                             return <span key={textIdx}>{item.text}</span>;
                         } else {
-                            // It's a ListItemContent, which theoretically shouldn't appear in a paragraph, but we're handling it just in case
+
                             return item.content.map((text, listItemIdx) =>
                                 <span key={textIdx + '-' + listItemIdx}>{text.text}</span>
                             );
@@ -130,7 +119,7 @@ const DocumentNode: React.FC<DocumentNodeProps> = ({ data }) => {
             ) : (
                 <RichTextEditor content={content} onUpdate={handleContentUpdate} />
             )}
-            <Button variant="contained" color="primary" onClick={toggleEditorHandler} style={{ pointerEvents: 'auto', position: 'fixed', left: '-25%', top: 0 }}>
+            <Button variant="contained" color="primary" onClick={handleToggleEditor} style={{ pointerEvents: 'auto', position: 'fixed', left: '-25%', top: 0 }}>
                 {editorIsOpen ? "Close Editor" : "Edit"}
             </Button>
         </div>

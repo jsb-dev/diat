@@ -2,7 +2,7 @@ import React, { useEffect, FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { initializeAuth, setAuthState } from '@/redux/slices/authSlice';
-import { initializeDiagram, setDiagram, setDiagramInCache } from '@/redux/slices/diagramSlice';
+import { initializeDiagram, setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
 import { setUser } from '@/redux/slices/userSlice';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Diagram } from '../interfaces/Diagram';
@@ -133,6 +133,9 @@ const DashboardPage: FC = () => {
           ]
         }
       },
+      draggable: true,
+      selectable: true,
+      connectable: true,
     },
   ];
   const diagramEdges: Edge[] = [];
@@ -153,12 +156,12 @@ const DashboardPage: FC = () => {
     return (
       <div >
         <LoadingSpinner />
-        <PageShell content={main} />
+        <PageShell content={main} page={'/dashboard-page'} />
       </div>)
   }
 
   return (
-    <PageShell content={main} />
+    <PageShell content={main} page={'/dashboard-page'} />
   );
 }
 

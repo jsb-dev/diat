@@ -22,7 +22,7 @@ function Root() {
   }, []);
 
   return (
-    <PageShell content={<h1>Root</h1>} />
+    <PageShell content={<h1>Root</h1>} page={'/'} />
   );
 }
 

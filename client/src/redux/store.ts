@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './slices/userSlice';
-import diagramReducer from './slices/diagramSlice';
+import diagramEditorReducer from './slices/diagramEditorSlice';
+import diagramReducer from './slices/flowSlice';
 import authReducer from './slices/authSlice';
 import syncDiagram from './middleware/diagramSync';
-import editorReducer from './slices/editorSlice';
+import editorReducer from './slices/tiptapSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     diagram: diagramReducer,
     auth: authReducer,
     editor: editorReducer,
+    diagramEditor: diagramEditorReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(syncDiagram)
 });
