@@ -57,8 +57,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         return () => clearInterval(interval);
     }, [nodes, edges, requestSaveDiagram]);
 
-
-    // wrap these in their own callback
     const addNode = useCallback((type: string, x: number, y: number) => {
         const id = uuid();
         const newNode: Node = {
@@ -68,7 +66,10 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 x: x,
                 y: y
             },
-            data: {},
+            data: {
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }],
+                type: 'doc',
+            },
             draggable: true,
             selectable: true,
             connectable: true,
@@ -96,6 +97,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     useEffect(() => {
         const { action, payload } = diagramEditorState;
+
+        console.log('nodes', nodes);
 
         if (action === 'addNode') {
             const { type, x, y } = payload;
@@ -181,8 +184,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         },
         [nodes, requestSaveDiagram]
     );
-
-    console.log('Flow render', nodes, edges)
 
     return (
         <ReactFlow

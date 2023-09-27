@@ -102,7 +102,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
             opacity: 0.8,
             transition: 'all .1s ease-in-out',
             boxShadow: '0 .5rem 7rem 1rem rgba(0, 0, 0, .7), 0 .5rem 1.8rem 1.5rem rgba(0, 0, 0, 0.5)',
-          }}>Close Diagram</Button>
+          }}>Close Editor</Button>
 
           <Box onClick={toggleDiagramDrawer} sx={{
             position: 'fixed',
@@ -136,7 +136,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
             opacity: 0.8,
             transition: 'all .1s ease-in-out',
             boxShadow: '0 .5rem 7rem 1rem rgba(0, 0, 0, .7), 0 .5rem 1.8rem 1.5rem rgba(0, 0, 0, 0.5)',
-          }}>Open Diagram</Button>
+          }}>Open Editor</Button>
         )
       )}
     </Container>

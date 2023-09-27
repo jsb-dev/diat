@@ -21,6 +21,9 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
     };
 
     const renderDocContent = (docContent: DocContent) => {
+        console.log('docContent', docContent);
+
+        // Check if the structure is correct, if not present, "type: 'doc'" will be added
         return docContent.content.map((block: BlockContent, idx: number) => {
             if (block.type === 'bulletList' || block.type === 'orderedList') {
                 const ListTag = block.type === 'bulletList' ? 'ul' : 'ol';
