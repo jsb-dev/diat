@@ -14,20 +14,18 @@ const diagramEditorSlice = createSlice({
   name: 'diagramEditor',
   initialState,
   reducers: {
-    addNode: (state, action: PayloadAction<{ type: string, x: number, y: number }>) => {
-      state.action = 'addNode';
+    addDocNode: (state, action: PayloadAction<{ type: string, x: number, y: number }>) => {
+      state.action = 'addDocNode';
       state.payload = action.payload;
     },
     addEdge: (state, action: PayloadAction<{ source: string, sourceHandle: string, target: string, targetHandle: string }>) => {
       state.action = 'addEdge';
       state.payload = action.payload;
     },
-    // You can add more reducers for "Add Image" and "Add URL" later
+    // TODO: Add more reducers for "Add Image" and "Add URL" later
   },
 });
 
-// Named exports for the actions
-export const { addNode, addEdge } = diagramEditorSlice.actions;
+export const { addDocNode, addEdge } = diagramEditorSlice.actions;
 
-// Default export for the reducer
 export default diagramEditorSlice.reducer;

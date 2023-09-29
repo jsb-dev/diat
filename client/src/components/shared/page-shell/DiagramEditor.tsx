@@ -1,12 +1,12 @@
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
-import { addNode, addEdge } from '../../../redux/slices/diagramEditorSlice';
+import { addDocNode, addEdge } from '../../../redux/slices/diagramEditorSlice';
 
 const DiagramEditor: React.FC = () => {
     const dispatch = useDispatch();
 
     const handleAddDocument = () => {
-        dispatch(addNode({ type: 'documentNode', x: 0, y: 0 }));
+        dispatch(addDocNode({ type: 'documentNode', x: 0, y: 0 }));
     };
 
     const handleConnect = () => {

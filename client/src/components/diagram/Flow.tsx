@@ -35,6 +35,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
     const [focusedNode, setFocusedNode] = useState<string | null>(null);
+    const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
 
     const dispatch = useDispatch();
 
@@ -57,7 +58,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         return () => clearInterval(interval);
     }, [nodes, edges, requestSaveDiagram]);
 
-    const addNode = useCallback((type: string, x: number, y: number) => {
+    const addDocNode = useCallback((type: string, x: number, y: number) => {
         const id = uuid();
         const newNode: Node = {
             id: id,
@@ -67,8 +68,13 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 y: y
             },
             data: {
-                content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }],
-                type: 'doc',
+                // content is wrapped a couple times because of the way 
+                // Flow wraps components and delivers their props from 
+                // the diagram data
+                content: {
+                    content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }],
+                    type: 'doc'
+                }
             },
             draggable: true,
             selectable: true,
@@ -95,24 +101,26 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         , [nodes, edges, dispatch]);
 
 
+    // nodes is left out from the deps array to prevent infinite
+    // addDocNode loop
     useEffect(() => {
         const { action, payload } = diagramEditorState;
 
-        console.log('nodes', nodes);
-
-        if (action === 'addNode') {
+        if (action === 'addDocNode' && lastActionProcessed !== action) {
             const { type, x, y } = payload;
-            addNode(type, x, y);
+            addDocNode(type, x, y);
+            setLastActionProcessed(action);
         }
 
-        if (action === 'addEdge') {
+        if (action === 'addEdge' && lastActionProcessed !== action) {
             const { source, sourceHandle, target, targetHandle } = payload;
             addEdge(source, sourceHandle, target, targetHandle);
+            setLastActionProcessed(action);
         }
 
-        // Additional logic as needed
+        // Additional functions
 
-    }, [diagramEditorState, addEdge, addNode]);
+    }, [diagramEditorState, addEdge, addDocNode]);
 
 
     const rfStyle: React.CSSProperties = {
@@ -122,8 +130,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     const handleNodeClick = useCallback((id: string) => {
         setFocusedNode(id);
-
-        console.log('handleNodeClick', id, editorIsOpen)
 
         if (editorIsOpen) {
             const updatedNodes = nodes.map((n) => {

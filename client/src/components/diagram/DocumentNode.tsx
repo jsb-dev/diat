@@ -8,9 +8,10 @@ import { toggleEditor } from '../../redux/slices/tiptapSlice';
 import { NodeProps } from '@reactflow/core';
 
 const DocumentNode: React.FC<NodeProps> = ({ data }) => {
+    const nodeContent = data.content as any;
     const dispatch = useDispatch();
     const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
-    const [content, setContent] = useState(data.content);
+    const [content, setContent] = useState(nodeContent);
 
     const handleContentUpdate = (newContent: DocContent) => {
         setContent(newContent);
@@ -20,11 +21,10 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
         dispatch(toggleEditor());
     };
 
-    const renderDocContent = (docContent: DocContent) => {
-        console.log('docContent', docContent);
+    const renderDocContent = (content: DocContent) => {
+        console.log('renderDoContentcontent = (', content);
 
-        // Check if the structure is correct, if not present, "type: 'doc'" will be added
-        return docContent.content.map((block: BlockContent, idx: number) => {
+        return content.content.map((block: BlockContent, idx: number) => {
             if (block.type === 'bulletList' || block.type === 'orderedList') {
                 const ListTag = block.type === 'bulletList' ? 'ul' : 'ol';
                 return (
