@@ -22,10 +22,17 @@ const diagramEditorSlice = createSlice({
       state.action = 'addEdge';
       state.payload = action.payload;
     },
-    // TODO: Add more reducers for "Add Image" and "Add URL" later
+    addImgNode: (state, action: PayloadAction<{ type: string, asset: any, x: number, y: number }>) => {
+      state.action = 'addImgNode';
+      state.payload = action.payload;
+    },
+    addUrlNode: (state, action: PayloadAction<{ type: string, asset: string, x: number, y: number }>) => {
+      state.action = 'addUrlNode';
+      state.payload = action.payload;
+    },
   },
 });
 
-export const { addDocNode, addEdge } = diagramEditorSlice.actions;
+export const { addDocNode, addEdge, addImgNode, addUrlNode } = diagramEditorSlice.actions;
 
 export default diagramEditorSlice.reducer;

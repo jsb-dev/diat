@@ -12,7 +12,7 @@ import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import PageShell from '@/components/shared/page-shell/PageShell';
 import Flow from '@/components/diagram/Flow';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const DashboardPage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -139,6 +139,8 @@ const DashboardPage: FC = () => {
     },
   ];
   const diagramEdges: Edge[] = [];
+
+  console.log(userCredentials);
 
   /////////////////////////////////////////////////////////////////////////
 
