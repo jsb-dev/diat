@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
-import WebpageScrape from '../../../database/models/WebpageScrape.js';
 
 // Function to check if the path is disallowed based on robots.txt content
 const isPathDisallowed = (robotsTxt, path) => {
@@ -49,7 +48,6 @@ const submitNodeUrl = async (req, res) => {
       });
     }
 
-    // Proceed with scraping
     const response = await fetch(url);
     const data = await response.text();
     const $ = cheerio.load(data);
@@ -66,21 +64,9 @@ const submitNodeUrl = async (req, res) => {
       $('meta[property="og:description"]').attr('content') ||
       'N/A';
 
-    console.log('cheerio: ', $);
-
     const websiteName = parsedUrl.host || 'N/A';
 
-    // Save to MongoDB
-    const newScrape = new WebpageScrape({
-      url,
-      title,
-      description,
-      body,
-    });
-
-    await newScrape.save();
-
-    return res.json({ title, description, body, websiteName });
+    return res.json({ title, description, websiteName });
   } catch (error) {
     console.error('Error scraping webpage:', error);
     return res.status(500).json({ message: 'Internal Server Error', error });

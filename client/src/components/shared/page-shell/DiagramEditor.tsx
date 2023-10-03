@@ -3,12 +3,13 @@ import { useDispatch } from 'react-redux';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { addDocNode, addEdge, addImgNode, addUrlNode } from '../../../redux/slices/diagramEditorSlice';
 
-type DialogType = 'fileOrUrl' | 'image' | 'url' | null;
+type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
 
 const DiagramEditor: React.FC = () => {
     const dispatch = useDispatch();
     const [currentDialog, setCurrentDialog] = useState<DialogType>(null);
     const [asset, setAsset] = useState('');
+    const [sourceType, setSourceType] = useState<'img' | 'url'>('url');
 
     const handleAddDocument = () => {
         dispatch(addDocNode({ type: 'documentNode', x: 0, y: 0 }));
@@ -23,6 +24,20 @@ const DiagramEditor: React.FC = () => {
     const handleAddUrl = () => {
         dispatch(addUrlNode({ type: 'urlNode', asset, x: 0, y: 0 }));
         setAsset('');
+        setCurrentDialog(null);
+    };
+
+    const handleAddResource = () => {
+        if (sourceType === 'img') {
+            handleAddImage();
+            console.log('addImg called')
+        } else if (sourceType === 'url') {
+            handleAddUrl();
+            console.log('addUrl called')
+
+        }
+        setAsset('');
+        setSourceType('url');
         setCurrentDialog(null);
     };
 
@@ -55,25 +70,24 @@ const DiagramEditor: React.FC = () => {
         <>
             <ul style={listStyle}>
                 <li style={itemStyle}><Button onClick={handleAddDocument} className='secondary-btn'>Add Document</Button></li>
-                <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('fileOrUrl')} className='secondary-btn'>Add Image</Button></li>
+                <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='secondary-btn'>Add Image</Button></li>
                 <li style={{ ...itemStyle, transform: 'translateY(250%)' }}><Button onClick={() => setCurrentDialog('url')} className='secondary-btn'>Add URL</Button></li>
                 <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}><Button onClick={handleConnect} className='secondary-btn'>Connect</Button></li>
             </ul>
 
-            {/* Image Dialogs */}
-            <Dialog open={currentDialog === 'fileOrUrl'} onClose={() => setCurrentDialog(null)}>
+            <Dialog open={currentDialog === 'ImgOrUrl'} onClose={() => setCurrentDialog(null)}>
                 <DialogTitle>Select Source</DialogTitle>
                 <DialogContent>
-                    <Button onClick={() => setCurrentDialog('image')}>From File</Button>
-                    <Button onClick={() => setCurrentDialog('url')}>From URL</Button>
+                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('img') }}>From File</Button>
+                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('url') }}>From URL</Button>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setCurrentDialog(null)}>Cancel</Button>
+                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }}>Cancel</Button>
                 </DialogActions>
             </Dialog>
 
 
-            <Dialog open={currentDialog === 'image'} onClose={() => setCurrentDialog(null)}>
+            <Dialog open={currentDialog === 'img'} onClose={() => setCurrentDialog(null)}>
                 <DialogTitle>Add Image</DialogTitle>
                 <DialogContent>
                     <input
@@ -83,12 +97,11 @@ const DiagramEditor: React.FC = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setCurrentDialog(null)}>Cancel</Button>
-                    <Button onClick={handleAddImage}>Add</Button>
+                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }}>Cancel</Button>
+                    <Button onClick={() => handleAddResource()}>Add</Button>
                 </DialogActions>
             </Dialog>
 
-            {/* URL Dialog */}
             <Dialog open={currentDialog === 'url'} onClose={() => setCurrentDialog(null)}>
                 <DialogTitle>Add URL</DialogTitle>
                 <DialogContent>
@@ -103,8 +116,8 @@ const DiagramEditor: React.FC = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setCurrentDialog(null)}>Cancel</Button>
-                    <Button onClick={handleAddUrl}>Add</Button>
+                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }}>Cancel</Button>
+                    <Button onClick={() => handleAddResource()}>Add</Button>
                 </DialogActions>
             </Dialog>
         </>

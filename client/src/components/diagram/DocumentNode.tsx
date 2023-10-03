@@ -22,7 +22,6 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
     };
 
     const renderDocContent = (content: DocContent) => {
-        console.log('renderDoContentcontent = (', content);
 
         return content.content.map((block: BlockContent, idx: number) => {
             if (block.type === 'bulletList' || block.type === 'orderedList') {

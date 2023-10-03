@@ -5,9 +5,9 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
     const asset = data.content.asset as string;
 
     const [webpageInfo, setWebpageInfo] = useState({
-        title: 'Webpage Title',
-        description: 'Brief Description',
-        body: `Write something helpful so you know what you'll find at this website`,
+        title: '',
+        description: `We couldn't create a summary for this link`,
+        body: '',
     });
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
     }, [asset, webpageInfo]);
 
     return (
-        <div style={{ width: '300px', height: '300px', padding: 8 }}>
+        <div style={{ width: '300px', minHeight: '300px', padding: 8, backgroundColor: 'white' }}>
             <h1>{webpageInfo.title}</h1>
             <h2>{webpageInfo.description}</h2>
             <article>

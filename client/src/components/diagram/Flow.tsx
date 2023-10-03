@@ -44,15 +44,9 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     const dispatch = useDispatch();
 
-    ///////////////////////////////////////////////////////////////////////////// TESTING 
     const requestSaveDiagram = useCallback((nodes: Node[], edges: Edge[]) => {
-        console.log('requestSaveDiagram TEST');
-        console.log(nodes);
-        console.log(edges);
-
-        // implement db save here
+        // placeholder implementation
     }, []);
-    /////////////////////////////////////////////////////////////////////////////
 
     // Save diagram every 5 seconds
     useEffect(() => {
