@@ -2,7 +2,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { Auth0Provider } from '@auth0/auth0-react';
 import type { AppProps } from 'next/app';
 import store from '../redux/store';
-import '../assets/globals.css'
+import '../assets/globals.scss'
 import '../assets/prosemirror.module.scss'
 import 'normalize.css'
 

@@ -1,62 +1,44 @@
+import React, { CSSProperties } from 'react';
 import { Button } from '@mui/material';
 import Link from 'next/link';
 
+const listStyle: CSSProperties = {
+    listStyleType: 'none',
+    position: 'fixed',
+    bottom: '27rem',
+    right: '25rem'
+};
+
+const itemStyle: CSSProperties = {
+    position: 'fixed',
+    cursor: 'pointer',
+};
+
 const NavList: React.FC = () => {
     return (
-        <ul style={{ listStyleType: 'none', position: 'absolute', bottom: '13rem', right: '18rem' }}>
-            <li style={listItemStyle}>
+        <ul style={listStyle}>
+            <li style={itemStyle}>
                 <Link href="/" passHref >
-                    <Button style={buttonStyle}>Home</Button>
+                    <Button className='secondary-btn'>Home</Button>
                 </Link>
             </li>
-            <li style={{ ...listItemStyle, transform: 'translate(50%, 50%)' }}>
+            <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}>
                 <Link href="/option1" passHref >
-                    <Button style={buttonStyle}>1</Button>
+                    <Button className='secondary-btn'>1</Button>
                 </Link>
             </li>
-            <li style={{ ...listItemStyle, transform: 'translateY(100%)' }}>
+            <li style={{ ...itemStyle, transform: 'translateY(250%)' }}>
                 <Link href="/option2" passHref >
-                    <Button style={buttonStyle}>2</Button>
+                    <Button className='secondary-btn'>2</Button>
                 </Link>
             </li>
-            <li style={{ ...listItemStyle, transform: 'translate(-50%, 50%)' }}>
+            <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
                 <Link href="/option3" passHref >
-                    <Button style={buttonStyle}>3</Button>
+                    <Button className='secondary-btn'>3</Button>
                 </Link>
             </li>
         </ul>
     );
 }
-
-const listItemStyle: React.CSSProperties = {
-    position: 'absolute',
-    width: '15rem',
-    height: '15rem',
-};
-
-const navLinkStyle: React.CSSProperties = {
-    textDecoration: 'none',
-    color: '#fff',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.2rem',
-    transition: 'all 0.2s ease-in-out',
-    textAlign: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '1rem',
-    width: '6rem',
-    height: '6rem',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    backgroundColor: '#c37ee0',
-    cursor: 'pointer'
-};
-
-const buttonStyle: React.CSSProperties = {
-    ...navLinkStyle,
-};
 
 export default NavList;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, CSSProperties } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { addDocNode, addEdge, addImgNode, addUrlNode } from '../../../redux/slices/diagramEditorSlice';
@@ -16,13 +16,13 @@ const DiagramEditor: React.FC = () => {
 
     const handleAddImage = () => {
         dispatch(addImgNode({ type: 'imgNode', asset, x: 0, y: 0 }));
-        setAsset(''); // Reset asset
+        setAsset('');
         setCurrentDialog(null);
     };
 
     const handleAddUrl = () => {
         dispatch(addUrlNode({ type: 'urlNode', asset, x: 0, y: 0 }));
-        setAsset(''); // Reset asset
+        setAsset('');
         setCurrentDialog(null);
     };
 
@@ -31,7 +31,7 @@ const DiagramEditor: React.FC = () => {
         dispatch(addEdge({ source: 'sourceNodeId', sourceHandle: 'sourceHandle', target: 'targetNodeId', targetHandle: 'targetHandle' }));
     };
 
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
@@ -40,13 +40,24 @@ const DiagramEditor: React.FC = () => {
         }
     };
 
+    const listStyle: CSSProperties = {
+        position: 'fixed',
+        bottom: '27rem',
+        left: '15rem'
+    };
+
+    const itemStyle: CSSProperties = {
+        position: 'fixed',
+        cursor: 'pointer',
+    };
+
     return (
         <>
-            <ul style={{ listStyleType: 'none', position: 'absolute', bottom: '13rem', right: '2rem' }}>
-                <li><Button onClick={handleAddDocument} style={{ ...buttonStyle }}>Add Document</Button></li>
-                <li><Button onClick={() => setCurrentDialog('fileOrUrl')} style={{ ...buttonStyle }}>Add Image</Button></li>
-                <li><Button onClick={() => setCurrentDialog('url')} style={{ ...buttonStyle }}>Add URL</Button></li>
-                <li><Button onClick={handleConnect} style={{ ...buttonStyle }}>Connect</Button></li>
+            <ul style={listStyle}>
+                <li style={itemStyle}><Button onClick={handleAddDocument} className='secondary-btn'>Add Document</Button></li>
+                <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('fileOrUrl')} className='secondary-btn'>Add Image</Button></li>
+                <li style={{ ...itemStyle, transform: 'translateY(250%)' }}><Button onClick={() => setCurrentDialog('url')} className='secondary-btn'>Add URL</Button></li>
+                <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}><Button onClick={handleConnect} className='secondary-btn'>Connect</Button></li>
             </ul>
 
             {/* Image Dialogs */}
@@ -98,17 +109,6 @@ const DiagramEditor: React.FC = () => {
             </Dialog>
         </>
     );
-};
-
-const buttonStyle: React.CSSProperties = {
-    borderRadius: '1rem',
-    width: '6rem',
-    height: '6rem',
-    backgroundColor: '#c37ee0',
-    color: '#fff',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.2rem',
 };
 
 export default DiagramEditor;
