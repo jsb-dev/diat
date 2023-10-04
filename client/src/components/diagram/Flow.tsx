@@ -257,6 +257,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             }
             nodesDraggable={editorIsOpen ? false : true}
             panOnDrag={editorIsOpen ? false : true}
+            className='flow'
         />
     );
 };

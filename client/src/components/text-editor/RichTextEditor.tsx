@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { BubbleMenu, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import MenuBar from './MenuBar';
@@ -89,7 +89,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate }) =>
             overflowY: 'scroll',
             padding: 0,
             margin: 0,
-        }}>
+        }} className="RichTextEditor"
+        >
             {editor && (
                 <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
                     <Button

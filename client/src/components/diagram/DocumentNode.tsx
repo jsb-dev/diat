@@ -60,6 +60,7 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                 heading5: 'h5',
                 heading6: 'h6',
             };
+
             const HeadingTag = HeadingTags[block.type];
             if (HeadingTag) {
                 return (
@@ -115,6 +116,7 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                 padding: 8,
                 margin: 0,
             }}
+            className="DocumentNode"
         >
             {!editorIsOpen ? (
                 renderDocContent(content)
