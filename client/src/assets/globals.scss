@@ -228,6 +228,7 @@ section {
 .RichTextEditor * {
   @include textStyles(0.7);
   z-index: 1;
+  border-radius: 0;
 
   p {
     line-height: 1;
@@ -276,6 +277,10 @@ section {
     border: none;
     border-top: 2px solid rgba(#0D0D0D, 0.3);
     margin: 2rem 0;
+  }
+
+  .secondary-btn {
+    border-radius: .5rem;
   }
 }
 
