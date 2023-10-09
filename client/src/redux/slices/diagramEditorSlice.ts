@@ -30,9 +30,13 @@ const diagramEditorSlice = createSlice({
       state.action = 'addUrlNode';
       state.payload = action.payload;
     },
+    clearDiagramEditorState: (state) => {
+      state.action = '';
+      state.payload = null;
+    },
   },
 });
 
-export const { addDocNode, addEdge, addImgNode, addUrlNode } = diagramEditorSlice.actions;
+export const { addDocNode, addEdge, addImgNode, addUrlNode, clearDiagramEditorState } = diagramEditorSlice.actions;
 
 export default diagramEditorSlice.reducer;

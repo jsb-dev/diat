@@ -18,6 +18,7 @@ import { v4 as uuid } from 'uuid';
 import { RootState } from '../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDiagram } from '../../redux/slices/flowSlice';
+import { clearDiagramEditorState } from '../../redux/slices/diagramEditorSlice';
 import DocumentNode from './DocumentNode'
 import ImgNode from './ImgNode';
 import UrlNode from './UrlNode';
@@ -43,6 +44,11 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
 
     const dispatch = useDispatch();
+
+
+    const rfStyle: React.CSSProperties = {
+        backgroundColor: 'rgb(100, 100, 100)',
+    };
 
     const requestSaveDiagram = useCallback((nodes: Node[], edges: Edge[]) => {
         // placeholder implementation
@@ -70,8 +76,14 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 content: {
                     // NOTE: The payload goes inside data.content, hence the repetition of 'content' fields here 
                     // to accommodate the TipTap mapping structure defined in DocumentNode.tsx
-                    content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }],
-                    type: 'doc'
+                    id,
+                    content: [{ type: 'heading', content: [{ type: 'text', text: 'Document Name' }] }],
+                    type: 'doc',
+                    position: {
+                        x: x,
+                        y: y
+                    },
+                    nodeType: 'documentNode',
                 }
             },
             draggable: true,
@@ -95,7 +107,13 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             },
             data: {
                 content: {
+                    id,
                     asset: asset,
+                    position: {
+                        x: x,
+                        y: y
+                    },
+                    nodeType: type,
                 }
             },
         };
@@ -117,7 +135,13 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             },
             data: {
                 content: {
+                    id,
                     asset: asset,
+                    position: {
+                        x: x,
+                        y: y
+                    },
+                    nodeType: type,
                 }
             },
         };
@@ -140,66 +164,100 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     }
         , [nodes, edges, dispatch]);
 
+    const handleAddDocNode = useCallback((type: string, x: number, y: number, action: string) => {
+        if (lastActionProcessed !== action) {
+            addDocNode(type, x, y);
+            setLastActionProcessed(action);
+        } else {
+            addDocNode(type, x, y);
+            dispatch(clearDiagramEditorState());
+        }
+    }, [addDocNode, dispatch, lastActionProcessed]);
 
-    // NOTE: nodes is left out from the deps array to prevent 
-    // infinite addDocNode loop ??????????
+    const handleAddEdge = useCallback((source: string, sourceHandle: string, target: string, targetHandle: string, action: string) => {
+        if (lastActionProcessed !== action) {
+            addEdge(source, sourceHandle, target, targetHandle);
+            setLastActionProcessed(action);
+        } else {
+            addEdge(source, sourceHandle, target, targetHandle);
+            dispatch(clearDiagramEditorState());
+        }
+    }, [addEdge, dispatch, lastActionProcessed]);
+
+    const handleAddImgNode = useCallback((type: string, asset: string, x: number, y: number, action: string) => {
+        if (lastActionProcessed !== action) {
+            addImgNode(type, asset, x, y);
+            setLastActionProcessed(action);
+        } else {
+            addImgNode(type, asset, x, y);
+            dispatch(clearDiagramEditorState());
+        }
+    }, [addImgNode, lastActionProcessed, dispatch]);
+
+    const handleAddUrlNode = useCallback((type: string, asset: string, x: number, y: number, action: string) => {
+        if (lastActionProcessed !== action) {
+            addUrlNode(type, asset, x, y);
+            setLastActionProcessed(action);
+        } else {
+            addUrlNode(type, asset, x, y);
+            dispatch(clearDiagramEditorState());
+        }
+    }, [addUrlNode, dispatch, lastActionProcessed]);
+
+
     useEffect(() => {
         const { action, payload } = diagramEditorState;
 
-        if (action === 'addDocNode' && lastActionProcessed !== action) {
-            const { type, x, y } = payload;
-            addDocNode(type, x, y);
-            setLastActionProcessed(action);
+        switch (action) {
+            case 'addDocNode':
+                const { type, x, y }: { type: string; x: number; y: number } = payload;
+                handleAddDocNode(type, x, y, action);
+                break;
+            case 'addEdge':
+                const { source, sourceHandle, target, targetHandle }: {
+                    source: string;
+                    sourceHandle: string;
+                    target: string;
+                    targetHandle: string;
+                } = payload;
+                handleAddEdge(source, sourceHandle, target, targetHandle, action);
+                break;
+            case 'addImgNode':
+                const { type: imgType, asset, x: imgX, y: imgY }: {
+                    type: string;
+                    asset: string;
+                    x: number;
+                    y: number;
+                } = payload;
+                handleAddImgNode(imgType, asset, imgX, imgY, action);
+                break;
+            case 'addUrlNode':
+                const { type: urlType, asset: urlAsset, x: urlX, y: urlY }: {
+                    type: string;
+                    asset: string;
+                    x: number;
+                    y: number;
+                } = payload;
+                handleAddUrlNode(urlType, urlAsset, urlX, urlY, action);
+                break;
+            default:
+                break;
         }
 
-        if (action === 'addEdge' && lastActionProcessed !== action) {
-            const { source, sourceHandle, target, targetHandle } = payload;
-            addEdge(source, sourceHandle, target, targetHandle);
-            setLastActionProcessed(action);
-        }
-
-        if (action === 'addImgNode' && lastActionProcessed !== action) {
-            const { type, asset, x, y } = payload;
-            addImgNode(type, asset, x, y);
-            setLastActionProcessed(action);
-        }
-
-        if (action === 'addUrlNode' && lastActionProcessed !== action) {
-            const { type, asset, x, y } = payload;
-            addUrlNode(type, asset, x, y);
-            setLastActionProcessed(action);
-        }
-
-    }, [diagramEditorState, addEdge, addDocNode, lastActionProcessed, addImgNode, addUrlNode]);
-
-
-    const rfStyle: React.CSSProperties = {
-        backgroundColor: 'rgb(100, 100, 100)',
-        pointerEvents: editorIsOpen ? 'none' : 'auto',
-    };
+    }, [addEdge, addDocNode, addImgNode, addUrlNode, diagramEditorState, lastActionProcessed, handleAddDocNode, handleAddEdge, handleAddImgNode, handleAddUrlNode]);
 
     const handleNodeClick = useCallback((id: string) => {
         setFocusedNode(id);
 
-        if (editorIsOpen) {
-            const updatedNodes = nodes.map((n) => {
-                if (n.id === id) {
-                    return { ...n, draggable: false, selectable: false, connectable: false };
-                }
-                return n;
-            });
+        // dispatch the focused node id to the store
 
-            setNodes(updatedNodes);
-            dispatch(setDiagram({ nodes: updatedNodes, edges }));
-        }
-
-
-    }, [editorIsOpen, nodes, edges, dispatch]);
+    }, []);
 
     const onNodesChange = useCallback(
         (changes: any) => {
             const updatedNodes = applyNodeChanges(changes, nodes);
             setNodes(updatedNodes);
+            console.log(nodes);
         },
         [nodes]
     );

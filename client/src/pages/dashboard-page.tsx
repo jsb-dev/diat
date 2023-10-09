@@ -21,6 +21,8 @@ const DashboardPage: FC = () => {
   const { isAuthenticated, user, isLoading } = useAuth0();
 
   const [loading, setLoading] = useState(true);
+  const diagramNodes: Node[] = [];
+  const diagramEdges: Edge[] = [];
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
 
   useEffect(() => {
@@ -101,48 +103,6 @@ const DashboardPage: FC = () => {
       return null;
     }
   };
-
-  // TESTING
-  const diagramNodes: Node[] = [
-    {
-      id: 'node1',
-      type: 'documentNode',
-      position: { x: 100, y: 100 },
-      data: {
-        content: {
-          type: 'doc',
-          content: [
-            {
-              type: 'paragraph',
-              content: [
-                {
-                  type: 'text',
-                  text: 'This is a sample paragraph.'
-                }
-              ]
-            },
-            {
-              type: 'paragraph',
-              content: [
-                {
-                  type: 'text',
-                  text: 'This is another sample paragraph.'
-                }
-              ]
-            }
-          ]
-        }
-      },
-      draggable: true,
-      selectable: true,
-      connectable: true,
-    },
-  ];
-  const diagramEdges: Edge[] = [];
-
-  console.log(userCredentials);
-
-  /////////////////////////////////////////////////////////////////////////
 
   const main =
     <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />

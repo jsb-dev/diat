@@ -66,7 +66,6 @@ const diagramSlice = createSlice({
       caches.open('diagram-cache').then((cache) => {
         cache.delete('/diagram');
       });
-      console.log("Diagram cleared.");
     },
   },
   extraReducers: (builder) => {
@@ -74,8 +73,6 @@ const diagramSlice = createSlice({
       .addCase(setUser, (state, action) => {
         if (action.payload.diagram) {
           state.data = action.payload.diagram;
-
-          console.log("Diagram updated from setUser to:", state.data);
         }
       });
 
@@ -83,8 +80,6 @@ const diagramSlice = createSlice({
       if (action.payload) {
         state.data = action.payload;
         state.isCached = true;
-
-        console.log("Diagram fetched from cache:", state.data);
       }
     });
   },

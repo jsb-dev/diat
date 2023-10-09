@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { BubbleMenu, EditorContent, Editor } from '@tiptap/react';
+import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit';
 import MenuBar from './MenuBar';
 import Button from '@mui/material/Button';
@@ -60,13 +61,16 @@ const translateDocContent = (input: JSONContent): DocContent | null => {
 interface RichTextEditorProps {
     content: DocContent;
     onUpdate: (newContent: DocContent) => void;
+    isFocusable: boolean;
 }
 
-const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate }) => {
+const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate, isFocusable }) => {
     const editorRef = useRef(null);
     const editor = React.useMemo(() => {
         return new Editor({
-            extensions: [StarterKit],
+            extensions: [
+                StarterKit
+            ],
             content: content,
             onUpdate: ({ editor }) => {
                 const rawJson = editor.getJSON();
@@ -89,6 +93,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate }) =>
             overflowY: 'scroll',
             padding: 0,
             margin: 0,
+            pointerEvents: isFocusable ? 'auto' : 'none',
         }} className="RichTextEditor"
         >
             {editor && (

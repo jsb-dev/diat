@@ -279,8 +279,21 @@ section {
     margin: 2rem 0;
   }
 
+  s,
+  del {
+    text-decoration: line-through;
+  }
+
   .secondary-btn {
     border-radius: .5rem;
+  }
+
+  .tiptap p.is-editor-empty:first-child::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
   }
 }
 
