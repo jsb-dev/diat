@@ -19,6 +19,7 @@ import { RootState } from '../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDiagram } from '../../redux/slices/flowSlice';
 import { clearDiagramEditorState, setFocusedNode } from '../../redux/slices/diagramEditorSlice';
+import { removeProcessedDocUpdate } from '../../redux/slices/tiptapSlice';
 import DocumentNode from './DocumentNode'
 import ImgNode from './ImgNode';
 import UrlNode from './UrlNode';
@@ -38,6 +39,7 @@ const nodeTypes: NodeTypes = {
 const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
     const diagramEditorState = useSelector((state: RootState) => state.diagramEditor);
+    const tiptapState = useSelector((state: RootState) => state.editor);
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
@@ -190,6 +192,16 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         }
     }, [addUrlNode, dispatch, lastActionProcessed]);
 
+    const handleUpdateNodeDocument = (actionPayload: { id: string; content: any }) => {
+        const { id, content } = actionPayload;
+
+        setNodes((prevNodes) =>
+            prevNodes.map((node) =>
+                node.id === id ? { ...node, data: { ...node.data, content } } : node
+            )
+        );
+    };
+
     const onNodesChange = useCallback(
         (changes: any) => {
             const updatedNodes = applyNodeChanges(changes, nodes);
@@ -299,8 +311,15 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             default:
                 break;
         }
-
     }, [addEdge, addDocNode, addImgNode, addUrlNode, diagramEditorState, lastActionProcessed, handleAddDocNode, handleAddEdge, handleAddImgNode, handleAddUrlNode]);
+
+    useEffect(() => {
+        tiptapState.documentUpdates.forEach(update => {
+            handleUpdateNodeDocument(update);
+            dispatch(removeProcessedDocUpdate(update.id));
+        });
+    }, [tiptapState.documentUpdates, dispatch]);
+
 
     // Save diagram every 5 seconds
     useEffect(() => {

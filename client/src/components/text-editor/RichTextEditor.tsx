@@ -74,9 +74,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate, isFo
             onUpdate: ({ editor }) => {
                 const rawJson = editor.getJSON();
                 const translatedContent = translateDocContent(rawJson as any as JSONContent);
-
                 if (translatedContent) {
                     onUpdate(translatedContent);
+
                 } else {
                     console.error("Received invalid document structure from editor:", rawJson);
                 }
