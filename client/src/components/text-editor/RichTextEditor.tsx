@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { BubbleMenu, EditorContent, Editor } from '@tiptap/react';
-import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit';
 import MenuBar from './MenuBar';
 import Button from '@mui/material/Button';
@@ -122,7 +121,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate, isFo
                 </BubbleMenu>
             )}
             <EditorContent editor={editor} />
-            <MenuBar editor={editor} />
+            {isFocusable ? (<MenuBar editor={editor} />) : null}
         </div>
     );
 };

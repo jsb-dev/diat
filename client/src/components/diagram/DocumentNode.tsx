@@ -8,9 +8,10 @@ import { NodeProps } from '@reactflow/core';
 
 const DocumentNode: React.FC<NodeProps> = ({ data }) => {
     const nodeContent = data.content as any;
-    const dispatch = useDispatch();
-    const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
     const [content, setContent] = useState(nodeContent);
+    const focusedNode = useSelector((state: RootState) => state.diagramEditor.focusedNode);
+    const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
+    const dispatch = useDispatch();
 
     const handleContentUpdate = (newContent: any) => {
         setContent(newContent);
@@ -31,9 +32,9 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
             }}
             className="DocumentNode"
         >
-            <RichTextEditor content={content} onUpdate={handleContentUpdate} isFocusable={editorIsOpen} />
+            <RichTextEditor content={content} onUpdate={handleContentUpdate} isFocusable={editorIsOpen}/>
             <Button variant="contained" color="primary" onClick={handleToggleEditor} style={{ pointerEvents: 'auto', position: 'fixed', left: '-25%', top: 0 }}>
-                {editorIsOpen ? "Close Editor" : "Edit"}
+                {editorIsOpen ? "Close" : "Edit"}
             </Button>
         </Container>
     );

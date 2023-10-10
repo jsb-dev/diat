@@ -10,6 +10,13 @@ const AuthToggle: React.FC = () => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const dispatch = useDispatch();
 
+  const buttonStyles = {
+    position: 'fixed',
+    top: '5rem',
+    left: '2rem',
+    zIndex: 1005,
+  };
+
   const handleLogout = () => {
     dispatch(clearAuthState());
     dispatch(clearDiagram());
@@ -19,30 +26,12 @@ const AuthToggle: React.FC = () => {
 
   if (isAuthenticated) {
     return (
-      <Button onClick={handleLogout} style={{
-        position: 'fixed',
-        top: '5rem',
-        left: '2rem',
-        zIndex: 1005,
-      }} className='quarternary-btn'>
+      <Button onClick={handleLogout} sx={buttonStyles} className='quarternary-btn'>
         Log Out
       </Button>
     );
   } else {
-    return <Button onClick={() => loginWithRedirect()} style={{
-      position: 'absolute',
-      top: '2vh',
-      left: '2vw',
-      padding: 0,
-      margin: 0,
-      zIndex: 1005,
-      width: '8rem',
-      height: '8rem',
-      borderRadius: '1rem',
-      opacity: 0.8,
-      transition: 'all .1s ease-in-out',
-      boxShadow: '0 .5rem 7rem 1rem rgba(0, 0, 0, .7), 0 .5rem 1.8rem 1.5rem rgba(0, 0, 0, 0.5)',
-    }} className='primary-btn'>Log In</Button>;
+    return <Button onClick={() => loginWithRedirect()} sx={buttonStyles} className='primary-btn'>Log In</Button>;
   }
 };
 

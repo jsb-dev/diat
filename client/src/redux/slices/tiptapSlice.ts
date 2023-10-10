@@ -15,6 +15,7 @@ const editorSlice = createSlice({
         toggleEditor: (state) => {
             state.editorIsOpen = !state.editorIsOpen;
         },
+
     },
 });
 

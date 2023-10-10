@@ -18,7 +18,7 @@ import { v4 as uuid } from 'uuid';
 import { RootState } from '../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDiagram } from '../../redux/slices/flowSlice';
-import { clearDiagramEditorState } from '../../redux/slices/diagramEditorSlice';
+import { clearDiagramEditorState, setFocusedNode } from '../../redux/slices/diagramEditorSlice';
 import DocumentNode from './DocumentNode'
 import ImgNode from './ImgNode';
 import UrlNode from './UrlNode';
@@ -40,11 +40,9 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const diagramEditorState = useSelector((state: RootState) => state.diagramEditor);
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
-    const [focusedNode, setFocusedNode] = useState<string | null>(null);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
 
     const dispatch = useDispatch();
-
 
     const rfStyle: React.CSSProperties = {
         backgroundColor: 'rgb(100, 100, 100)',
@@ -53,15 +51,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const requestSaveDiagram = useCallback((nodes: Node[], edges: Edge[]) => {
         // placeholder implementation
     }, []);
-
-    // Save diagram every 5 seconds
-    useEffect(() => {
-        const interval = setInterval(() => {
-            requestSaveDiagram(nodes, edges);
-        }, 5000);
-
-        return () => clearInterval(interval);
-    }, [nodes, edges, requestSaveDiagram]);
 
     const addDocNode = useCallback((type: string, x: number, y: number) => {
         const id = uuid();
@@ -73,18 +62,16 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 y: y
             },
             data: {
+                id,
                 content: {
-                    // NOTE: The payload goes inside data.content, hence the repetition of 'content' fields here 
-                    // to accommodate the TipTap mapping structure defined in DocumentNode.tsx
-                    id,
                     content: [{ type: 'heading', content: [{ type: 'text', text: 'Document Name' }] }],
                     type: 'doc',
-                    position: {
-                        x: x,
-                        y: y
-                    },
-                    nodeType: 'documentNode',
-                }
+                },
+                position: {
+                    x: x,
+                    y: y
+                },
+                nodeType: 'documentNode',
             },
             draggable: true,
             selectable: true,
@@ -106,15 +93,15 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 y: y
             },
             data: {
+                id,
                 content: {
-                    id,
                     asset: asset,
-                    position: {
-                        x: x,
-                        y: y
-                    },
-                    nodeType: type,
-                }
+                },
+                position: {
+                    x: x,
+                    y: y
+                },
+                nodeType: type,
             },
         };
         setNodes([...nodes, newNode]);
@@ -149,7 +136,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         dispatch(setDiagram({ nodes: [...nodes, newNode], edges }));
     }
         , [nodes, edges, dispatch]);
-
 
     const addEdge = useCallback((source: string, sourceHandle: string, target: string, targetHandle: string) => {
         const newEdge = {
@@ -204,6 +190,76 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         }
     }, [addUrlNode, dispatch, lastActionProcessed]);
 
+    const onNodesChange = useCallback(
+        (changes: any) => {
+            const updatedNodes = applyNodeChanges(changes, nodes);
+            setNodes(updatedNodes);
+            console.log(nodes);
+        },
+        [nodes]
+    );
+
+    const handleNodeClick = useCallback((id: string) => {
+        setFocusedNode(id);
+        if (editorIsOpen) {
+            const updatedNodes = nodes.map((n) => {
+                if (n.id === id) {
+                    return { ...n, draggable: false };
+                }
+                return n;
+            });
+
+            setNodes(updatedNodes);
+            dispatch(setDiagram({ nodes: updatedNodes, edges }));
+        } else {
+            const updatedNodes = nodes.map((n) => {
+                if (n.id === id) {
+                    return { ...n, draggable: true };
+                }
+                return n;
+            });
+
+            setNodes(updatedNodes);
+            dispatch(setDiagram({ nodes: updatedNodes, edges }));
+        }
+    }, [editorIsOpen, nodes, edges, dispatch]);
+
+    const onEdgesChange = useCallback(
+        (changes: any) => {
+            const updatedEdges = applyEdgeChanges(changes, edges);
+            setEdges(updatedEdges);
+        },
+        [edges]
+    );
+
+    const onConnect = useCallback(
+        (connection: Connection) => {
+            setEdges((prevEdges: Edge[]) => {
+                if (
+                    connection.source === null ||
+                    connection.sourceHandle === null ||
+                    connection.target === null ||
+                    connection.targetHandle === null
+                ) {
+                    console.error("Incomplete edge information. Not creating new edge.");
+                    return prevEdges;
+                }
+
+                const newEdge: Edge = {
+                    id: uuid(),
+                    source: connection.source,
+                    sourceHandle: connection.sourceHandle,
+                    target: connection.target,
+                    targetHandle: connection.targetHandle,
+                };
+
+                const newEdges: Edge[] = [...prevEdges, newEdge];
+                requestSaveDiagram(nodes, newEdges);
+                return newEdges;
+            });
+        },
+        [nodes, requestSaveDiagram]
+    );
 
     useEffect(() => {
         const { action, payload } = diagramEditorState;
@@ -246,58 +302,16 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     }, [addEdge, addDocNode, addImgNode, addUrlNode, diagramEditorState, lastActionProcessed, handleAddDocNode, handleAddEdge, handleAddImgNode, handleAddUrlNode]);
 
-    const handleNodeClick = useCallback((id: string) => {
-        setFocusedNode(id);
+    // Save diagram every 5 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            requestSaveDiagram(nodes, edges);
+        }, 5000);
 
-        // dispatch the focused node id to the store
+        return () => clearInterval(interval);
+    }, [nodes, edges, requestSaveDiagram]);
 
-    }, []);
-
-    const onNodesChange = useCallback(
-        (changes: any) => {
-            const updatedNodes = applyNodeChanges(changes, nodes);
-            setNodes(updatedNodes);
-            console.log(nodes);
-        },
-        [nodes]
-    );
-
-    const onEdgesChange = useCallback(
-        (changes: any) => {
-            const updatedEdges = applyEdgeChanges(changes, edges);
-            setEdges(updatedEdges);
-        },
-        [edges]
-    );
-
-    const onConnect = useCallback(
-        (connection: Connection) => {
-            setEdges((prevEdges: Edge[]) => {
-                if (
-                    connection.source === null ||
-                    connection.sourceHandle === null ||
-                    connection.target === null ||
-                    connection.targetHandle === null
-                ) {
-                    console.error("Incomplete edge information. Not creating new edge.");
-                    return prevEdges;
-                }
-
-                const newEdge: Edge = {
-                    id: uuid(),
-                    source: connection.source,
-                    sourceHandle: connection.sourceHandle,
-                    target: connection.target,
-                    targetHandle: connection.targetHandle,
-                };
-
-                const newEdges: Edge[] = [...prevEdges, newEdge];
-                requestSaveDiagram(nodes, newEdges);
-                return newEdges;
-            });
-        },
-        [nodes, requestSaveDiagram]
-    );
+    console.log(nodes)
 
     return (
         <ReactFlow
@@ -308,14 +322,14 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             style={rfStyle}
+            nodesDraggable={!editorIsOpen}
+            panOnDrag={!editorIsOpen}
             onNodeClick={
                 (event, node) => {
                     handleNodeClick(node.id);
                 }
             }
-            nodesDraggable={editorIsOpen ? false : true}
-            panOnDrag={editorIsOpen ? false : true}
-            className='flow'
+            className='Flow'
         />
     );
 };

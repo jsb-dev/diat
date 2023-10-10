@@ -147,11 +147,12 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
 
     return (
         <Container style={{
-            width: '100vw',
-            height: '100vh',
             position: 'fixed',
+            width: '4rem',
             right: '0',
             top: '0',
+            padding: 0,
+            margin: 0,
             zIndex: 1000,
             transform: 'translate(100%, 0)',
         }}>
@@ -176,20 +177,24 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                                 {
                                     'icon' in item ?
                                         (
-                                            <IconButton
-                                                disabled={!canPerformActionForType(item.type)}
-                                                style={isActiveForType(item.type) ? { color: 'blue' } : {}}
-                                            >
-                                                {React.createElement(item.icon)}
-                                            </IconButton>
+                                            <span>
+                                                <IconButton
+                                                    disabled={!canPerformActionForType(item.type)}
+                                                    style={isActiveForType(item.type) ? { color: 'blue' } : {}}
+                                                >
+                                                    {React.createElement(item.icon)}
+                                                </IconButton>
+                                            </span>
                                         ) :
                                         (
-                                            <Button
-                                                disabled={!canPerformActionForType(item.type)}
-                                                style={isActiveForType(item.type) ? { color: 'blue' } : {}}
-                                            >
-                                                {item.title}
-                                            </Button>
+                                            <span>
+                                                <Button
+                                                    disabled={!canPerformActionForType(item.type)}
+                                                    style={isActiveForType(item.type) ? { color: 'blue' } : {}}
+                                                >
+                                                    {item.title}
+                                                </Button>
+                                            </span>
                                         )
                                 }
 

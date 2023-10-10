@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface DiagramEditorState {
   action: string;
   payload: any;
+  focusedNode?: string;
 }
 
 const initialState: DiagramEditorState = {
   action: '',
   payload: null,
+  focusedNode: undefined,
 };
 
 const diagramEditorSlice = createSlice({
@@ -30,13 +32,17 @@ const diagramEditorSlice = createSlice({
       state.action = 'addUrlNode';
       state.payload = action.payload;
     },
+    setFocusedNode: (state, action) => {
+      state.focusedNode = action.payload;
+    },
     clearDiagramEditorState: (state) => {
       state.action = '';
       state.payload = null;
+      state.focusedNode = undefined;
     },
   },
 });
 
-export const { addDocNode, addEdge, addImgNode, addUrlNode, clearDiagramEditorState } = diagramEditorSlice.actions;
+export const { addDocNode, addEdge, addImgNode, addUrlNode, setFocusedNode, clearDiagramEditorState } = diagramEditorSlice.actions;
 
 export default diagramEditorSlice.reducer;
