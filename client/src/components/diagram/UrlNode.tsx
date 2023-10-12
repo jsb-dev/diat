@@ -14,7 +14,7 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
         const fetchData = async () => {
             try {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/diagram/url`, {
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/node/post/url`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

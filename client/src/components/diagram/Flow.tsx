@@ -15,15 +15,17 @@ import {
     NodeProps,
 } from '@reactflow/core';
 import { v4 as uuid } from 'uuid';
-import { RootState } from '../../redux/store';
+import { RootState } from '@/redux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { setDiagram } from '../../redux/slices/flowSlice';
-import { clearDiagramEditorState, setFocusedNode } from '../../redux/slices/diagramEditorSlice';
-import { removeProcessedDocUpdate } from '../../redux/slices/tiptapSlice';
+import { setDiagram } from '@/redux/slices/flowSlice';
+import { clearDiagramEditorState, setFocusedNode } from '@/redux/slices/diagramEditorSlice';
+import { removeProcessedDocUpdate } from '@/redux/slices/tiptapSlice';
+import { selectUser, setUser } from '@/redux/slices/userSlice';
 import DocumentNode from './DocumentNode'
 import ImgNode from './ImgNode';
 import UrlNode from './UrlNode';
 import 'reactflow/dist/style.css';
+import { Diagram } from '@/interfaces/Diagram';
 
 interface FlowProps {
     diagramNodes: Node[];
@@ -37,12 +39,14 @@ const nodeTypes: NodeTypes = {
 };
 
 const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
+    const user = useSelector(selectUser);
     const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
     const diagramEditorState = useSelector((state: RootState) => state.diagramEditor);
     const tiptapState = useSelector((state: RootState) => state.editor);
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
+    const [diagramUpdated, setDiagramUpdated] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -50,9 +54,105 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         backgroundColor: 'rgb(100, 100, 100)',
     };
 
-    const requestSaveDiagram = useCallback((nodes: Node[], edges: Edge[]) => {
-        // placeholder implementation
-    }, []);
+    ////////////////////////////// SAVE DIAGRAM ON UPDATE //////////////////////////////
+    const saveUserDiagram = useCallback(async () => {
+        if (!diagramUpdated) {
+            return;
+        }
+
+        const diagram: Diagram = {
+            nodes,
+            edges
+        };
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    diagramId: user.diagramId,
+                    diagram
+                })
+            });
+
+            if (response.ok) {
+                dispatch(setUser({ ...user, diagram: { nodes, edges } }));
+                setDiagramUpdated(false);
+                return;
+            } else {
+                console.error('Error saving diagram:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error saving diagram:', error);
+        }
+    }, [diagramUpdated, dispatch, edges, nodes, user]);
+
+    useEffect(() => {
+        tiptapState.documentUpdates.forEach(update => {
+            handleUpdateNodeDocument(update);
+            dispatch(removeProcessedDocUpdate(update.id));
+        });
+    }, [tiptapState.documentUpdates, dispatch]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            saveUserDiagram();
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [nodes, edges, saveUserDiagram]);
+
+    const onNodesChange = useCallback(
+        (changes: any) => {
+            const updatedNodes = applyNodeChanges(changes, nodes);
+            setNodes(updatedNodes);
+            setDiagramUpdated(true);
+        },
+        [nodes]
+    );
+
+    const onEdgesChange = useCallback(
+        (changes: any) => {
+            const updatedEdges = applyEdgeChanges(changes, edges);
+            setEdges(updatedEdges);
+            setDiagramUpdated(true);
+            console.log('edges changed', user.diagram);
+        },
+        [edges, user]
+    );
+
+    const onConnect = useCallback(
+        (connection: Connection) => {
+            setEdges((prevEdges: Edge[]) => {
+                if (
+                    connection.source === null ||
+                    connection.sourceHandle === null ||
+                    connection.target === null ||
+                    connection.targetHandle === null
+                ) {
+                    console.error("Incomplete edge information. Not creating new edge.");
+                    return prevEdges;
+                }
+
+                const newEdge: Edge = {
+                    id: uuid(),
+                    source: connection.source,
+                    sourceHandle: connection.sourceHandle,
+                    target: connection.target,
+                    targetHandle: connection.targetHandle,
+                };
+
+                const newEdges: Edge[] = [...prevEdges, newEdge];
+                saveUserDiagram();
+                return newEdges;
+            });
+        },
+        [saveUserDiagram]
+    );
+
+    ////////////////////////////// ACTIONS //////////////////////////////
 
     const addDocNode = useCallback((type: string, x: number, y: number) => {
         const id = uuid();
@@ -152,6 +252,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     }
         , [nodes, edges, dispatch]);
 
+    ////////////////////////////// ACTION HANDLERS //////////////////////////////
+
     const handleAddDocNode = useCallback((type: string, x: number, y: number, action: string) => {
         if (lastActionProcessed !== action) {
             addDocNode(type, x, y);
@@ -200,16 +302,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 node.id === id ? { ...node, data: { ...node.data, content } } : node
             )
         );
+        setDiagramUpdated(true);
     };
-
-    const onNodesChange = useCallback(
-        (changes: any) => {
-            const updatedNodes = applyNodeChanges(changes, nodes);
-            setNodes(updatedNodes);
-            console.log(nodes);
-        },
-        [nodes]
-    );
 
     const handleNodeClick = useCallback((id: string) => {
         setFocusedNode(id);
@@ -235,43 +329,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             dispatch(setDiagram({ nodes: updatedNodes, edges }));
         }
     }, [editorIsOpen, nodes, edges, dispatch]);
-
-    const onEdgesChange = useCallback(
-        (changes: any) => {
-            const updatedEdges = applyEdgeChanges(changes, edges);
-            setEdges(updatedEdges);
-        },
-        [edges]
-    );
-
-    const onConnect = useCallback(
-        (connection: Connection) => {
-            setEdges((prevEdges: Edge[]) => {
-                if (
-                    connection.source === null ||
-                    connection.sourceHandle === null ||
-                    connection.target === null ||
-                    connection.targetHandle === null
-                ) {
-                    console.error("Incomplete edge information. Not creating new edge.");
-                    return prevEdges;
-                }
-
-                const newEdge: Edge = {
-                    id: uuid(),
-                    source: connection.source,
-                    sourceHandle: connection.sourceHandle,
-                    target: connection.target,
-                    targetHandle: connection.targetHandle,
-                };
-
-                const newEdges: Edge[] = [...prevEdges, newEdge];
-                requestSaveDiagram(nodes, newEdges);
-                return newEdges;
-            });
-        },
-        [nodes, requestSaveDiagram]
-    );
 
     useEffect(() => {
         const { action, payload } = diagramEditorState;
@@ -312,25 +369,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 break;
         }
     }, [addEdge, addDocNode, addImgNode, addUrlNode, diagramEditorState, lastActionProcessed, handleAddDocNode, handleAddEdge, handleAddImgNode, handleAddUrlNode]);
-
-    useEffect(() => {
-        tiptapState.documentUpdates.forEach(update => {
-            handleUpdateNodeDocument(update);
-            dispatch(removeProcessedDocUpdate(update.id));
-        });
-    }, [tiptapState.documentUpdates, dispatch]);
-
-
-    // Save diagram every 5 seconds
-    useEffect(() => {
-        const interval = setInterval(() => {
-            requestSaveDiagram(nodes, edges);
-        }, 5000);
-
-        return () => clearInterval(interval);
-    }, [nodes, edges, requestSaveDiagram]);
-
-    console.log(nodes)
 
     return (
         <ReactFlow

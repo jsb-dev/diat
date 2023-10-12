@@ -10,21 +10,35 @@ const getUserCredentials = async (req, res) => {
       return res.status(400).json({ message: 'Email is required' });
     }
 
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email }).populate('diagramId');
+    console.log('found user?', user);
+    let diagram;
 
     if (!user) {
       const newDiagram = await Diagram.create({});
-
       const newUser = {
         email: email,
-        diagramId: newDiagram.diagramId,
+        diagramId: newDiagram._id,
       };
 
       user = await User.create(newUser);
+    } else {
+      try {
+        diagram = await Diagram.findOne({ diagramId: user.diagramId });
+      } catch {
+        diagram = await Diagram.create({});
+      }
     }
 
-    return res.json(stripModel(user));
+    console.log('user', user);
+    console.log('diagram', diagram);
+
+    return res.json({
+      user: stripModel(user),
+      diagram: stripModel(diagram),
+    });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: 'Internal Server Error', error });
   }
 };

@@ -15,6 +15,8 @@ const getUserDiagram = async (req, res) => {
       return res.status(404).json({ message: 'Diagram not found' });
     }
 
+    console.log('diagram', diagram);
+
     return res.json(stripModel(diagram));
   } catch (error) {
     return res.status(500).json({ message: 'Internal Server Error', error });

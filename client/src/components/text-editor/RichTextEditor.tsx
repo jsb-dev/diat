@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
-import { BubbleMenu, EditorContent, Editor } from '@tiptap/react';
+import { EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import MenuBar from './MenuBar';
-import Button from '@mui/material/Button';
 import { BlockContent, DocContent, ListItemContent, TextContent } from '@/interfaces/Document';
 
 type JSONContent = {
@@ -95,31 +94,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate, isFo
             pointerEvents: isFocusable ? 'auto' : 'none',
         }} className="RichTextEditor"
         >
-            {editor && (
-                <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
-                    <Button
-                        onClick={() => editor.chain().focus().toggleBold().run()}
-                        variant={editor.isActive('bold') ? 'contained' : 'outlined'}
-                        color="primary"
-                    >
-                        B
-                    </Button>
-                    <Button
-                        onClick={() => editor.chain().focus().toggleItalic().run()}
-                        variant={editor.isActive('italic') ? 'contained' : 'outlined'}
-                        color="primary"
-                    >
-                        I
-                    </Button>
-                    <Button
-                        onClick={() => editor.chain().focus().toggleStrike().run()}
-                        variant={editor.isActive('strike') ? 'contained' : 'outlined'}
-                        color="primary"
-                    >
-                        S
-                    </Button>
-                </BubbleMenu>
-            )}
             <EditorContent editor={editor} />
             {isFocusable ? (<MenuBar editor={editor} />) : null}
         </div>

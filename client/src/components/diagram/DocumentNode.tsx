@@ -33,7 +33,7 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                 );
                 setRequestUpdate(false);
             }
-        }, 2500);
+        }, 400);
 
         return () => {
             clearInterval(updateTimer);

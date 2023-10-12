@@ -30,11 +30,8 @@ const DiagramEditor: React.FC = () => {
     const handleAddResource = () => {
         if (sourceType === 'img') {
             handleAddImage();
-            console.log('addImg called')
         } else if (sourceType === 'url') {
             handleAddUrl();
-            console.log('addUrl called')
-
         }
         setAsset('');
         setSourceType('url');

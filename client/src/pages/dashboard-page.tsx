@@ -4,8 +4,7 @@ import { AppDispatch } from '@/redux/store';
 import { initializeAuth, setAuthState } from '@/redux/slices/authSlice';
 import { initializeDiagram, setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
 import { setUser } from '@/redux/slices/userSlice';
-import { useAuth0 } from "@auth0/auth0-react";
-import { Diagram } from '../interfaces/Diagram';
+import { useAuth0 } from '@auth0/auth0-react';
 import { User } from '../interfaces/User';
 import { Node, Edge } from 'reactflow';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -16,90 +15,64 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const DashboardPage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [diagramNodes, setDiagramNodes] = useState<Node[]>([]);
+  const [diagramEdges, setDiagramEdges] = useState<Edge[]>([]);
   const { data: diagram } = useSelector((state: any) => state.diagram);
   const authState = useSelector((state: any) => state.auth);
   const { isAuthenticated, user, isLoading } = useAuth0();
 
   const [loading, setLoading] = useState(true);
-  const diagramNodes: Node[] = [];
-  const diagramEdges: Edge[] = [];
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      if (!isLoading) {
-        if (isAuthenticated && user?.email && !authState?.isAuthenticated) {
-          let credentials = await getUserCredentials(user.email);
+      // If the data is already loading or if the user isn't authenticated, simply return.
+      if (isLoading || !isAuthenticated) {
+        return;
+      }
 
-          if (credentials) {
-            let currentDiagram = diagram;
-            let currentAuthState = {
-              isAuthenticated: true,
-              user: credentials,
-            };
+      if (user?.email && !authState?.isAuthenticated) {
+        const responseData = await getUserDetails(user.email);
 
-            if (credentials.diagramId && !diagram) {
-              currentDiagram = await getUserDiagram(credentials.diagramId);
-              if (currentDiagram) {
-                currentDiagram.nodes = currentDiagram.content.nodes;
-                currentDiagram.edges = currentDiagram.content.edges;
-                delete currentDiagram.diagramId;
-                delete currentDiagram.content;
-                dispatch(setDiagram(currentDiagram));
-                dispatch(setDiagramInCache(currentDiagram));
-              }
-            }
+        if (responseData) {
+          const { user: fetchedUser, diagram: fetchedDiagram } = responseData;
+          const diagramContent = fetchedDiagram?.content;
+          setDiagramNodes(diagramContent.nodes);
+          setDiagramEdges(diagramContent.edges);
 
-            const userData: User = {
-              email: credentials.email,
-              userId: credentials.userId,
-              diagramId: credentials.diagramId,
-              diagram: currentDiagram,
-              authState: currentAuthState,
-            };
+          dispatch(setUser(fetchedUser));
+          dispatch(setDiagram(diagramContent));
+          dispatch(setDiagramInCache(diagramContent));
+          dispatch(setAuthState({
+            isAuthenticated: true,
+            user: fetchedUser,
+          }));
 
-            dispatch(setUser(userData));
-            dispatch(setAuthState(currentAuthState));
-            setUserCredentials(credentials);
-          }
-          setLoading(false);
-        } else {
-          dispatch(initializeAuth());
-          dispatch(initializeDiagram());
+          setUserCredentials(fetchedUser);
           setLoading(false);
         }
+      } else {
+        // This condition handles the scenario when the user isn't authenticated
+        dispatch(initializeAuth());
+        dispatch(initializeDiagram());
+        setLoading(false);
       }
     };
 
     fetchUserDetails();
   }, [user, isAuthenticated, isLoading, authState?.isAuthenticated, diagram, dispatch]);
 
-  const getUserCredentials = async (email: string): Promise<User | null> => {
+  const getUserDetails = async (email: string) => {
     try {
       const response = await fetch(`${BACKEND_URL}/user/get/credentials?email=${email}`);
       if (response.ok) {
         return await response.json();
       } else {
-        console.error('Error fetching user credentials', await response.text());
+        console.error('Error fetching user details', await response.text());
         return null;
       }
     } catch (error) {
-      console.error('Error fetching user credentials', error);
-      return null;
-    }
-  };
-
-  const getUserDiagram = async (diagramId: string): Promise<Diagram | null> => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/user/get/diagram?diagramId=${diagramId}`);
-      if (response.ok) {
-        return await response.json();
-      } else {
-        console.error('Error fetching user diagram', await response.text());
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching user diagram', error);
+      console.error('Error fetching user details', error);
       return null;
     }
   };
