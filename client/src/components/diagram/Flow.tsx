@@ -109,6 +109,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const updatedNodes = applyNodeChanges(changes, nodes);
             setNodes(updatedNodes);
             setDiagramUpdated(true);
+            console.log('nodes changed', changes);
         },
         [nodes]
     );
