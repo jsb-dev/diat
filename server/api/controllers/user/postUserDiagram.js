@@ -1,9 +1,8 @@
 import Diagram from '../../../database/models/Diagram.js';
 
 const updateUserDiagram = async (req, res) => {
+  console.log(req.body);
   const { diagramId, changedNodes } = req.body;
-  console.log('diagramId', diagramId);
-  console.log('changedNodes', changedNodes);
 
   try {
     const userDiagram = await Diagram.findOne({ _id: diagramId });
@@ -44,6 +43,8 @@ const updateUserDiagram = async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
+    console.log('error', error);
+    console.log('req.body', req.body);
   }
 };
 

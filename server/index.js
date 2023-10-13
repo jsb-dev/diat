@@ -17,10 +17,10 @@ const corsOptions = {
 
 // Express
 const app = express();
-app.use(cors(corsOptions));
-app.use('/', router);
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(cors(corsOptions));
+app.use('/', router);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));

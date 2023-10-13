@@ -23,7 +23,7 @@ interface DiagramState {
   edges: Edge[];
 }
 
-const initialState: DiagramState = {
+export const initialState: DiagramState = {
   data: null,
   isCached: false,
   nodes: [],

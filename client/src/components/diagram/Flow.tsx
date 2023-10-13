@@ -25,7 +25,6 @@ import DocumentNode from './DocumentNode'
 import ImgNode from './ImgNode';
 import UrlNode from './UrlNode';
 import 'reactflow/dist/style.css';
-import { Diagram } from '@/interfaces/Diagram';
 
 interface FlowProps {
     diagramNodes: Node[];
@@ -51,6 +50,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     const dispatch = useDispatch();
 
+    console.log('user', user);
+
     const rfStyle: React.CSSProperties = {
         backgroundColor: 'rgb(100, 100, 100)',
     };
@@ -63,29 +64,36 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
         const changedNodes = nodes.filter(node => nodeChanges.includes(node.data.id));
 
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    diagramId: user.diagramId,
-                    changedNodes,
-                })
-            });
+        console.log('Saving diagram');
+        console.log('Changed nodes:', changedNodes);
+        console.log('diagramId:', user.diagramId);
 
-            setNodeChanges([]);
+        if (user.diagramId) {
+            console.log('Saving diagram', user.diagramId, 'to backend');
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        diagramId: user.diagramId,
+                        changedNodes,
+                    })
+                });
 
-            if (response.ok) {
-                dispatch(setUser({ ...user, diagram: { nodes, edges } }));
-                setDiagramUpdated(false);
-                return;
-            } else {
-                console.error('Error saving diagram:', response.statusText);
+                setNodeChanges([]);
+
+                if (response.ok) {
+                    dispatch(setUser({ ...user, diagram: { nodes, edges } }));
+                    setDiagramUpdated(false);
+                    return;
+                } else {
+                    console.error('Error saving diagram:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error saving diagram:', error);
             }
-        } catch (error) {
-            console.error('Error saving diagram:', error);
         }
     }, [diagramUpdated, dispatch, edges, nodeChanges, nodes, user]);
 

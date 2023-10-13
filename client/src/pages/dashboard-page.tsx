@@ -1,9 +1,9 @@
-import React, { useEffect, FC, useState } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { initializeAuth, setAuthState } from '@/redux/slices/authSlice';
 import { initializeDiagram, setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
-import { setUser } from '@/redux/slices/userSlice';
+import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
 import { useAuth0 } from '@auth0/auth0-react';
 import { User } from '../interfaces/User';
 import { Node, Edge } from 'reactflow';
@@ -17,28 +17,53 @@ const DashboardPage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [diagramNodes, setDiagramNodes] = useState<Node[]>([]);
   const [diagramEdges, setDiagramEdges] = useState<Edge[]>([]);
-  const { data: diagram } = useSelector((state: any) => state.diagram);
-  const authState = useSelector((state: any) => state.auth);
-  const { isAuthenticated, user, isLoading } = useAuth0();
-
   const [loading, setLoading] = useState(true);
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
 
+  const diagram = useSelector((state: any) => state.diagram.data);
+  const authState = useSelector((state: any) => state.auth);
+  const { isAuthenticated, user, isLoading: auth0Loading } = useAuth0();
+
   useEffect(() => {
-    dispatch(initializeDiagram());
-    const fetchUserDetails = async () => {
-      // If the data is already loading or if the user isn't authenticated, simply return.
+    if (auth0Loading) {
+      return;
+    }
 
+    console.log('auth user', user);
 
-      if (user?.email && !authState?.isAuthenticated) {
-        const responseData = await getUserDetails(user.email);
+    const initializeFromCache = async () => {
+      const cachedUserCredentials = await getCachedUserCredentials();
+      const cachedAuthState = getCachedAuthState();
+      const cachedDiagram = cachedUserCredentials?.diagram;
 
-        if (responseData) {
+      if (cachedUserCredentials) {
+        dispatch(setUser(cachedUserCredentials));
+      }
+
+      if (cachedAuthState) {
+        dispatch(setAuthState(cachedAuthState));
+      }
+
+      if (cachedDiagram) {
+        setDiagramNodes(cachedDiagram.nodes);
+        setDiagramEdges(cachedDiagram.edges);
+      }
+    };
+
+    const fetchAndUpdateDetails = async () => {
+      if (user?.email && isAuthenticated) {
+        try {
+          const responseData = await getUserDetails(user.email);
+          if (!responseData) {
+            console.log("No response data.");
+            return;
+          }
+
           const { user: fetchedUser, diagram: fetchedDiagram } = responseData;
           const diagramContent = fetchedDiagram?.content;
+
           setDiagramNodes(diagramContent.nodes);
           setDiagramEdges(diagramContent.edges);
-
           dispatch(setUser(fetchedUser));
           dispatch(setDiagram(diagramContent));
           dispatch(setDiagramInCache(diagramContent));
@@ -46,26 +71,21 @@ const DashboardPage: FC = () => {
             isAuthenticated: true,
             user: fetchedUser,
           }));
-
-          setUserCredentials(fetchedUser);
           setLoading(false);
+        } catch (e) {
+          console.error('Error fetching user details', e);
         }
-      } else {
-        dispatch(initializeAuth());
-        dispatch(initializeDiagram());
-        setLoading(false);
       }
     };
 
-    fetchUserDetails();
+    initializeFromCache()
+    fetchAndUpdateDetails();
 
-    console.log('diagramNodes', diagramNodes);
-    console.log('diagramEdges', diagramEdges);
-    console.log('diagram', diagram);
-    console.log('user', user);
-    console.log('isAuthenticated', isAuthenticated);
+    if (!loading) {
+      return;
+    }
 
-  }, [user, isAuthenticated, isLoading, authState?.isAuthenticated, diagram, dispatch, diagramNodes, diagramEdges]);
+  }, [isAuthenticated, auth0Loading, user, authState?.isAuthenticated, diagram, dispatch, loading, userCredentials]);
 
   const getUserDetails = async (email: string) => {
     try {
@@ -82,27 +102,17 @@ const DashboardPage: FC = () => {
     }
   };
 
-  const main =
+  // Show cached diagram behind a loading spinner
+  const main = loading ? (
+    <>
+      <LoadingSpinner />
+      <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
+    </>
+  ) : (
     <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
-
-  if (!isAuthenticated) {
-    return (
-      <div >
-        <LoadingSpinner />
-      </div>)
-  }
-
-  if (loading) {
-    return (
-      <div >
-        <LoadingSpinner />
-        <PageShell content={main} page={'/dashboard-page'} />
-      </div>)
-  }
-
-  return (
-    <PageShell content={main} page={'/dashboard-page'} />
   );
-}
+
+  return <PageShell content={main} page={'/dashboard-page'} />;
+};
 
 export default DashboardPage;
