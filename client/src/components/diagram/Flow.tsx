@@ -45,6 +45,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const tiptapState = useSelector((state: RootState) => state.editor);
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
+    const [nodeChanges, setNodeChanges] = useState<string[]>([]);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
     const [diagramUpdated, setDiagramUpdated] = useState(false);
 
@@ -56,14 +57,11 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     ////////////////////////////// SAVE DIAGRAM ON UPDATE //////////////////////////////
     const saveUserDiagram = useCallback(async () => {
-        if (!diagramUpdated) {
+        if (!diagramUpdated || nodeChanges.length === 0) {
             return;
         }
 
-        const diagram: Diagram = {
-            nodes,
-            edges
-        };
+        const changedNodes = nodes.filter(node => nodeChanges.includes(node.data.id));
 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram`, {
@@ -73,9 +71,11 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 },
                 body: JSON.stringify({
                     diagramId: user.diagramId,
-                    diagram
+                    changedNodes,
                 })
             });
+
+            setNodeChanges([]);
 
             if (response.ok) {
                 dispatch(setUser({ ...user, diagram: { nodes, edges } }));
@@ -87,7 +87,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         } catch (error) {
             console.error('Error saving diagram:', error);
         }
-    }, [diagramUpdated, dispatch, edges, nodes, user]);
+    }, [diagramUpdated, dispatch, edges, nodeChanges, nodes, user]);
 
     useEffect(() => {
         tiptapState.documentUpdates.forEach(update => {
@@ -108,11 +108,18 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         (changes: any) => {
             const updatedNodes = applyNodeChanges(changes, nodes);
             setNodes(updatedNodes);
+
+            const changedNodeIds = changes.map((change: { id: string }) => change.id);
+            setNodeChanges(prev => {
+                const mergedArray = [...prev, ...changedNodeIds];
+                return mergedArray.filter((value, index, self) => self.indexOf(value) === index);
+            });
+
             setDiagramUpdated(true);
-            console.log('nodes changed', changes);
         },
         [nodes]
     );
+
 
     const onEdgesChange = useCallback(
         (changes: any) => {

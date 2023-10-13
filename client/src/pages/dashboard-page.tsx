@@ -25,11 +25,10 @@ const DashboardPage: FC = () => {
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
 
   useEffect(() => {
+    dispatch(initializeDiagram());
     const fetchUserDetails = async () => {
       // If the data is already loading or if the user isn't authenticated, simply return.
-      if (isLoading || !isAuthenticated) {
-        return;
-      }
+
 
       if (user?.email && !authState?.isAuthenticated) {
         const responseData = await getUserDetails(user.email);
@@ -52,7 +51,6 @@ const DashboardPage: FC = () => {
           setLoading(false);
         }
       } else {
-        // This condition handles the scenario when the user isn't authenticated
         dispatch(initializeAuth());
         dispatch(initializeDiagram());
         setLoading(false);
@@ -60,7 +58,14 @@ const DashboardPage: FC = () => {
     };
 
     fetchUserDetails();
-  }, [user, isAuthenticated, isLoading, authState?.isAuthenticated, diagram, dispatch]);
+
+    console.log('diagramNodes', diagramNodes);
+    console.log('diagramEdges', diagramEdges);
+    console.log('diagram', diagram);
+    console.log('user', user);
+    console.log('isAuthenticated', isAuthenticated);
+
+  }, [user, isAuthenticated, isLoading, authState?.isAuthenticated, diagram, dispatch, diagramNodes, diagramEdges]);
 
   const getUserDetails = async (email: string) => {
     try {

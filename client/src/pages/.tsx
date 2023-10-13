@@ -12,7 +12,7 @@ function Root() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log(data.message);
+        console.log('Server Response', data.message);
       } catch (error) {
         console.error("There was an issue fetching from the backend:", error);
       }

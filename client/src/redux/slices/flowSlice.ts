@@ -7,14 +7,14 @@ import { Node, Edge } from '@reactflow/core';
 // user edits to the diagram.
 
 export const initializeDiagram = createAsyncThunk(
-    'diagram/initialize',
-    async (_, { dispatch, getState }) => {
-      const state: any = getState();
-      if (!state.diagram.data) {
-        dispatch(getDiagramFromCache());
-      }
+  'diagram/initialize',
+  async (_, { dispatch, getState }) => {
+    const state: any = getState();
+    if (!state.diagram.data) {
+      await dispatch(getDiagramFromCache());
     }
-  );
+  }
+);
 
 interface DiagramState {
   data: Diagram | null;
@@ -35,12 +35,19 @@ export const getDiagramFromCache = createAsyncThunk(
   async () => {
     const cache = await caches.open('diagram-cache');
     const cachedResponse = await cache.match('/diagram');
+    
     if (cachedResponse) {
       return await cachedResponse.json();
     }
-    return null;
+    
+    // Return an object with blank nodes and edges instead of null
+    return {
+      nodes: [],
+      edges: []
+    };
   }
 );
+
 
 export const setDiagramInCache = createAsyncThunk(
   'diagram/setInCache',

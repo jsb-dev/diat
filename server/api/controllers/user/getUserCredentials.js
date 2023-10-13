@@ -5,31 +5,34 @@ import { stripModel } from '../controller-utils.js';
 const getUserCredentials = async (req, res) => {
   try {
     const email = req.query.email;
+    let diagram;
 
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });
     }
 
-    let user = await User.findOne({ email }).populate('diagramId');
-    console.log('found user?', user);
-    let diagram;
+    let user = await User.findOne({ email });
 
     if (!user) {
       const newDiagram = await Diagram.create({});
       const newUser = {
-        email: email,
+        email,
         diagramId: newDiagram._id,
       };
-
       user = await User.create(newUser);
-    } else {
-      try {
-        diagram = await Diagram.findOne({ diagramId: user.diagramId });
-      } catch {
-        diagram = await Diagram.create({});
-      }
     }
 
+    if (user.diagramId) {
+      const diagramId = user.diagramId;
+      diagram = await Diagram.findOne({ _id: diagramId });
+    } else {
+      const newDiagram = await Diagram.create({});
+      user.diagramId = newDiagram._id;
+      await user.save();
+      diagram = newDiagram;
+    }
+
+    // Log user and diagram (for debugging purposes)
     console.log('user', user);
     console.log('diagram', diagram);
 
