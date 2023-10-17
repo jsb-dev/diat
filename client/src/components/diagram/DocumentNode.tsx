@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container } from '@mui/material';
+import { Handle, Position } from 'reactflow';
+import { Button, Container, Box } from '@mui/material';
 import RichTextEditor from '../text-editor/RichTextEditor';
 import { RootState } from '../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
@@ -56,6 +57,32 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
             <Button variant="contained" color="primary" onClick={handleToggleEditor} style={{ pointerEvents: 'auto', position: 'fixed', left: '-25%', top: 0 }}>
                 {editorIsOpen ? "Close" : "Edit"}
             </Button>
+            <Box>
+                <Handle
+                    id="top"
+                    type="source"
+                    position={Position.Top}
+                    isConnectable={true}
+                />
+                <Handle
+                    id="right"
+                    type="source"
+                    position={Position.Right}
+                    isConnectable={true}
+                />
+                <Handle
+                    id="bottom"
+                    type="source"
+                    position={Position.Bottom}
+                    isConnectable={true}
+                />
+                <Handle
+                    id="left"
+                    type="source"
+                    position={Position.Left}
+                    isConnectable={true}
+                />
+            </Box>
         </Container>
     );
 };

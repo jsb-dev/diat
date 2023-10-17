@@ -1,7 +1,9 @@
-import React, { useState, ChangeEvent, CSSProperties } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect, ChangeEvent, CSSProperties } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { addDocNode, addEdge, addImgNode, addUrlNode } from '../../../redux/slices/diagramEditorSlice';
+import { RootState } from '@/redux/store';
+
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
 
@@ -38,11 +40,6 @@ const DiagramEditor: React.FC = () => {
         setCurrentDialog(null);
     };
 
-    const handleConnect = () => {
-        // Placeholder implementation
-        dispatch(addEdge({ source: 'sourceNodeId', sourceHandle: 'sourceHandle', target: 'targetNodeId', targetHandle: 'targetHandle' }));
-    };
-
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -69,7 +66,6 @@ const DiagramEditor: React.FC = () => {
                 <li style={itemStyle}><Button onClick={handleAddDocument} className='secondary-btn'>Add Document</Button></li>
                 <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='secondary-btn'>Add Image</Button></li>
                 <li style={{ ...itemStyle, transform: 'translateY(250%)' }}><Button onClick={() => setCurrentDialog('url')} className='secondary-btn'>Add URL</Button></li>
-                <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}><Button onClick={handleConnect} className='secondary-btn'>Connect</Button></li>
             </ul>
 
             <Dialog open={currentDialog === 'ImgOrUrl'} onClose={() => setCurrentDialog(null)}>

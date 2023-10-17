@@ -28,9 +28,6 @@ const DashboardPage: FC = () => {
     if (auth0Loading) {
       return;
     }
-
-    console.log('auth user', user);
-
     const initializeFromCache = async () => {
       const cachedUserCredentials = await getCachedUserCredentials();
       const cachedAuthState = getCachedAuthState();

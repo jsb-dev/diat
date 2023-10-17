@@ -32,10 +32,6 @@ const getUserCredentials = async (req, res) => {
       diagram = newDiagram;
     }
 
-    // Log user and diagram (for debugging purposes)
-    console.log('user', user);
-    console.log('diagram', diagram);
-
     return res.json({
       user: stripModel(user),
       diagram: stripModel(diagram),

@@ -1,8 +1,7 @@
 import Diagram from '../../../database/models/Diagram.js';
 
 const updateUserDiagram = async (req, res) => {
-  console.log(req.body);
-  const { diagramId, changedNodes } = req.body;
+  const { diagramId, changedNodes, changedEdges } = req.body;
 
   try {
     const userDiagram = await Diagram.findOne({ _id: diagramId });
@@ -18,13 +17,19 @@ const updateUserDiagram = async (req, res) => {
 
     // Merge existing nodes and changed nodes
     const mergedNodes = changedNodes.reduce((acc, changedNode) => {
-      const existingNode = existingNodesMap.get(changedNode.data.id);
+      let existingNode;
+
+      try {
+        existingNode = existingNodesMap.get(changedNode.data.id);
+      } catch {
+        existingNode = null;
+      }
 
       // Update existing node if found, otherwise add new node
       if (existingNode) {
-        acc.push(changedNode); // update existing node
+        existingNode.data = changedNode.data;
       } else {
-        acc.push(changedNode); // add new node
+        acc.push(changedNode);
       }
 
       // Remove this node from the map as it has been processed
@@ -33,8 +38,31 @@ const updateUserDiagram = async (req, res) => {
       return acc;
     }, []);
 
-    // Add any remaining existing nodes that were not updated
+    const existingEdgesMap = new Map(
+      userDiagram.content.edges.map((edge) => [edge.id, edge])
+    );
+
+    const mergedEdges = changedEdges.reduce((acc, changedEdge) => {
+      let existingEdge;
+      try {
+        existingEdge = existingEdgesMap.get(changedEdge.id);
+      } catch {
+        existingEdge = null;
+      }
+
+      if (existingEdge) {
+        existingEdge.data = changedEdge.data;
+      } else {
+        acc.push(changedEdge);
+      }
+
+      existingEdgesMap.delete(changedEdge.id);
+
+      return acc;
+    }, []);
+
     userDiagram.content.nodes = [...mergedNodes, ...existingNodesMap.values()];
+    userDiagram.content.edges = [...mergedEdges, ...existingEdgesMap.values()];
 
     console.log('userDiagram', userDiagram);
     await userDiagram.save();
