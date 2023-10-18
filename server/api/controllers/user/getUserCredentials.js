@@ -1,6 +1,6 @@
 import User from '../../../database/models/User.js';
 import Diagram from '../../../database/models/Diagram.js';
-import { stripModel } from '../controller-utils.js';
+import stripModel from '../../utils/stripModel.js';
 
 const getUserCredentials = async (req, res) => {
   try {

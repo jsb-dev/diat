@@ -1,4 +1,8 @@
 import Diagram from '../../../database/models/Diagram.js';
+import aggregateRequests from '../../utils/aggregateRequests.js';
+
+// Queue to store failed aggregation attempts
+const failedAggregationQueue = [];
 
 const handleNodes = async (existingNodes, changedNodes) => {
   const existingNodesMap = new Map(
@@ -28,33 +32,78 @@ const handleEdges = async (existingEdges, changedEdges) => {
   return [...mergedEdges, ...existingEdgesMap.values()];
 };
 
+// Assuming you have already loaded the Diagram outside of this controller for reusability
+let loadedDiagram;
+
 const updateUserDiagram = async (req, res) => {
-  const { diagramId, changedNodes, changedEdges } = req.body;
-
   try {
-    const userDiagram = await Diagram.findOne({ _id: diagramId });
+    const { diagramId, changedNodes, changedEdges } = req.body;
 
-    if (!userDiagram) {
+    // Try to process failed aggregations first
+    while (failedAggregationQueue.length > 0) {
+      const { diagramId, nodes, edges } = failedAggregationQueue.shift();
+      const reAggregatedRequest = await aggregateRequests(
+        diagramId,
+        nodes,
+        edges
+      );
+      if (reAggregatedRequest) {
+        console.log('Successfully re-aggregated failed request');
+      } else {
+        failedAggregationQueue.push({ diagramId, nodes, edges });
+      }
+    }
+
+    // Load diagram only if not loaded or different diagramId is received
+    if (!loadedDiagram) {
+      loadedDiagram = await Diagram.findOne({ _id: diagramId });
+    }
+
+    if (!loadedDiagram) {
+      console.log('Diagram not found');
       return res.status(404).json({ message: 'Diagram not found' });
     }
 
+    const aggregatedRequest = await aggregateRequests(
+      diagramId,
+      changedNodes,
+      changedEdges
+    );
+
+    if (!aggregatedRequest) {
+      // Push to the queue for next cycle
+      failedAggregationQueue.push({
+        diagramId,
+        nodes: changedNodes,
+        edges: changedEdges,
+      });
+      console.log('Failed to aggregate request');
+      return res.status(500).json({
+        message:
+          'Failed to aggregate request. Will try again in the next cycle.',
+      });
+    }
+
     const [newNodes, newEdges] = await Promise.all([
-      handleNodes(userDiagram.content.nodes, changedNodes),
-      handleEdges(userDiagram.content.edges, changedEdges),
+      handleNodes(
+        loadedDiagram.content.nodes,
+        Array.from(aggregatedRequest.nodes.values())
+      ),
+      handleEdges(
+        loadedDiagram.content.edges,
+        Array.from(aggregatedRequest.edges.values())
+      ),
     ]);
 
-    userDiagram.content.nodes = newNodes;
-    userDiagram.content.edges = newEdges;
+    loadedDiagram.content.nodes = newNodes;
+    loadedDiagram.content.edges = newEdges;
 
-    await userDiagram.save();
+    await loadedDiagram.save();
 
     res.status(200).json({ message: 'Diagram updated' });
     console.log('Diagram updated');
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server error');
-    console.log('error', error);
-    console.log('req.body', req.body);
   }
 };
 

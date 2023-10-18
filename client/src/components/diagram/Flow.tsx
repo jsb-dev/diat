@@ -98,7 +98,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         if (diagramEdited) {
             const timer = setTimeout(() => {
                 saveUserDiagram();
-            }, 2000);
+            }, 1000);
 
             return () => clearTimeout(timer);
         } else {

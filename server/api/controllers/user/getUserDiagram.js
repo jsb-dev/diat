@@ -1,5 +1,5 @@
 import Diagram from '../../../database/models/Diagram.js';
-import { stripModel } from '../controller-utils.js';
+import stripModel from '../../utils/stripModel.js';
 
 const getUserDiagram = async (req, res) => {
   try {
