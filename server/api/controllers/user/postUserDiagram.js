@@ -1,5 +1,33 @@
 import Diagram from '../../../database/models/Diagram.js';
 
+const handleNodes = async (existingNodes, changedNodes) => {
+  const existingNodesMap = new Map(
+    existingNodes.map((node) => [node.data.id, node])
+  );
+
+  const mergedNodes = changedNodes.reduce((acc, changedNode) => {
+    acc.push(changedNode);
+    existingNodesMap.delete(changedNode.data.id);
+    return acc;
+  }, []);
+
+  return [...mergedNodes, ...existingNodesMap.values()];
+};
+
+const handleEdges = async (existingEdges, changedEdges) => {
+  const existingEdgesMap = new Map(
+    existingEdges.map((edge) => [edge.id, edge])
+  );
+
+  const mergedEdges = changedEdges.reduce((acc, changedEdge) => {
+    acc.push(changedEdge);
+    existingEdgesMap.delete(changedEdge.id);
+    return acc;
+  }, []);
+
+  return [...mergedEdges, ...existingEdgesMap.values()];
+};
+
 const updateUserDiagram = async (req, res) => {
   const { diagramId, changedNodes, changedEdges } = req.body;
 
@@ -10,64 +38,18 @@ const updateUserDiagram = async (req, res) => {
       return res.status(404).json({ message: 'Diagram not found' });
     }
 
-    // Create a mapping of existing nodes for faster lookup
-    const existingNodesMap = new Map(
-      userDiagram.content.nodes.map((node) => [node.data.id, node])
-    );
+    const [newNodes, newEdges] = await Promise.all([
+      handleNodes(userDiagram.content.nodes, changedNodes),
+      handleEdges(userDiagram.content.edges, changedEdges),
+    ]);
 
-    // Merge existing nodes and changed nodes
-    const mergedNodes = changedNodes.reduce((acc, changedNode) => {
-      let existingNode;
+    userDiagram.content.nodes = newNodes;
+    userDiagram.content.edges = newEdges;
 
-      try {
-        existingNode = existingNodesMap.get(changedNode.data.id);
-      } catch {
-        existingNode = null;
-      }
-
-      // Update existing node if found, otherwise add new node
-      if (existingNode) {
-        existingNode.data = changedNode.data;
-      } else {
-        acc.push(changedNode);
-      }
-
-      // Remove this node from the map as it has been processed
-      existingNodesMap.delete(changedNode.data.id);
-
-      return acc;
-    }, []);
-
-    const existingEdgesMap = new Map(
-      userDiagram.content.edges.map((edge) => [edge.id, edge])
-    );
-
-    const mergedEdges = changedEdges.reduce((acc, changedEdge) => {
-      let existingEdge;
-      try {
-        existingEdge = existingEdgesMap.get(changedEdge.id);
-      } catch {
-        existingEdge = null;
-      }
-
-      if (existingEdge) {
-        existingEdge.data = changedEdge.data;
-      } else {
-        acc.push(changedEdge);
-      }
-
-      existingEdgesMap.delete(changedEdge.id);
-
-      return acc;
-    }, []);
-
-    userDiagram.content.nodes = [...mergedNodes, ...existingNodesMap.values()];
-    userDiagram.content.edges = [...mergedEdges, ...existingEdgesMap.values()];
-
-    console.log('userDiagram', userDiagram);
     await userDiagram.save();
 
-    res.json(userDiagram);
+    res.status(200).json({ message: 'Diagram updated' });
+    console.log('Diagram updated');
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
