@@ -55,22 +55,9 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     ////////////////////////////// SAVE DIAGRAM ON UPDATE //////////////////////////////
     useEffect(() => {
-        const saveUserDiagram = async () => {
-            console.log('Saving diagram', user.diagramId, 'to backend');
-            console.log(nodes);
-            console.log(edges);
-
-            let changedNodes: Node[] = [];
-            let changedEdges: Edge[] = [];
-
-            if (nodeChanges.length > 0) { changedNodes = nodes.filter((node: { data: { id: string; }; }) => nodeChanges.includes(node.data.id)); }
-            if (edgeChanges.length > 0) { changedEdges = edges.filter((edge: { id: string; }) => edgeChanges.includes(edge.id)); }
-
-            console.log('Changed nodes:', changedNodes);
-            console.log('Changed edges:', changedEdges);
-
+        const saveUserNodes = async (changedNodes: Node[]) => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram/nodes`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -78,26 +65,67 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                     body: JSON.stringify({
                         diagramId: user.diagramId,
                         changedNodes,
-                        changedEdges
-                    })
+                    }),
                 });
 
                 if (response.ok) {
-                    dispatch(setUser({ ...user, diagram: { nodes, edges } }));
+                    console.log('Nodes saved successfully')
                     setNodeChanges([]);
-                    setEdgeChanges([]);
-                    setDiagramEdited(false);
                 } else {
-                    console.error('Error saving diagram:', response.statusText);
+                    console.error('Error saving nodes:', response.statusText);
                 }
             } catch (error) {
-                console.error('Error saving diagram:', error);
+                console.error('Error saving nodes:', error);
             }
-        }
+        };
+
+        const saveUserEdges = async (changedEdges: Edge[]) => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram/edges`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        diagramId: user.diagramId,
+                        changedEdges,
+                    }),
+                });
+
+                if (response.ok) {
+                    console.log('Edges saved successfully')
+                    setEdgeChanges([]);
+                } else {
+                    console.error('Error saving edges:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error saving edges:', error);
+            }
+        };
+
+        const handleDiagramSave = async () => {
+            let changedNodes: Node[] = [];
+            let changedEdges: Edge[] = [];
+
+            if (nodeChanges.length > 0) {
+                changedNodes = nodes.filter((node: { data: { id: string; }; }) => nodeChanges.includes(node.data.id));
+                saveUserNodes(changedNodes);
+            }
+            if (edgeChanges.length > 0) {
+                changedEdges = edges.filter((edge: { id: string; }) => edgeChanges.includes(edge.id));
+                saveUserEdges(changedEdges);
+            }
+
+            if (changedNodes.length > 0 || changedEdges.length > 0) {
+                dispatch(setUser({ ...user, diagram: { nodes, edges } }));
+                setDiagramEdited(false);
+            }
+        };
 
         if (diagramEdited) {
             const timer = setTimeout(() => {
-                saveUserDiagram();
+                console.log('Saving diagram...')
+                handleDiagramSave();
             }, 1000);
 
             return () => clearTimeout(timer);
@@ -105,6 +133,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             return;
         }
     }, [diagramEdited, dispatch, edgeChanges, edges, nodeChanges, nodes, user]);
+
 
     useEffect(() => {
         const handleUpdateNodeDocument = (actionPayload: { id: string; content: any }) => {
@@ -333,8 +362,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const handleNodeClick = useCallback((id: string) => {
         setFocusedNode(id);
 
-        // Allows each document to be dragged once after the editor has 
-        // been opened before locking it for better UX
+        // Allows each document to be dragged after the editor has 
+        // been opened before locking it on focus for better UX
         if (editorIsOpen) {
             const updatedNodes = nodes.map((n) => {
                 if (n.id === id) {
