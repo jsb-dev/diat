@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { NodeProps } from '@reactflow/core';
+import { NodeProps, Handle, Position } from '@reactflow/core';
+import { Box } from '@mui/material';
+import NodeDeleteButton from './node-components/NodeDeleteButton';
 
 const UrlNode: React.FC<NodeProps> = ({ data }) => {
     const asset = data.content.asset as string;
@@ -46,6 +48,33 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
                 <p><strong>URL: {asset}</strong></p>
                 <p>{webpageInfo.body}</p>
             </article>
+            <Box>
+                <Handle
+                    id="top"
+                    type="target"
+                    position={Position.Top}
+                    isConnectable={true}
+                />
+                <Handle
+                    id="right"
+                    type="target"
+                    position={Position.Right}
+                    isConnectable={true}
+                />
+                <Handle
+                    id="bottom"
+                    type="target"
+                    position={Position.Bottom}
+                    isConnectable={true}
+                />
+                <Handle
+                    id="left"
+                    type="target"
+                    position={Position.Left}
+                    isConnectable={true}
+                />
+            </Box>
+            <NodeDeleteButton nodeId={data.id} />
         </div>
     );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { Handle, Position } from 'reactflow';
 import { NodeProps } from '@reactflow/core';
 import { Box } from '@mui/material';
+import NodeDeleteButton from './node-components/NodeDeleteButton';
 
 
 const ImgNode: React.FC<NodeProps> = ({ data }) => {
@@ -9,7 +10,8 @@ const ImgNode: React.FC<NodeProps> = ({ data }) => {
 
     return (
         <>
-            <img src={asset} alt="" style={{ width: '600px' }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={asset} alt="An image you uploaded" style={{ width: '600px' }} />
             <Box>
                 <Handle
                     id="top"
@@ -35,6 +37,7 @@ const ImgNode: React.FC<NodeProps> = ({ data }) => {
                     position={Position.Left}
                     isConnectable={true}
                 />
+                <NodeDeleteButton nodeId={data.id} />
             </Box>
         </>
     );

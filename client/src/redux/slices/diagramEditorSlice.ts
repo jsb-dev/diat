@@ -35,6 +35,10 @@ const diagramEditorSlice = createSlice({
     setFocusedNode: (state, action) => {
       state.focusedNode = action.payload;
     },
+    deleteNode: (state, action: PayloadAction<{ nodeId: string}>) => {
+      state.action = 'deleteNode';
+      state.payload = action.payload;
+    },
     clearDiagramEditorState: (state) => {
       state.action = '';
       state.payload = null;
@@ -43,6 +47,6 @@ const diagramEditorSlice = createSlice({
   },
 });
 
-export const { addDocNode, addEdge, addImgNode, addUrlNode, setFocusedNode, clearDiagramEditorState } = diagramEditorSlice.actions;
+export const { addDocNode, addEdge, addImgNode, addUrlNode, setFocusedNode, clearDiagramEditorState, deleteNode } = diagramEditorSlice.actions;
 
 export default diagramEditorSlice.reducer;

@@ -21,9 +21,9 @@ import { setDiagram } from '@/redux/slices/flowSlice';
 import { clearDiagramEditorState, setFocusedNode } from '@/redux/slices/diagramEditorSlice';
 import { removeProcessedDocUpdate } from '@/redux/slices/tiptapSlice';
 import { selectUser, setUser } from '@/redux/slices/userSlice';
-import DocumentNode from './DocumentNode'
-import ImgNode from './ImgNode';
-import UrlNode from './UrlNode';
+import DocumentNode from './nodes/DocumentNode'
+import ImgNode from './nodes/ImgNode';
+import UrlNode from './nodes/UrlNode';
 import 'reactflow/dist/style.css';
 
 interface FlowProps {
@@ -46,12 +46,17 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [edges, setEdges] = useState<Edge[]>(diagramEdges);
     const [nodeChanges, setNodeChanges] = useState<string[]>([]);
     const [edgeChanges, setEdgeChanges] = useState<string[]>([]);
+    const [deletedNodes, setDeletedNodes] = useState<Node[]>([]);
+    const [deletedEdges, setDeletedEdges] = useState<Edge[]>([]);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
     const [diagramEdited, setDiagramEdited] = useState(false);
-    const dispatch = useDispatch();
+    const [deleteIsOpen, setDeleteIsOpen] = useState(false);
+
     const rfStyle: React.CSSProperties = {
         backgroundColor: 'rgb(100, 100, 100)',
     };
+
+    const dispatch = useDispatch();
 
     ////////////////////////////// SAVE DIAGRAM ON UPDATE //////////////////////////////
     useEffect(() => {
@@ -103,6 +108,54 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             }
         };
 
+        const deleteUserNodes = async (deletedNodeIds: string[]) => {
+            const diagramId = user.diagramId;
+            const query = `diagramId=${diagramId}&deletedNodeIds=${deletedNodeIds.join(',')}`;
+            const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/delete/diagram/nodes?${query}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    console.log('Nodes deleted successfully');
+                    setDeletedNodes([]);
+                } else {
+                    console.error('Error deleting nodes:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error deleting nodes:', error);
+            }
+        };
+
+        const deleteUserEdges = async (deletedEdgeIds: string[]) => {
+            const diagramId = user.diagramId;
+            const query = `diagramId=${diagramId}&deletedEdgeIds=${deletedEdgeIds.join(',')}`;
+            const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/delete/diagram/edges?${query}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    console.log('Edges deleted successfully');
+                    setDeletedEdges([]);
+                } else {
+                    console.error('Error deleting edges:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error deleting edges:', error);
+            }
+        };
+
         const handleDiagramSave = async () => {
             let changedNodes: Node[] = [];
             let changedEdges: Edge[] = [];
@@ -122,18 +175,39 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             }
         };
 
+        const handleDiagramDelete = async () => {
+            if (deletedNodes.length > 0) {
+                const deletedNodeIds = deletedNodes.map(node => node.data.id);
+                deleteUserNodes(deletedNodeIds);
+            }
+            if (deletedEdges.length > 0) {
+                const deletedEdgeIds = deletedEdges.map(edge => edge.id);
+                deleteUserEdges(deletedEdgeIds);
+            }
+        };
+
+        if (deletedNodes.length > 0 || deletedEdges.length > 0) {
+            const timer = setTimeout(() => {
+                console.log('Deleting diagram elements...')
+                handleDiagramDelete();
+            }, 1000);
+
+            return () => clearTimeout(timer);
+        }
+
         if (diagramEdited) {
             const timer = setTimeout(() => {
                 console.log('Saving diagram...')
                 handleDiagramSave();
-            }, 1000);
+            }, 2000);
 
             return () => clearTimeout(timer);
         } else {
             return;
         }
-    }, [diagramEdited, dispatch, edgeChanges, edges, nodeChanges, nodes, user]);
+    }, [deletedEdges, deletedNodes, diagramEdited, dispatch, edgeChanges, edges, nodeChanges, nodes, user]);
 
+    ///////////////////////// DETECT CHANGES IN NODES AND EDGES (AND TIPTAP IN REAL TIME) /////////////////////////
 
     useEffect(() => {
         const handleUpdateNodeDocument = (actionPayload: { id: string; content: any }) => {
@@ -158,6 +232,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     const onNodesChange = useCallback(
         (changes: any) => {
+
             const updatedNodes = applyNodeChanges(changes, nodes);
             setNodes(updatedNodes);
 
@@ -174,6 +249,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     const onEdgesChange = useCallback(
         (changes: any) => {
+
             const updatedEdges = applyEdgeChanges(changes, edges);
             setEdges(updatedEdges);
 
@@ -218,7 +294,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         [edgeChanges]
     );
 
-    ////////////////////////////// ACTIONS //////////////////////////////
+    ////////////////////////////// EDITING ACTIONS //////////////////////////////
 
     const addDocNode = useCallback((type: string, x: number, y: number) => {
         const id = uuid();
@@ -304,6 +380,33 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     }
         , [nodes, edges, dispatch]);
 
+    const deleteNode = useCallback((nodeId: string) => {
+
+        const deletedNode = nodes.find((node) => node.id === nodeId);
+        if (!deletedNode) {
+            deletedNodes.filter((node) => node.id !== nodeId);
+            return;
+        }
+
+        if (deletedNode) {
+            setDeletedNodes([...deletedNodes, deletedNode]);
+
+            edges.forEach((edge) => {
+                if (edge.source === nodeId || edge.target === nodeId) {
+                    setDeletedEdges([...deletedEdges, edge])
+                }
+            });
+        } else {
+            console.log('node not found, available nodes are', nodes);
+        }
+
+        const newNodes = nodes.filter((node) => node.id !== nodeId);
+        const newEdges = edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId);
+        setNodes(newNodes);
+        setEdges(newEdges);
+        dispatch(setDiagram({ nodes: newNodes, edges: newEdges }));
+    }, [edges, nodes, dispatch, deletedEdges, deletedNodes]);
+
     const addEdge = useCallback((source: string, sourceHandle: string, target: string, targetHandle: string) => {
         const newEdge = {
             id: uuid(),
@@ -317,7 +420,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     }
         , [nodes, edges, dispatch]);
 
-    ////////////////////////////// ACTION HANDLERS //////////////////////////////
+    ////////////////////////////// EDITING ACTION HANDLERS //////////////////////////////
 
     const handleAddDocNode = useCallback((type: string, x: number, y: number, action: string) => {
         if (lastActionProcessed !== action) {
@@ -359,11 +462,21 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         }
     }, [addUrlNode, dispatch, lastActionProcessed]);
 
+    const handleDeleteNode = useCallback((nodeId: string, action: string) => {
+        if (lastActionProcessed !== action) {
+            deleteNode(nodeId);
+            setLastActionProcessed(action);
+        } else {
+            deleteNode(nodeId);
+            dispatch(clearDiagramEditorState());
+        }
+    }, [deleteNode, lastActionProcessed, dispatch]);
+
     const handleNodeClick = useCallback((id: string) => {
         setFocusedNode(id);
 
         // Allows each document to be dragged after the editor has 
-        // been opened before locking it on focus for better UX
+        // been opened before locking it on editor focus for better UX
         if (editorIsOpen) {
             const updatedNodes = nodes.map((n) => {
                 if (n.id === id) {
@@ -386,6 +499,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             setNodes(updatedNodes);
         }
     }, [editorIsOpen, nodes]);
+
+    ////////////////////////////// ACTION SWITCH CASE //////////////////////////////
 
     useEffect(() => {
         const { action, payload } = diagramEditorState;
@@ -413,10 +528,13 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 } = payload;
                 handleAddUrlNode(urlType, urlAsset, urlX, urlY, action);
                 break;
+            case 'deleteNode':
+                handleDeleteNode(payload.nodeId, action);
+                break;
             default:
                 break;
         }
-    }, [addEdge, addDocNode, addImgNode, addUrlNode, diagramEditorState, lastActionProcessed, handleAddDocNode, handleAddEdge, handleAddImgNode, handleAddUrlNode]);
+    }, [addEdge, addDocNode, addImgNode, addUrlNode, diagramEditorState, lastActionProcessed, handleAddDocNode, handleAddEdge, handleAddImgNode, handleAddUrlNode, handleDeleteNode]);
 
     return (
         <ReactFlow
@@ -428,6 +546,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             nodeTypes={nodeTypes}
             style={rfStyle}
             nodesDraggable={!editorIsOpen}
+            nodesFocusable={!editorIsOpen}
             panOnDrag={!editorIsOpen}
             onNodeClick={
                 (event, node) => {
@@ -436,6 +555,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             }
             className='Flow'
         />
+
     );
 };
 
