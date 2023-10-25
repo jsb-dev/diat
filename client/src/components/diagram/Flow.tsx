@@ -189,7 +189,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const timer = setTimeout(() => {
                 console.log('Deleting diagram elements...')
                 handleDiagramDelete();
-            }, 1000);
+            }, 1500);
 
             return () => clearTimeout(timer);
         }

@@ -202,20 +202,6 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                         </MenuItem>
                     ))
                 ))}
-                <MenuItem onClick={() => { editor.chain().focus().setHorizontalRule().run(); handleMenuClose(); }}>
-                    <Tooltip title="Set Horizontal Rule">
-                        <IconButton>
-                            <HorizontalRule />
-                        </IconButton>
-                    </Tooltip>
-                </MenuItem>
-                <MenuItem onClick={() => { editor.chain().focus().setHardBreak().run(); handleMenuClose(); }}>
-                    <Tooltip title="Set Hard Break">
-                        <IconButton>
-                            <South />
-                        </IconButton>
-                    </Tooltip>
-                </MenuItem>
             </Menu>
         </Container>
     );
