@@ -14,6 +14,17 @@ userPostDiagramRouter.use(saveRequestMiddleware);
 
 const processingQueue = [];
 let isProcessing = false;
+let aggregationTimer = null;
+
+const flushRequestsToQueue = () => {
+  if (aggregatedSaveRequests.length > 0) {
+    processingQueue.push({
+      type: 'aggregated',
+      aggregatedRequests: [...aggregatedSaveRequests],
+    });
+    aggregatedSaveRequests.length = 0;
+  }
+};
 
 const processNextInQueue = async () => {
   if (isProcessing || processingQueue.length === 0) {
@@ -24,11 +35,13 @@ const processNextInQueue = async () => {
 
   await acquireLock();
 
-  const { type, res } = processingQueue.shift();
+  const { type, aggregatedRequests } = processingQueue.shift();
 
   try {
-    await postUserDiagramNodes(aggregatedSaveRequests);
-    res.status(200).json({ message: 'Nodes saved successfully' });
+    if (type === 'aggregated') {
+      await postUserDiagramNodes(aggregatedRequests);
+      await postUserDiagramEdges(aggregatedRequests);
+    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -40,16 +53,32 @@ const processNextInQueue = async () => {
 
 // Post Nodes
 userPostDiagramRouter.post('/nodes', async (req, res) => {
-  aggregateSaveRequests();
-  processingQueue.push({ type: 'nodes', res });
-  processNextInQueue();
+  aggregateSaveRequests(req.body);
+
+  if (!aggregationTimer) {
+    aggregationTimer = setTimeout(() => {
+      flushRequestsToQueue();
+      processNextInQueue();
+      aggregationTimer = null;
+    }, 3000);
+  }
+
+  res.status(202).json({ message: 'Post request received for aggregation' });
 });
 
 // Post Edges
 userPostDiagramRouter.post('/edges', async (req, res) => {
-  aggregateSaveRequests();
-  processingQueue.push({ type: 'edges', res });
-  processNextInQueue();
+  aggregateSaveRequests(req.body);
+
+  if (!aggregationTimer) {
+    aggregationTimer = setTimeout(() => {
+      flushRequestsToQueue();
+      processNextInQueue();
+      aggregationTimer = null;
+    }, 3000);
+  }
+
+  res.status(202).json({ message: 'Post request received for aggregation' });
 });
 
 export default userPostDiagramRouter;

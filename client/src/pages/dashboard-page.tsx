@@ -1,8 +1,8 @@
 import React, { useEffect, useState, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { initializeAuth, setAuthState } from '@/redux/slices/authSlice';
-import { initializeDiagram, setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
+import { setAuthState } from '@/redux/slices/authSlice';
+import { setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
 import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
 import { useAuth0 } from '@auth0/auth0-react';
 import { User } from '../interfaces/User';
@@ -18,7 +18,8 @@ const DashboardPage: FC = () => {
   const [diagramNodes, setDiagramNodes] = useState<Node[]>([]);
   const [diagramEdges, setDiagramEdges] = useState<Edge[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userCredentials, setUserCredentials] = useState<User | null>(null);
+  const [userCredentials] = useState<User | null>(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const diagram = useSelector((state: any) => state.diagram.data);
   const authState = useSelector((state: any) => state.auth);
@@ -28,6 +29,7 @@ const DashboardPage: FC = () => {
     if (auth0Loading) {
       return;
     }
+
     const initializeFromCache = async () => {
       const cachedUserCredentials = await getCachedUserCredentials();
       const cachedAuthState = getCachedAuthState();
@@ -49,40 +51,43 @@ const DashboardPage: FC = () => {
 
     const fetchAndUpdateDetails = async () => {
       if (user?.email && isAuthenticated) {
-        try {
-          const responseData = await getUserDetails(user.email);
-          if (!responseData) {
-            console.log("No response data.");
-            return;
+        if (!loggedIn) {
+          try {
+            const responseData = await getUserDetails(user.email);
+            if (!responseData) {
+              console.log("No response data.");
+              return;
+            }
+
+            const { user: fetchedUser, diagram: fetchedDiagram } = responseData;
+            const diagramContent = fetchedDiagram?.content;
+
+            setDiagramNodes(diagramContent.nodes);
+            setDiagramEdges(diagramContent.edges);
+            dispatch(setUser(fetchedUser));
+            dispatch(setDiagram(diagramContent));
+            dispatch(setDiagramInCache(diagramContent));
+            dispatch(setAuthState({
+              isAuthenticated: true,
+              user: fetchedUser,
+            }));
+            setLoading(false);
+          } catch (e) {
+            console.error('Error fetching user details', e);
           }
-
-          const { user: fetchedUser, diagram: fetchedDiagram } = responseData;
-          const diagramContent = fetchedDiagram?.content;
-
-          setDiagramNodes(diagramContent.nodes);
-          setDiagramEdges(diagramContent.edges);
-          dispatch(setUser(fetchedUser));
-          dispatch(setDiagram(diagramContent));
-          dispatch(setDiagramInCache(diagramContent));
-          dispatch(setAuthState({
-            isAuthenticated: true,
-            user: fetchedUser,
-          }));
-          setLoading(false);
-        } catch (e) {
-          console.error('Error fetching user details', e);
         }
       }
     };
 
-    initializeFromCache()
+    initializeFromCache();
     fetchAndUpdateDetails();
+    setLoggedIn(isAuthenticated);
 
     if (!loading) {
       return;
     }
 
-  }, [isAuthenticated, auth0Loading, user, authState?.isAuthenticated, diagram, dispatch, loading, userCredentials]);
+  }, [isAuthenticated, auth0Loading, user, authState.isAuthenticated, diagram, dispatch, loading, userCredentials, loggedIn]);
 
   const getUserDetails = async (email: string) => {
     try {
@@ -99,7 +104,6 @@ const DashboardPage: FC = () => {
     }
   };
 
-  // Show cached diagram behind a loading spinner
   const main = loading ? (
     <>
       <LoadingSpinner />

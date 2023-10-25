@@ -50,7 +50,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [deletedEdges, setDeletedEdges] = useState<Edge[]>([]);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
     const [diagramEdited, setDiagramEdited] = useState(false);
-    const [deleteIsOpen, setDeleteIsOpen] = useState(false);
 
     const rfStyle: React.CSSProperties = {
         backgroundColor: 'rgb(100, 100, 100)',
@@ -199,7 +198,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const timer = setTimeout(() => {
                 console.log('Saving diagram...')
                 handleDiagramSave();
-            }, 2000);
+            }, 500);
 
             return () => clearTimeout(timer);
         } else {

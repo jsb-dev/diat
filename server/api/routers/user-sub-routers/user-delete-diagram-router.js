@@ -20,10 +20,21 @@ const processNextDeleteInQueue = async () => {
   const { type, res, query } = deleteProcessingQueue.shift();
 
   try {
-    await deleteUserDiagramNodes(query);
-    res.status(200).json({ message: 'Nodes deleted successfully' });
+    if (type === 'nodes') {
+      await deleteUserDiagramNodes(query);
+      res
+        .status(202)
+        .json({ message: 'Delete request received for aggregation' });
+    } else {
+      await deleteUserDiagramEdges(query);
+      res
+        .status(202)
+        .json({ message: 'Delete request received for aggregation' });
+    }
   } catch (error) {
-    console.error(error);
+    res
+      .status(500)
+      .json({ message: `Error deleting ${type}, re-aggregating request` });
   } finally {
     releaseLock();
     isDeleteProcessing = false;
