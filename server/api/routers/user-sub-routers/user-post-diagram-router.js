@@ -4,9 +4,8 @@ import postUserDiagramEdges from '../../controllers/user/postUserDiagramEdges.js
 import {
   aggregateSaveRequests,
   aggregatedSaveRequests,
-} from '../../utils/post-user-diagram-utils.js';
+} from '../../utils/user-post-diagram-utils.js';
 import saveRequestMiddleware from './middleware/saveRequestMiddleware.js';
-import { acquireLock, releaseLock } from '../../utils/sharedLock.js';
 
 const userPostDiagramRouter = express.Router();
 
@@ -14,7 +13,6 @@ userPostDiagramRouter.use(saveRequestMiddleware);
 
 const processingQueue = [];
 let isProcessing = false;
-let aggregationTimer = null;
 
 const flushRequestsToQueue = () => {
   if (aggregatedSaveRequests.length > 0) {
@@ -27,58 +25,74 @@ const flushRequestsToQueue = () => {
 };
 
 const processNextInQueue = async () => {
-  if (isProcessing || processingQueue.length === 0) {
+  if (processingQueue.length === 0 && !isProcessing) {
     return;
   }
 
   isProcessing = true;
 
-  await acquireLock();
-
   const { type, aggregatedRequests } = processingQueue.shift();
 
-  try {
-    if (type === 'aggregated') {
+  if (type === 'aggregated') {
+    try {
       await postUserDiagramNodes(aggregatedRequests);
       await postUserDiagramEdges(aggregatedRequests);
+    } catch (error) {
+      console.error(error);
+      processingQueue.push({
+        type: 'aggregated',
+        aggregatedRequests: [...aggregatedRequests],
+      });
+    } finally {
+      isProcessing = false;
+      processNextInQueue();
     }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    releaseLock();
+  } else if (processingQueue.length > 0) {
     isProcessing = false;
     processNextInQueue();
+  } else {
+    isProcessing = false;
   }
 };
 
 // Post Nodes
 userPostDiagramRouter.post('/nodes', async (req, res) => {
-  aggregateSaveRequests(req.body);
-
-  if (!aggregationTimer) {
-    aggregationTimer = setTimeout(() => {
+  try {
+    if (req.body) {
+      aggregateSaveRequests(req.body);
       flushRequestsToQueue();
-      processNextInQueue();
-      aggregationTimer = null;
-    }, 3000);
-  }
+    }
 
-  res.status(202).json({ message: 'Post request received for aggregation' });
+    if (processingQueue.length > 0) {
+      processNextInQueue();
+    }
+
+    res.status(202).json({ message: 'Post request received for aggregation' });
+  } catch {
+    aggregateSaveRequests(req.body);
+    flushRequestsToQueue();
+    processNextInQueue();
+  }
 });
 
 // Post Edges
 userPostDiagramRouter.post('/edges', async (req, res) => {
-  aggregateSaveRequests(req.body);
-
-  if (!aggregationTimer) {
-    aggregationTimer = setTimeout(() => {
+  try {
+    if (req.body) {
+      aggregateSaveRequests(req.body);
       flushRequestsToQueue();
-      processNextInQueue();
-      aggregationTimer = null;
-    }, 3000);
-  }
+    }
 
-  res.status(202).json({ message: 'Post request received for aggregation' });
+    if (processingQueue.length > 0) {
+      processNextInQueue();
+    }
+
+    res.status(202).json({ message: 'Post request received for aggregation' });
+  } catch {
+    aggregateSaveRequests(req.body);
+    flushRequestsToQueue();
+    processNextInQueue();
+  }
 });
 
 export default userPostDiagramRouter;

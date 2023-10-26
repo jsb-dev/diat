@@ -1,58 +1,50 @@
 import Diagram from '../../../database/models/Diagram.js';
 
-const deleteUserDiagramEdges = async (query, retryCount = 0) => {
-  let failedDeleteEdgesQueue = [];
+const deleteUserDiagramEdges = async (query) => {
+  console.log('deleteUserDiagramEdges');
+  console.log('query:', query);
 
-  if (retryCount > 5) {
-    return;
-  }
-
-  let deletedEdgeIds = [];
-
-  const { diagramId, deletedEdgeIds: rawDeletedEdgeIds } = query;
+  const { diagramId, deletedEdgeIds: rawDeletedEdgeIds } = query[0];
 
   if (!rawDeletedEdgeIds) {
     return;
   }
 
-  if (rawDeletedEdgeIds.includes(',')) {
-    deletedEdgeIds = rawDeletedEdgeIds.split(',');
-  } else {
-    deletedEdgeIds[0] = rawDeletedEdgeIds;
-  }
+  let deletedEdgeIds = Array.isArray(rawDeletedEdgeIds)
+    ? rawDeletedEdgeIds
+    : rawDeletedEdgeIds.split(',');
 
   try {
     const diagram = await Diagram.findOne({ _id: diagramId });
 
     if (!diagram) {
+      console.error('Diagram not found');
       return;
     }
 
-    const existingEdgesMap = new Map(
-      diagram.content.edges.map((edge) => [edge.id, edge])
+    console.log('Deleting edges');
+
+    diagram.content.edges = diagram.content.edges.filter(
+      (edge) => !deletedEdgeIds.includes(edge.id)
     );
 
-    deletedEdgeIds.forEach((id) => {
-      if (existingEdgesMap.has(id)) {
-        existingEdgesMap.delete(id);
-      } else {
-        failedDeleteEdgesQueue.push(id);
+    let isDiagramSaved = false;
+    let retry = 0;
+
+    while (!isDiagramSaved && retry < 5) {
+      try {
+        await diagram.save();
+        isDiagramSaved = true;
+      } catch {
+        console.warn('Waiting for diagram write opening...');
+        retry++;
       }
-    });
-
-    diagram.content.edges = Array.from(existingEdgesMap.values());
-    await diagram.save();
-  } catch {
-    failedDeleteEdgesQueue.push(...deletedEdgeIds);
-  }
-
-  if (failedDeleteEdgesQueue.length > 0) {
-    try {
-      query.deletedEdgeIds = failedDeleteEdgesQueue.join(',');
-      deleteUserDiagramEdges(query, retryCount + 1);
-    } catch {
-      deleteUserDiagramEdges(query, retryCount + 1);
     }
+
+    console.log('Diagram saved');
+  } catch (e) {
+    console.error(e);
+    return;
   }
 };
 

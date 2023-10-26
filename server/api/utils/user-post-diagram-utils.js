@@ -1,8 +1,8 @@
-let bufferedRequests = [];
+let bufferedSaveRequests = [];
 let aggregatedSaveRequests = [];
 
 const aggregateSaveRequests = () => {
-  bufferedRequests.forEach((request) => {
+  bufferedSaveRequests.forEach((request) => {
     const foundRequestIndex = aggregatedSaveRequests.findIndex(
       (aggregated) => aggregated.id === request.id
     );
@@ -12,7 +12,7 @@ const aggregateSaveRequests = () => {
       aggregatedSaveRequests[foundRequestIndex] = request;
     }
   });
-  bufferedRequests = [];
+  bufferedSaveRequests = [];
 };
 
-export { bufferedRequests, aggregatedSaveRequests, aggregateSaveRequests };
+export { bufferedSaveRequests, aggregatedSaveRequests, aggregateSaveRequests };

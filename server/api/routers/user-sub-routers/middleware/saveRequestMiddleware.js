@@ -1,10 +1,12 @@
-import { bufferedRequests } from '../../../utils/post-user-diagram-utils.js';
+import { bufferedSaveRequests } from '../../../utils/user-post-diagram-utils.js';
 
 const saveRequestMiddleware = (req, res, next) => {
   if (req.body) {
-    bufferedRequests.push(req.body);
+    bufferedSaveRequests.push(req.body);
+    next();
+  } else {
+    return;
   }
-  next();
 };
 
 export default saveRequestMiddleware;

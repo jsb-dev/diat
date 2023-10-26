@@ -1,6 +1,13 @@
 import Diagram from '../../../database/models/Diagram.js';
 
 const postUserDiagramEdges = async (aggregatedRequests, retryCount = 0) => {
+  console.log('postUserDiagramEdges');
+  console.log('aggregatedRequests:', aggregatedRequests);
+
+  if (aggregatedRequests.length === 0) {
+    return;
+  }
+
   if (retryCount > 5) {
     console.error('Maximum retry attempts reached for edge creation');
     return;
@@ -13,6 +20,7 @@ const postUserDiagramEdges = async (aggregatedRequests, retryCount = 0) => {
     const diagram = await Diagram.findOne({ _id: diagramId });
 
     if (!diagram) {
+      console.error('Diagram not found');
       return;
     }
 
@@ -23,20 +31,36 @@ const postUserDiagramEdges = async (aggregatedRequests, retryCount = 0) => {
     aggregatedRequests.forEach((req) => {
       if (req.changedEdges) {
         req.changedEdges.forEach((changedEdge) => {
-          existingEdgesMap.set(changedEdge.id, changedEdge);
+          try {
+            existingEdgesMap.set(changedEdge.id, changedEdge);
+          } catch {
+            console.error('Edge not found');
+          }
         });
       }
     });
 
     diagram.content.edges = Array.from(existingEdgesMap.values());
-    await diagram.save();
+
+    let isDiagramSaved = false;
+    let retry = 0;
+
+    while (!isDiagramSaved && retry < 5) {
+      try {
+        await diagram.save();
+        isDiagramSaved = true;
+      } catch {
+        console.warn('Waiting for diagram write opening...');
+        retry++;
+      }
+    }
   } catch {
     failedEdgesQueue.push(
       ...aggregatedRequests.flatMap((req) => req.changedEdges || [])
     );
   }
 
-  if (failedEdgesQueue.length > 0) {
+  while (failedEdgesQueue.length > 0) {
     aggregatedRequests.push({ changedEdges: failedEdgesQueue });
     postUserDiagramEdges(aggregatedRequests, retryCount + 1);
   }

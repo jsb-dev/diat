@@ -189,7 +189,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const timer = setTimeout(() => {
                 console.log('Deleting diagram elements...')
                 handleDiagramDelete();
-            }, 1500);
+            }, 1333);
 
             return () => clearTimeout(timer);
         }
@@ -198,12 +198,11 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const timer = setTimeout(() => {
                 console.log('Saving diagram...')
                 handleDiagramSave();
-            }, 500);
+            }, 800);
 
             return () => clearTimeout(timer);
-        } else {
-            return;
         }
+
     }, [deletedEdges, deletedNodes, diagramEdited, dispatch, edgeChanges, edges, nodeChanges, nodes, user]);
 
     ///////////////////////// DETECT CHANGES IN NODES AND EDGES (AND TIPTAP IN REAL TIME) /////////////////////////
@@ -272,7 +271,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                     connection.target === null ||
                     connection.targetHandle === null
                 ) {
-                    console.error("Incomplete edge information. Not creating new edge.");
                     return prevEdges;
                 }
 
@@ -289,6 +287,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 setEdgeChanges([...edgeChanges, newEdge.id]);
                 return newEdges;
             });
+            setDiagramEdited(true);
+
         },
         [edgeChanges]
     );

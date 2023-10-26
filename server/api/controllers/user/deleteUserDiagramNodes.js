@@ -1,58 +1,41 @@
 import Diagram from '../../../database/models/Diagram.js';
 
-const deleteUserDiagramNodes = async (query, retryCount = 0) => {
-  let failedDeleteNodesQueue = [];
+const deleteUserDiagramNodes = async (query) => {
+  console.log('deleteUserDiagramNodes');
+  console.log('query:', query);
 
-  if (retryCount > 5) {
-    return;
-  }
-
-  let deletedNodeIds = [];
-
-  const { diagramId, deletedNodeIds: rawDeletedNodeIds } = query;
+  const { diagramId, deletedNodeIds: rawDeletedNodeIds } = query[0];
 
   if (!rawDeletedNodeIds) {
     return;
   }
 
-  if (rawDeletedNodeIds.includes(',')) {
-    deletedNodeIds = rawDeletedNodeIds.split(',');
-  } else {
-    deletedNodeIds[0] = rawDeletedNodeIds;
-  }
+  let deletedNodeIds = Array.isArray(rawDeletedNodeIds)
+    ? rawDeletedNodeIds
+    : rawDeletedNodeIds.split(',');
 
   try {
     const diagram = await Diagram.findOne({ _id: diagramId });
 
-    if (!diagram) {
-      return;
-    }
-
-    const existingNodesMap = new Map(
-      diagram.content.nodes.map((node) => [node.id, node])
+    diagram.content.nodes = diagram.content.nodes.filter(
+      (node) => !deletedNodeIds.includes(node.id)
     );
 
-    deletedNodeIds.forEach((id) => {
-      if (existingNodesMap.has(id)) {
-        existingNodesMap.delete(id);
-      } else {
-        failedDeleteNodesQueue.push(id);
+    let isDiagramSaved = false;
+    let retry = 0;
+
+    while (!isDiagramSaved && retry < 5) {
+      try {
+        await diagram.save();
+        isDiagramSaved = true;
+      } catch {
+        console.warn('Waiting for diagram write opening...');
+        retry++;
       }
-    });
-
-    diagram.content.nodes = Array.from(existingNodesMap.values());
-    await diagram.save();
-  } catch {
-    failedDeleteNodesQueue.push(...deletedNodeIds);
-  }
-
-  if (failedDeleteNodesQueue.length > 0) {
-    try {
-      query.deletedNodeIds = failedDeleteNodesQueue.join(',');
-      deleteUserDiagramNodes(query, retryCount + 1);
-    } catch {
-      deleteUserDiagramNodes(query, retryCount + 1);
     }
+  } catch (e) {
+    console.error(e);
+    return;
   }
 };
 

@@ -1,12 +1,28 @@
 import express from 'express';
 import deleteUserDiagramNodes from '../../controllers/user/deleteUserDiagramNodes.js';
 import deleteUserDiagramEdges from '../../controllers/user/deleteUserDiagramEdges.js';
-import { acquireLock, releaseLock } from '../../utils/sharedLock.js';
+import {
+  aggregateDeleteRequests,
+  aggregatedDeleteRequests,
+} from '../../utils/user-delete-diagram-utils.js';
+import deleteRequestMiddleware from './middleware/deleteRequestMiddleware.js';
 
 const userDeleteDiagramRouter = express.Router();
 
+userDeleteDiagramRouter.use(deleteRequestMiddleware);
+
 const deleteProcessingQueue = [];
 let isDeleteProcessing = false;
+
+const flushDeletesToQueue = () => {
+  if (aggregatedDeleteRequests.length > 0) {
+    deleteProcessingQueue.push({
+      type: 'aggregated',
+      aggregatedRequests: [...aggregatedDeleteRequests],
+    });
+    aggregatedDeleteRequests.length = 0;
+  }
+};
 
 const processNextDeleteInQueue = async () => {
   if (isDeleteProcessing || deleteProcessingQueue.length === 0) {
@@ -15,41 +31,74 @@ const processNextDeleteInQueue = async () => {
 
   isDeleteProcessing = true;
 
-  await acquireLock();
+  const { type, aggregatedRequests } = deleteProcessingQueue.shift();
 
-  const { type, res, query } = deleteProcessingQueue.shift();
-
-  try {
-    if (type === 'nodes') {
-      await deleteUserDiagramNodes(query);
-      res
-        .status(202)
-        .json({ message: 'Delete request received for aggregation' });
-    } else {
-      await deleteUserDiagramEdges(query);
-      res
-        .status(202)
-        .json({ message: 'Delete request received for aggregation' });
+  if (type === 'aggregated') {
+    {
+      try {
+        await deleteUserDiagramNodes(aggregatedRequests);
+        await deleteUserDiagramEdges(aggregatedRequests);
+      } catch (error) {
+        console.error(error);
+        deleteProcessingQueue.push({
+          type: 'aggregated',
+          aggregatedRequests: [...aggregatedRequests],
+        });
+      } finally {
+        isDeleteProcessing = false;
+        processNextDeleteInQueue();
+      }
     }
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: `Error deleting ${type}, re-aggregating request` });
-  } finally {
-    releaseLock();
+  } else if (deleteProcessingQueue.length > 0) {
     isDeleteProcessing = false;
     processNextDeleteInQueue();
+  } else {
+    isDeleteProcessing = false;
   }
 };
 
+// Delete Nodes
 userDeleteDiagramRouter.delete('/nodes', async (req, res) => {
-  deleteProcessingQueue.push({ type: 'nodes', res, query: req.query });
-  processNextDeleteInQueue();
+  try {
+    if (req.query) {
+      aggregateDeleteRequests(req.query);
+      flushDeletesToQueue();
+    }
+
+    if (deleteProcessingQueue.length > 0) {
+      processNextDeleteInQueue();
+    }
+
+    res
+      .status(202)
+      .json({ message: 'Delete request received for aggregation' });
+  } catch {
+    aggregateDeleteRequests(req.query);
+    flushDeletesToQueue();
+    processNextDeleteInQueue();
+  }
 });
 
+// Delete Edges
 userDeleteDiagramRouter.delete('/edges', async (req, res) => {
-  deleteProcessingQueue.push({ type: 'edges', res, query: req.query });
-  processNextDeleteInQueue();
+  try {
+    if (req.query) {
+      aggregateDeleteRequests(req.query);
+      flushDeletesToQueue();
+    }
+
+    if (deleteProcessingQueue.length > 0) {
+      processNextDeleteInQueue();
+    }
+
+    res
+      .status(202)
+      .json({ message: 'Delete request received for aggregation' });
+  } catch {
+    aggregateDeleteRequests(req.query);
+    flushDeletesToQueue();
+    processNextDeleteInQueue();
+  }
 });
 
 export default userDeleteDiagramRouter;

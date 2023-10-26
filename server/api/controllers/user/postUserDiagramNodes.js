@@ -1,6 +1,13 @@
 import Diagram from '../../../database/models/Diagram.js';
 
 const postUserDiagramNodes = async (aggregatedRequests, retryCount = 0) => {
+  console.log('postUserDiagramNodes');
+  console.log('aggregatedRequests:', aggregatedRequests);
+
+  if (aggregatedRequests.length === 0) {
+    return;
+  }
+
   if (retryCount > 5) {
     console.error('Maximum retry attempts reached for node creation');
     return;
@@ -21,27 +28,46 @@ const postUserDiagramNodes = async (aggregatedRequests, retryCount = 0) => {
       diagram.content.nodes.map((node) => [node.id, node])
     );
 
+    const latestNodesMap = new Map();
+
     aggregatedRequests.forEach((req) => {
       if (req.changedNodes) {
         req.changedNodes.forEach((changedNode) => {
           try {
-            existingNodesMap.set(changedNode.id, changedNode);
-          } catch {
-            failedNodesQueue.push(changedNode);
+            latestNodesMap.set(changedNode.id, changedNode);
+          } catch (e) {
+            console.error('Node not found');
           }
         });
       }
     });
 
+    latestNodesMap.forEach((value, key) => {
+      existingNodesMap.set(key, value);
+    });
+
     diagram.content.nodes = Array.from(existingNodesMap.values());
-    await diagram.save();
-  } catch {
+
+    let isDiagramSaved = false;
+    let retry = 0;
+
+    while (!isDiagramSaved && retry < 5) {
+      try {
+        await diagram.save();
+        isDiagramSaved = true;
+      } catch {
+        console.warn('Waiting for diagram write opening...');
+        retry++;
+      }
+    }
+  } catch (error) {
+    console.error(error);
     failedNodesQueue.push(
       ...aggregatedRequests.flatMap((req) => req.changedNodes || [])
     );
   }
 
-  if (failedNodesQueue.length > 0) {
+  while (failedNodesQueue.length > 0) {
     aggregatedRequests.push({ changedNodes: failedNodesQueue });
     postUserDiagramNodes(aggregatedRequests, retryCount + 1);
   }
