@@ -4,7 +4,8 @@ const postUserDiagramNodes = async (aggregatedRequests, retryCount = 0) => {
   console.log('postUserDiagramNodes');
   console.log('aggregatedRequests:', aggregatedRequests);
 
-  if (aggregatedRequests.length === 0) {
+  if (aggregatedRequests.length === 0 || !aggregatedRequests[0].changedNodes) {
+    console.log('No nodes to update');
     return;
   }
 

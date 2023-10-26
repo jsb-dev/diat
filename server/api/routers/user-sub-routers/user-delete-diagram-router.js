@@ -57,8 +57,7 @@ const processNextDeleteInQueue = async () => {
   }
 };
 
-// Delete Nodes
-userDeleteDiagramRouter.delete('/nodes', async (req, res) => {
+const handleDeleteRequest = async (req, res) => {
   try {
     if (req.query) {
       aggregateDeleteRequests(req.query);
@@ -72,33 +71,20 @@ userDeleteDiagramRouter.delete('/nodes', async (req, res) => {
     res
       .status(202)
       .json({ message: 'Delete request received for aggregation' });
-  } catch {
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
     aggregateDeleteRequests(req.query);
     flushDeletesToQueue();
     processNextDeleteInQueue();
   }
-});
+};
 
-// Delete Edges
-userDeleteDiagramRouter.delete('/edges', async (req, res) => {
-  try {
-    if (req.query) {
-      aggregateDeleteRequests(req.query);
-      flushDeletesToQueue();
-    }
-
-    if (deleteProcessingQueue.length > 0) {
-      processNextDeleteInQueue();
-    }
-
-    res
-      .status(202)
-      .json({ message: 'Delete request received for aggregation' });
-  } catch {
-    aggregateDeleteRequests(req.query);
-    flushDeletesToQueue();
-    processNextDeleteInQueue();
-  }
-});
+userDeleteDiagramRouter.delete('/nodes', (req, res) =>
+  handleDeleteRequest(req, res)
+);
+userDeleteDiagramRouter.delete('/edges', (req, res) =>
+  handleDeleteRequest(req, res)
+);
 
 export default userDeleteDiagramRouter;

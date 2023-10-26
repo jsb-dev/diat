@@ -7,6 +7,7 @@ const deleteUserDiagramNodes = async (query) => {
   const { diagramId, deletedNodeIds: rawDeletedNodeIds } = query[0];
 
   if (!rawDeletedNodeIds) {
+    console.log('No nodes to delete');
     return;
   }
 

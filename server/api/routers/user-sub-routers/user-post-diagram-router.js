@@ -55,8 +55,7 @@ const processNextInQueue = async () => {
   }
 };
 
-// Post Nodes
-userPostDiagramRouter.post('/nodes', async (req, res) => {
+const handlePostRequest = async (req, res) => {
   try {
     if (req.body) {
       aggregateSaveRequests(req.body);
@@ -68,31 +67,16 @@ userPostDiagramRouter.post('/nodes', async (req, res) => {
     }
 
     res.status(202).json({ message: 'Post request received for aggregation' });
-  } catch {
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
     aggregateSaveRequests(req.body);
     flushRequestsToQueue();
     processNextInQueue();
   }
-});
+};
 
-// Post Edges
-userPostDiagramRouter.post('/edges', async (req, res) => {
-  try {
-    if (req.body) {
-      aggregateSaveRequests(req.body);
-      flushRequestsToQueue();
-    }
-
-    if (processingQueue.length > 0) {
-      processNextInQueue();
-    }
-
-    res.status(202).json({ message: 'Post request received for aggregation' });
-  } catch {
-    aggregateSaveRequests(req.body);
-    flushRequestsToQueue();
-    processNextInQueue();
-  }
-});
+userPostDiagramRouter.post('/nodes', (req, res) => handlePostRequest(req, res));
+userPostDiagramRouter.post('/edges', (req, res) => handlePostRequest(req, res));
 
 export default userPostDiagramRouter;

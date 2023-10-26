@@ -189,7 +189,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const timer = setTimeout(() => {
                 console.log('Deleting diagram elements...')
                 handleDiagramDelete();
-            }, 1333);
+            }, 1666);
 
             return () => clearTimeout(timer);
         }
@@ -198,7 +198,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const timer = setTimeout(() => {
                 console.log('Saving diagram...')
                 handleDiagramSave();
-            }, 800);
+            }, 1000);
 
             return () => clearTimeout(timer);
         }
@@ -245,23 +245,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         [nodes]
     );
 
-    const onEdgesChange = useCallback(
-        (changes: any) => {
-
-            const updatedEdges = applyEdgeChanges(changes, edges);
-            setEdges(updatedEdges);
-
-            const changedEdgeIds = changes.map((change: { id: string }) => change.id);
-            setEdgeChanges(prev => {
-                const mergedArray = [...prev, ...changedEdgeIds];
-                return mergedArray.filter((value, index, self) => self.indexOf(value) === index);
-            });
-
-            setDiagramEdited(true);
-        },
-        [edges]
-    );
-
     const onConnect = useCallback(
         (connection: Connection) => {
             setEdges((prevEdges: Edge[]) => {
@@ -285,9 +268,9 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 const newEdges: Edge[] = [...prevEdges, newEdge];
                 setEdges(newEdges);
                 setEdgeChanges([...edgeChanges, newEdge.id]);
+                setDiagramEdited(true);
                 return newEdges;
             });
-            setDiagramEdited(true);
 
         },
         [edgeChanges]
@@ -363,15 +346,15 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 y: y
             },
             data: {
+                id,
                 content: {
-                    id,
                     asset: asset,
                     position: {
                         x: x,
                         y: y
                     },
-                    nodeType: type,
-                }
+                },
+                nodeType: type,
             },
         };
         setNodes([...nodes, newNode]);
@@ -540,7 +523,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             style={rfStyle}

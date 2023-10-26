@@ -4,7 +4,8 @@ const postUserDiagramEdges = async (aggregatedRequests, retryCount = 0) => {
   console.log('postUserDiagramEdges');
   console.log('aggregatedRequests:', aggregatedRequests);
 
-  if (aggregatedRequests.length === 0) {
+  if (aggregatedRequests.length === 0 || !aggregatedRequests[0].changedEdges) {
+    console.log('No edges to update');
     return;
   }
 

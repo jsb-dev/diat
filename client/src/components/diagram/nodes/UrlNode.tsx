@@ -8,8 +8,8 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
 
     const [webpageInfo, setWebpageInfo] = useState({
         title: '',
-        description: `We couldn't create a summary for this link`,
-        body: '',
+        description: '',
+        websiteName: '',
     });
 
     useEffect(() => {
@@ -31,7 +31,14 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
                 }
 
                 const data = await response.json();
-                setWebpageInfo(data);
+
+                const webpageInfo = {
+                    title: data.title === 'N/A' ? '' : data.title,
+                    description: data.description === 'N/A' ? '' : data.description,
+                    websiteName: data.websiteName === 'N/A' ? '' : data.websiteName,
+                };
+
+                setWebpageInfo(webpageInfo);
             } catch (error) {
                 console.error('Error fetching webpage info:', error);
             }
@@ -46,7 +53,7 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
             <h2>{webpageInfo.description}</h2>
             <article>
                 <p><strong>URL: {asset}</strong></p>
-                <p>{webpageInfo.body}</p>
+                <p>{webpageInfo.websiteName}</p>
             </article>
             <Box>
                 <Handle

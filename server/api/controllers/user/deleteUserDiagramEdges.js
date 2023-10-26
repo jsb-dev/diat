@@ -7,6 +7,7 @@ const deleteUserDiagramEdges = async (query) => {
   const { diagramId, deletedEdgeIds: rawDeletedEdgeIds } = query[0];
 
   if (!rawDeletedEdgeIds) {
+    console.log('No edges to delete');
     return;
   }
 
