@@ -6,7 +6,6 @@ import React, {
 } from 'react';
 import ReactFlow from 'reactflow'
 import {
-    applyEdgeChanges,
     applyNodeChanges,
     Node,
     Edge,
@@ -59,9 +58,9 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     ////////////////////////////// SAVE DIAGRAM ON UPDATE //////////////////////////////
     useEffect(() => {
-        const saveUserNodes = async (changedNodes: Node[]) => {
+        const saveUserDiagram = async (changedNodes: Node[], changedEdges: Edge[]) => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram/nodes`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -69,89 +68,19 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                     body: JSON.stringify({
                         diagramId: user.diagramId,
                         changedNodes,
-                    }),
-                });
-
-                if (response.ok) {
-                    console.log('Nodes saved successfully')
-                    setNodeChanges([]);
-                } else {
-                    console.error('Error saving nodes:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error saving nodes:', error);
-            }
-        };
-
-        const saveUserEdges = async (changedEdges: Edge[]) => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/post/diagram/edges`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        diagramId: user.diagramId,
                         changedEdges,
                     }),
                 });
 
                 if (response.ok) {
-                    console.log('Edges saved successfully')
+                    console.log('Diagram saved successfully');
+                    setNodeChanges([]);
                     setEdgeChanges([]);
                 } else {
-                    console.error('Error saving edges:', response.statusText);
+                    console.error('Error saving diagram:', response.statusText);
                 }
             } catch (error) {
-                console.error('Error saving edges:', error);
-            }
-        };
-
-        const deleteUserNodes = async (deletedNodeIds: string[]) => {
-            const diagramId = user.diagramId;
-            const query = `diagramId=${diagramId}&deletedNodeIds=${deletedNodeIds.join(',')}`;
-            const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/delete/diagram/nodes?${query}`;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.ok) {
-                    console.log('Nodes deleted successfully');
-                    setDeletedNodes([]);
-                } else {
-                    console.error('Error deleting nodes:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error deleting nodes:', error);
-            }
-        };
-
-        const deleteUserEdges = async (deletedEdgeIds: string[]) => {
-            const diagramId = user.diagramId;
-            const query = `diagramId=${diagramId}&deletedEdgeIds=${deletedEdgeIds.join(',')}`;
-            const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/delete/diagram/edges?${query}`;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.ok) {
-                    console.log('Edges deleted successfully');
-                    setDeletedEdges([]);
-                } else {
-                    console.error('Error deleting edges:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error deleting edges:', error);
+                console.error('Error saving diagram:', error);
             }
         };
 
@@ -161,27 +90,58 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
             if (nodeChanges.length > 0) {
                 changedNodes = nodes.filter((node: { data: { id: string; }; }) => nodeChanges.includes(node.data.id));
-                saveUserNodes(changedNodes);
             }
             if (edgeChanges.length > 0) {
                 changedEdges = edges.filter((edge: { id: string; }) => edgeChanges.includes(edge.id));
-                saveUserEdges(changedEdges);
             }
 
             if (changedNodes.length > 0 || changedEdges.length > 0) {
+                saveUserDiagram(changedNodes, changedEdges);
                 dispatch(setUser({ ...user, diagram: { nodes, edges } }));
                 setDiagramEdited(false);
             }
         };
 
-        const handleDiagramDelete = async () => {
-            if (deletedNodes.length > 0) {
-                const deletedNodeIds = deletedNodes.map(node => node.data.id);
-                deleteUserNodes(deletedNodeIds);
+        const deleteDiagramElements = async (nodesToDelete: string[], edgesToDelete: string[]) => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/delete/diagram`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        diagramId: user.diagramId,
+                        nodesToDelete,
+                        edgesToDelete,
+                    }),
+                });
+
+                if (response.ok) {
+                    console.log('Diagram elements deleted successfully');
+                    setDeletedNodes([]);
+                    setDeletedEdges([]);
+                } else {
+                    console.error('Error deleting diagram elements:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error deleting diagram elements:', error);
             }
+        };
+
+        const handleDiagramDelete = async () => {
+            let nodesToDelete: string[] = [];
+            let edgesToDelete: string[] = [];
+
+            if (deletedNodes.length > 0) {
+                nodesToDelete = deletedNodes.map(node => node.data.id);
+            }
+
             if (deletedEdges.length > 0) {
-                const deletedEdgeIds = deletedEdges.map(edge => edge.id);
-                deleteUserEdges(deletedEdgeIds);
+                edgesToDelete = deletedEdges.map(edge => edge.id);
+            }
+
+            if (nodesToDelete.length > 0 || edgesToDelete.length > 0) {
+                deleteDiagramElements(nodesToDelete, edgesToDelete);
             }
         };
 
@@ -189,7 +149,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             const timer = setTimeout(() => {
                 console.log('Deleting diagram elements...')
                 handleDiagramDelete();
-            }, 1666);
+            }, 1000);
 
             return () => clearTimeout(timer);
         }
