@@ -1,9 +1,7 @@
-import React, { useState, useEffect, ChangeEvent, CSSProperties } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, ChangeEvent, CSSProperties } from 'react';
+import { useDispatch } from 'react-redux';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import { addDocNode, addEdge, addImgNode, addUrlNode } from '../../../redux/slices/diagramEditorSlice';
-import { RootState } from '@/redux/store';
-
+import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
 

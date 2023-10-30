@@ -1,8 +1,8 @@
 import React, { FC, ReactNode, useState, CSSProperties } from 'react';
 import { Container, Paper, Button, Box } from '@mui/material';
-import NavList from './NavList';
-import DiagramEditor from './DiagramEditor';
-import AuthToggle from '@/components/shared/page-shell/AuthToggle';
+import NavList from './page-shell-components/NavList';
+import DiagramEditor from './page-shell-components/DiagramEditor';
+import AuthToggle from '@/components/shared/page-shell/page-shell-components/AuthToggle';
 
 interface PageShellProps {
   content: ReactNode;

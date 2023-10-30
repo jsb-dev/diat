@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import PageShell from "@/components/shared/page-shell/PageShell";
+import SignupSection from "@/components/page-components/root/sections/SignupSection";
+import AboutSection from "@/components/page-components/root/sections/AboutSection";
+import SiteFooter from "@/components/shared/SiteFooter";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -21,9 +24,15 @@ function Root() {
     fetchData();
   }, []);
 
-  return (
-    <PageShell content={<h1>Root</h1>} page={'/'} />
+  const main = (
+    <>
+      <SignupSection />
+      <AboutSection />
+      <SiteFooter />
+    </>
   );
+
+  return <PageShell content={main} page={'/'} />;
 }
 
 export default Root;

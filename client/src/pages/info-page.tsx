@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthToggle from '@/components/shared/page-shell/AuthToggle';
+import AuthToggle from '@/components/shared/page-shell/page-shell-components/AuthToggle';
 
 function InfoPage() {
   return (
