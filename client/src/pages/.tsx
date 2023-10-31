@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Container } from "@mui/material";
 import PageShell from "@/components/shared/page-shell/PageShell";
 import SignupSection from "@/components/page-components/root/sections/SignupSection";
 import AboutSection from "@/components/page-components/root/sections/AboutSection";
@@ -25,11 +26,11 @@ function Root() {
   }, []);
 
   const main = (
-    <>
+    <Container component="main" className='primary-section'>
       <SignupSection />
       <AboutSection />
       <SiteFooter />
-    </>
+    </Container>
   );
 
   return <PageShell content={main} page={'/'} />;

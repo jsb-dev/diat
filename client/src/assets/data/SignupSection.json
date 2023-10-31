@@ -1,0 +1,35 @@
+{
+  "article": {
+    "title": "Welcome to Diat",
+    "sections": [
+      {
+        "type": "intro",
+        "content": "Welcome to Diat, the application revolutionizing the way you plan and document projects."
+      },
+      {
+        "type": "subheading",
+        "content": "A Visual Approach"
+      },
+      {
+        "type": "paragraph",
+        "content": "Diat takes a visual approach to project planning and documenting, integrating diagram and text elements seamlessly."
+      },
+      {
+        "type": "subheading",
+        "content": "Combined Editing"
+      },
+      {
+        "type": "paragraph",
+        "content": "Not just limited to diagrams or text, Diat combines diagram editing with document editing for a unified experience."
+      },
+      {
+        "type": "subheading",
+        "content": "Rich Content Handling"
+      },
+      {
+        "type": "paragraph",
+        "content": "With Diat, collate and edit rich text documents, images, and summarised URLs in a single application."
+      }
+    ]
+  }
+}

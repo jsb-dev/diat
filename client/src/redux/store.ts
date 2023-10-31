@@ -5,6 +5,7 @@ import diagramReducer from './slices/flowSlice';
 import authReducer from './slices/authSlice';
 import syncDiagram from './middleware/diagramSync';
 import editorReducer from './slices/tiptapSlice';
+import uiReducer from './slices/uiSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
     diagram: diagramReducer,
     auth: authReducer,
     editor: editorReducer,
-    diagramEditor: diagramEditorReducer
+    diagramEditor: diagramEditorReducer,
+    ui: uiReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(syncDiagram)
 });

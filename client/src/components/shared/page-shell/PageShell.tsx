@@ -39,9 +39,8 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
   };
 
   return (
-
     <Container
-      component='div'
+      component="menu"
       className='ui-container'
     >
       <AuthToggle />
