@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/redux/store';
+import { AppDispatch } from '@/redux/store';
 import { setAuthState } from '@/redux/slices/authSlice';
 import { setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
 import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
