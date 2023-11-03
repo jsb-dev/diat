@@ -1,12 +1,15 @@
 import React, { useState, ChangeEvent, CSSProperties } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
 
 const DiagramEditor: React.FC = () => {
+    const { viewportIsPortable, viewportIsVertical } = useSelector((state: RootState) => state.ui);
     const dispatch = useDispatch();
+
     const [currentDialog, setCurrentDialog] = useState<DialogType>(null);
     const [asset, setAsset] = useState('');
     const [sourceType, setSourceType] = useState<'img' | 'url'>('url');
@@ -49,8 +52,11 @@ const DiagramEditor: React.FC = () => {
 
     const listStyle: CSSProperties = {
         position: 'fixed',
-        bottom: '27rem',
-        left: '15rem'
+        bottom: 0,
+        right: 0,
+        width: '30rem',
+        maxWidth: '250px',
+        marginBottom: viewportIsVertical ? '67dvh' : '77dvh'
     };
 
     const itemStyle: CSSProperties = {
@@ -61,9 +67,9 @@ const DiagramEditor: React.FC = () => {
     return (
         <>
             <ul style={listStyle}>
-                <li style={itemStyle}><Button onClick={handleAddDocument} className='secondary-btn'>Add Document</Button></li>
-                <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='secondary-btn'>Add Image</Button></li>
-                <li style={{ ...itemStyle, transform: 'translateY(250%)' }}><Button onClick={() => setCurrentDialog('url')} className='secondary-btn'>Add URL</Button></li>
+                <li style={itemStyle}><Button onClick={handleAddDocument} className='tertiary-btn'>Add Document</Button></li>
+                <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='tertiary-btn'>Add Image</Button></li>
+                <li style={{ ...itemStyle, transform: 'translateY(250%)' }}><Button onClick={() => setCurrentDialog('url')} className='tertiary-btn'>Add URL</Button></li>
             </ul>
 
             <Dialog open={currentDialog === 'ImgOrUrl'} onClose={() => setCurrentDialog(null)}>

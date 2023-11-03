@@ -5,8 +5,6 @@ import Link from 'next/link';
 const listStyle: CSSProperties = {
     listStyleType: 'none',
     position: 'fixed',
-    bottom: '27rem',
-    right: '25rem'
 };
 
 const itemStyle: CSSProperties = {
@@ -19,22 +17,22 @@ const NavList: React.FC = () => {
         <ul style={listStyle}>
             <li style={itemStyle}>
                 <Link href="/" passHref >
-                    <Button className='secondary-btn'>Home</Button>
+                    <Button className='primary-btn'>Home</Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}>
                 <Link href="/option1" passHref >
-                    <Button className='secondary-btn'>1</Button>
+                    <Button className='primary-btn'>1</Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translateY(250%)' }}>
                 <Link href="/option2" passHref >
-                    <Button className='secondary-btn'>2</Button>
+                    <Button className='primary-btn'>2</Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
                 <Link href="/option3" passHref >
-                    <Button className='secondary-btn'>3</Button>
+                    <Button className='primary-btn'>3</Button>
                 </Link>
             </li>
         </ul>

@@ -1,5 +1,5 @@
 {
-  "article": {
+  "signupSection": {
     "title": "Welcome to Diat",
     "sections": [
       {
@@ -30,6 +30,15 @@
         "type": "paragraph",
         "content": "With Diat, collate and edit rich text documents, images, and summarised URLs in a single application."
       }
+    ]
+  },
+  "aboutSection": {
+    "title": "Learn More About Us",
+    "contentParagraphs": [
+      "We are a company focused on innovation. Our mission is to provide cutting-edge solutions.",
+      "With a team of dedicated professionals, we strive for excellence in all our projects.",
+      "Our approach is client-centric, ensuring satisfaction and value.",
+      "Explore our services and discover how we can contribute to your success."
     ]
   }
 }

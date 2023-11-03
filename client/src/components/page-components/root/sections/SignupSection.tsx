@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Container, Grid, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLayout } from '@/redux/slices/uiSlice';
-import ContentBanner from '../components/ContentBanner';
+import ContentBanner from '../../../shared/components/ContentBanner';
 import contentData from '@/assets/data/SignupSection.json';
 import { RootState } from '@/redux/store';
 
@@ -40,25 +40,16 @@ const SignupSection: React.FC = () => {
     }, [dispatch]);
 
     const gridDirection = (viewportIsVertical || viewportIsPortable) ? 'column-reverse' : 'row';
-    const portableDevice = viewportIsVertical || viewportIsPortable;
 
     return (
         <Container component="section" className='section-selector'>
             <Grid container spacing={2} direction={gridDirection}>
-                <Grid item xs={12} md={6} sx={{
-
-                }}>
-                    <div style={{
-                        ...(!portableDevice && {
-                            overflowY: 'scroll',
-                            overflowX: 'hidden',
-                        }),
-                        height: portableDevice ? '100%' : '90dvh',
-                    }}>
+                <Grid item xs={12} md={6}>
+                    <div>
                         <Typography variant='h1' className='h1-selector'>
-                            {contentData.article.title}
+                            {contentData.signupSection.title}
                         </Typography>
-                        {contentData.article.sections.map((section, index) => (
+                        {contentData.signupSection.sections.map((section, index) => (
                             <div className='article-div' key={index}>
                                 {renderContent(section.type, section.content)}
                             </div>

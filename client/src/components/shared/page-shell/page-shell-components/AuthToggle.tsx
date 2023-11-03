@@ -12,8 +12,8 @@ const AuthToggle: React.FC = () => {
 
   const buttonStyles = {
     position: 'fixed',
-    top: '5rem',
-    left: '2rem',
+    top: '10dvh',
+    right: '1rem',
     zIndex: 1005,
   };
 
@@ -26,12 +26,12 @@ const AuthToggle: React.FC = () => {
 
   if (isAuthenticated) {
     return (
-      <Button onClick={handleLogout} sx={buttonStyles} className='quarternary-btn'>
+      <Button onClick={handleLogout} className='quarternary-btn' sx={buttonStyles}>
         Log Out
       </Button>
     );
   } else {
-    return <Button onClick={() => loginWithRedirect()} sx={buttonStyles} className='primary-btn'>Log In</Button>;
+    return <Button onClick={() => loginWithRedirect()} className='primary-btn' sx={buttonStyles}>Log In</Button>;
   }
 };
 

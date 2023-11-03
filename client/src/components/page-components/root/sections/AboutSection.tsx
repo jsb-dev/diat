@@ -1,41 +1,35 @@
 import React from 'react';
-import { Container, Grid, Typography } from '@mui/material';
-
-const pSelector = 'p-selector';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { Container, Grid, Typography, Box } from '@mui/material';
+import contentData from '@/assets/data/SignupSection.json';
 
 const AboutSection: React.FC = () => {
+    const { viewportIsPortable, viewportIsVertical } = useSelector((state: RootState) => state.ui);
+
     return (
-        <Container className='section-selector'>
-            <Grid container justifyContent="center">
-                <Grid item>
-                    <article>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Typography variant="body1" className={pSelector}>
-                                    Content 1
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography variant="body1" className={pSelector}>
-                                    Content 2
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography variant="body1" className={pSelector}>
-                                    Content 3
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography variant="body1" className={pSelector}>
-                                    Content 4
-                                </Typography>
-                            </Grid>
+        <Container component="section" className='section-selector' sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: viewportIsPortable || viewportIsVertical ? '7dvh' : '1dvh',
+        }}>
+            <Box sx={{ width: '100%' }}>
+                <Typography variant='h1' className='h1-selector' align='center'>
+                    {contentData.aboutSection.title}
+                </Typography>
+                <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
+                    {contentData.aboutSection.contentParagraphs.map((paragraph, index) => (
+                        <Grid item xs={12} sm={6} key={index}>
+                            <Typography variant='body1' className='p-selector'>
+                                {paragraph}
+                            </Typography>
                         </Grid>
-                    </article>
+                    ))}
                 </Grid>
-            </Grid>
+            </Box>
         </Container>
     );
-};
+}
 
 export default AboutSection;

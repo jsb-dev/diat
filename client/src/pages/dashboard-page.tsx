@@ -1,13 +1,14 @@
 import React, { useEffect, useState, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { setAuthState } from '@/redux/slices/authSlice';
 import { setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
 import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
+import { updateLayout } from "@/redux/slices/uiSlice";
 import { useAuth0 } from '@auth0/auth0-react';
 import { User } from '../interfaces/User';
 import { Node, Edge } from 'reactflow';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import LoadingSpinner from '@/components/shared/components/LoadingSpinner';
 import PageShell from '@/components/shared/page-shell/PageShell';
 import Flow from '@/components/diagram/Flow';
 
@@ -24,6 +25,18 @@ const DashboardPage: FC = () => {
   const diagram = useSelector((state: any) => state.diagram.data);
   const authState = useSelector((state: any) => state.auth);
   const { isAuthenticated, user, isLoading: auth0Loading } = useAuth0();
+
+  useEffect(() => {
+    const handleResize = () => {
+      dispatch(updateLayout({ innerWidth: window.innerWidth, innerHeight: window.innerHeight }));
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (auth0Loading) {

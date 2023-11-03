@@ -16,14 +16,14 @@ const btnStyle: CSSProperties = {
 
 const menuBtnStyle: CSSProperties = {
   ...btnStyle,
-  bottom: '5rem',
-  right: '2rem',
+  bottom: '10dvh',
+  right: '1dvw',
 }
 
 const editBtnStyle: CSSProperties = {
   ...btnStyle,
-  bottom: '5rem',
-  left: '2rem',
+  bottom: '45dvh',
+  right: '1dvw',
 };
 
 const PageShell: FC<PageShellProps> = ({ content, page }) => {
@@ -59,7 +59,17 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
             zIndex: 1002,
             opacity: isDrawerOpen ? 1 : 0,
           }}>
-            <NavList />
+            <div style={{
+              position: 'fixed',
+              bottom: 0,
+              right: 0,
+              width: '30rem',
+              maxWidth: '250px',
+              height: '32rem',
+              maxHeight: '250px',
+            }}>
+              <NavList />
+            </div>
           </Box>
         </>
       )}
