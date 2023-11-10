@@ -10,10 +10,9 @@ $object-quaternary-color: #df8888;
 $object-pentenary-color: #d9acd6;
 
 $container-primary-color: #80b781;
-$container-secondary-color: #6ec8ad;
+$container-secondary-color: #7b7daf;
 $container-tertiary-color: #7fb0d1;
-$container-quaternary-color: #7b7daf;
-$container-pentenary-color: #9681ad;
+$container-quarternary-color: #9681ad;
 
 $text-primary-color: #191a1a;
 $text-secondary-color: #252c2b;
@@ -142,69 +141,8 @@ body {
   background-color: $container-primary-color;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-  border-radius: 2rem;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 2rem;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 2rem;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-  border-radius: 2rem;
-}
-
-////////////////////////////////////////////////////////////// DESIGN //////////////////////////////////////////////////////////////
-:root {
-  font-size: 1dvmax;
-  letter-spacing: 1rem;
-  word-spacing: .5rem;
-}
-
-html {
-  text-size-adjust: 100%;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  border-radius: 0.5rem;
-  letter-spacing: 0.1rem;
-  scroll-behavior: smooth;
-}
-
-.ui-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100dvh;
-  width: 100dvw;
-  overflow: hidden;
-}
-
-.main-container {
-  width: 99dvw;
-  height: 97dvh;
-  overflow-Y: scroll;
-  overflow-X: hidden;
-  border-radius: 2rem;
-  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
-}
-
-section,
-.section-selector {
-  margin-top: 1rem;
-  border-radius: 0;
+.secondary-container {
+  background-color: $container-secondary-color;
 }
 
 @mixin textStyles($scaleFactor: 1,
@@ -278,9 +216,17 @@ section,
   p,
   .p-selector,
   a,
-  .a-selector {
+  .a-selector,
+  .radio-control {
     font-size: 10pt * $scaleFactor;
     color: $quaColor;
+  }
+
+  .text-field-selector,
+  .text-field-selector * {
+    font-size: 6pt * $scaleFactor;
+    color: $quaColor;
+    border-color: $quaColor;
   }
 
   .article-div,
@@ -306,6 +252,71 @@ section,
 }
 
 @include textStyles;
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  border-radius: 2rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  border-radius: 2rem;
+}
+
+////////////////////////////////////////////////////////////// DESIGN //////////////////////////////////////////////////////////////
+:root {
+  font-size: 1dvmax;
+  letter-spacing: 1rem;
+  word-spacing: .5rem;
+}
+
+html {
+  text-size-adjust: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  letter-spacing: 0.1rem;
+  scroll-behavior: smooth;
+}
+
+.ui-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  width: 100dvw;
+  overflow: hidden;
+}
+
+.main-container {
+  width: 99dvw;
+  height: 97dvh;
+  overflow-Y: scroll;
+  overflow-X: hidden;
+  border-radius: 2rem;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+}
+
+section,
+.section-selector {
+  margin-top: 1rem;
+  border-radius: 0;
+}
 
 ////////////////////////////////////////////////////////////// COMPONENTS //////////////////////////////////////////////////////////////
 .DocumentNode,

@@ -1,6 +1,8 @@
 import React, { CSSProperties } from 'react';
 import { Button } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
 import Link from 'next/link';
+import AuthToggle from '@/components/shared/page-shell/page-shell-components/AuthToggle';
 
 const listStyle: CSSProperties = {
     listStyleType: 'none',
@@ -13,6 +15,8 @@ const itemStyle: CSSProperties = {
 };
 
 const NavList: React.FC = () => {
+    const { isAuthenticated } = useAuth0();
+
     return (
         <ul style={listStyle}>
             <li style={itemStyle}>
@@ -21,20 +25,26 @@ const NavList: React.FC = () => {
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}>
-                <Link href="/option1" passHref >
-                    <Button className='primary-btn'>1</Button>
+                <Link href="/info-page" passHref >
+                    <Button className='primary-btn'>Info</Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translateY(250%)' }}>
-                <Link href="/option2" passHref >
-                    <Button className='primary-btn'>2</Button>
+                <Link href="/contact-page" passHref >
+                    <Button className='primary-btn'>Contact</Button>
                 </Link>
             </li>
-            <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
-                <Link href="/option3" passHref >
-                    <Button className='primary-btn'>3</Button>
-                </Link>
-            </li>
+            {isAuthenticated ? (
+                <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
+                    <Link href="/account-page" passHref >
+                        <Button className='primary-btn'>Account</Button>
+                    </Link>
+                </li>
+            ) : (
+                <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
+                    <AuthToggle />
+                </li>
+            )}
         </ul>
     );
 }

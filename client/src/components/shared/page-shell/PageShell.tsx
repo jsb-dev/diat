@@ -43,7 +43,14 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
       component="menu"
       className='ui-container'
     >
-      <AuthToggle />
+      <div style={{
+        position: 'fixed',
+        zIndex: 1005,
+        top: '10dvh',
+        right: '1dvw',
+      }}>
+        <AuthToggle />
+      </div>
       <Paper className='main-container' elevation={3}>
         {content}
       </Paper>

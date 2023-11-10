@@ -3,7 +3,7 @@ import { Container, Grid, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLayout } from '@/redux/slices/uiSlice';
 import ContentBanner from '../../../shared/components/ContentBanner';
-import contentData from '@/assets/data/SignupSection.json';
+import contentData from '@/assets/data/RootContent.json';
 import { RootState } from '@/redux/store';
 
 const SignupSection: React.FC = () => {

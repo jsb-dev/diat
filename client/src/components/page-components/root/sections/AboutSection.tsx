@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Container, Grid, Typography, Box } from '@mui/material';
-import contentData from '@/assets/data/SignupSection.json';
+import contentData from '@/assets/data/RootContent.json';
 
 const AboutSection: React.FC = () => {
     const { viewportIsPortable, viewportIsVertical } = useSelector((state: RootState) => state.ui);
