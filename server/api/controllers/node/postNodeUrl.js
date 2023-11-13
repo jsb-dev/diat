@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
 
-// Function to check if the path is disallowed based on robots.txt content
 const isPathDisallowed = (robotsTxt, path) => {
   const lines = robotsTxt.split('\n');
   let disallowRules = [];
@@ -31,7 +30,6 @@ const submitNodeUrl = async (req, res) => {
       return res.status(400).json({ message: 'URL is required' });
     }
 
-    // Fetch and check robots.txt
     const robotsRes = await fetch(`${parsedUrl.origin}/robots.txt`);
 
     if (robotsRes.ok) {

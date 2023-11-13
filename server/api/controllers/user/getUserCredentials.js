@@ -1,3 +1,4 @@
+import validator from 'validator';
 import User from '../../../database/models/User.js';
 import Diagram from '../../../database/models/Diagram.js';
 import stripModel from '../../utils/stripModel.js';
@@ -9,6 +10,8 @@ const getUserCredentials = async (req, res) => {
 
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });
+    } else if (!validator.isEmail(email)) {
+      return res.status(400).json({ message: 'Invalid Email' });
     }
 
     let user = await User.findOne({ email });
@@ -37,7 +40,7 @@ const getUserCredentials = async (req, res) => {
       diagram: stripModel(diagram),
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: 'Internal Server Error', error });
   }
 };

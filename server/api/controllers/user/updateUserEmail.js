@@ -1,9 +1,16 @@
 import User from '../../../database/models/User.js';
+import validator from 'validator';
 
 const updateUserEmail = async (req, res) => {
-  const { currentEmail, newEmail } = req.body;
-
   try {
+    const { currentEmail, newEmail } = req.body;
+
+    if (!currentEmail || !newEmail) {
+      return res.status(400).json({ message: 'Email is required.' });
+    } else if (!validator.isEmail(currentEmail)) {
+      return res.status(400).json({ message: 'Invalid current email.' });
+    }
+
     const emailTaken = await User.findOne({ email: newEmail });
     if (emailTaken) {
       return res.status(409).json({ message: 'Email is already taken.' });

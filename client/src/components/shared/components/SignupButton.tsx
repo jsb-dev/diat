@@ -8,7 +8,7 @@ const SignupButton: React.FC = () => {
     const router = useRouter();
 
     const handleDashboard = () => {
-        router.push('/dashboard');
+        router.push('/dashboard-page');
     };
 
     return (
