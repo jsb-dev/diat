@@ -67,9 +67,9 @@ const DiagramEditor: React.FC = () => {
     return (
         <>
             <ul style={listStyle}>
-                <li style={itemStyle}><Button onClick={handleAddDocument} className='tertiary-btn'>Add Document</Button></li>
-                <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='tertiary-btn'>Add Image</Button></li>
-                <li style={{ ...itemStyle, transform: 'translateY(250%)' }}><Button onClick={() => setCurrentDialog('url')} className='tertiary-btn'>Add URL</Button></li>
+                <li style={itemStyle}><Button onClick={handleAddDocument} className='ternary-btn'>Add Document</Button></li>
+                <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='ternary-btn'>Add Image</Button></li>
+                <li style={{ ...itemStyle, transform: 'translateY(250%)' }}><Button onClick={() => setCurrentDialog('url')} className='ternary-btn'>Add URL</Button></li>
             </ul>
 
             <Dialog open={currentDialog === 'ImgOrUrl'} onClose={() => setCurrentDialog(null)}>

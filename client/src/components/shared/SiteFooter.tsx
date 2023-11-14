@@ -17,19 +17,21 @@ const SiteFooter: React.FC = () => {
         padding: '1rem',
     };
 
+    const footerContainerStyles = {
+        minHeight: '30vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderTopLeftRadius: '1rem',
+        borderTopRightRadius: '1rem',
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+    }
+
     return (
-        <Container className='footer-selector' component='footer' sx={{
-            minHeight: '30vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '2rem',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            borderTopLeftRadius: '1rem',
-            borderTopRightRadius: '1rem',
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-        }}>
+        <Container className='footer-selector' component='footer' sx={footerContainerStyles}>
             <Grid container spacing={3}>
                 <Grid item xs={gridSize} sx={gridItemStyle}>
                     <Typography variant="h6" className='footer-h6-selector'>

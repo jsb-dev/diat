@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { deleteNode } from '../../../../redux/slices/diagramEditorSlice';
+import { deleteNode } from '@/redux/slices/diagramEditorSlice';
 
 interface NodeDeleteButtonProps {
     nodeId: string;
@@ -26,8 +26,8 @@ const NodeDeleteButton: React.FC<NodeDeleteButtonProps> = ({ nodeId }) => {
 
     return (
         <>
-            <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-                Delete Node
+            <Button variant="contained" onClick={handleClickOpen} className="quarternary-btn">
+                Delete
             </Button>
             <Dialog
                 open={open}
@@ -40,11 +40,11 @@ const NodeDeleteButton: React.FC<NodeDeleteButtonProps> = ({ nodeId }) => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
+                    <Button onClick={handleClose} className="primary-btn">
+                        Back
                     </Button>
-                    <Button onClick={handleDelete} color="secondary">
-                        Confirm
+                    <Button onClick={handleDelete} className="quarternary-btn">
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>

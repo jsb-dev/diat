@@ -57,10 +57,10 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
 
       {/* ////////// Nav Menu ////////// */}
       {!isDrawerOpen ? (
-        <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>Menu</Button>
+        <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>Go to</Button>
       ) : (
         <>
-          <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>Close Menu</Button>
+          <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>Hide</Button>
           <Box onClick={toggleDrawer}></Box>
           <Box sx={{
             zIndex: 1002,
@@ -84,12 +84,12 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
       {/* ////////// Diagram Editor ////////// */}
       {!isDiagramDrawerOpen ? (
         page === '/dashboard-page' && (
-          <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='tertiary-btn'>Editor</Button>
+          <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='ternary-btn'>Editor</Button>
         )
 
       ) : (
         <>
-          <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='tertiary-btn'>Close Editor</Button>
+          <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='ternary-btn'>Close Editor</Button>
           <Box onClick={toggleDiagramDrawer} ></Box>
           <Box sx={{
             zIndex: 1002,

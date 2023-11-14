@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Diagram } from '../../interfaces/Diagram';
+import { Diagram } from '@/interfaces/Diagram';
 import { setUser } from './userSlice';
 import { Node, Edge } from '@reactflow/core';
 

@@ -6,9 +6,9 @@ import { setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
 import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
 import { updateLayout } from "@/redux/slices/uiSlice";
 import { useAuth0 } from '@auth0/auth0-react';
-import { User } from '../interfaces/User';
+import { User } from '@/interfaces/User';
 import { Node, Edge } from 'reactflow';
-import LoadingSpinner from '@/components/shared/components/LoadingSpinner';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import PageShell from '@/components/shared/page-shell/PageShell';
 import Flow from '@/components/diagram/Flow';
 

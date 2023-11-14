@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
-import { User } from '../../interfaces/User';
+import { User } from '@/interfaces/User';
 import { setDiagram } from './flowSlice';
 import { setAuthState } from './authSlice';
 

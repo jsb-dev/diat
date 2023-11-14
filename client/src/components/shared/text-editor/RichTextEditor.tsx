@@ -3,6 +3,7 @@ import { EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import MenuBar from './MenuBar';
 import { BlockContent, DocContent, ListItemContent, TextContent } from '@/interfaces/Document';
+import { Container } from '@mui/material';
 
 type JSONContent = {
     type: string;
@@ -23,9 +24,41 @@ const translateDocContent = (input: JSONContent): DocContent | null => {
             if (contentItem.type === 'text') {
                 const textContent: TextContent = {
                     type: 'text',
-                    text: contentItem.text
+                    text: contentItem.text,
                 };
                 return textContent;
+            }
+
+            if (contentItem.type === 'bold') {
+                const boldContent: TextContent = {
+                    type: 'bold',
+                    text: contentItem.text,
+                };
+                return boldContent;
+            }
+
+            if (contentItem.type === 'italic') {
+                const italicContent: TextContent = {
+                    type: 'italic',
+                    text: contentItem.text,
+                };
+                return italicContent;
+            }
+
+            if (contentItem.type === 'strike') {
+                const strikeContent: TextContent = {
+                    type: 'strike',
+                    text: contentItem.text,
+                };
+                return strikeContent;
+            }
+
+            if (contentItem.type === 'code') {
+                const codeContent: TextContent = {
+                    type: 'code',
+                    text: contentItem.text,
+                };
+                return codeContent;
             }
 
             if (contentItem.type === 'listItem') {
@@ -95,7 +128,20 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate, isFo
         }} className="RichTextEditor"
         >
             <EditorContent editor={editor} />
-            {isFocusable ? (<MenuBar editor={editor} />) : null}
+            {isFocusable ? (
+                <Container component="div" style={{
+                    position: 'fixed',
+                    width: '4rem',
+                    right: '0',
+                    top: '0',
+                    padding: 0,
+                    margin: 0,
+                    zIndex: 1000,
+                    transform: 'translate(100%, 0)',
+                }}>
+                    <MenuBar editor={editor} />
+                </Container>
+            ) : null}
         </div>
     );
 };

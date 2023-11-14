@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Button, Container, Box } from '@mui/material';
-import RichTextEditor from '../../text-editor/RichTextEditor';
-import { RootState } from '../../../redux/store';
+import RichTextEditor from '@/components/shared/text-editor/RichTextEditor';
+import { RootState } from '@/redux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleEditor, updateDocContent } from '../../../redux/slices/tiptapSlice';
+import { toggleEditor, updateDocContent } from '@/redux/slices/tiptapSlice';
 import { NodeProps } from '@reactflow/core';
 import NodeDeleteButton from './node-components/NodeDeleteButton';
 
@@ -54,8 +54,8 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
             }}
             className="DocumentNode"
         >
-            <Button variant="contained" color="primary" onClick={handleToggleEditor} style={{ pointerEvents: 'auto', position: 'fixed', left: '-25%', top: 0 }}>
-                {editorIsOpen ? "Close" : "Edit"}
+            <Button variant="contained" onClick={handleToggleEditor} className="ternary-btn" style={{ pointerEvents: 'auto', position: 'fixed', left: '-25%', top: 0 }}>
+                {editorIsOpen ? "Unlock" : "Edit"}
             </Button>
             <RichTextEditor content={content} onUpdate={handleContentUpdate} isFocusable={editorIsOpen} />
             <Box>

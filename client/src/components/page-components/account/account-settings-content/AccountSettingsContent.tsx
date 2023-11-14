@@ -6,6 +6,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { clearAuthState } from '@redux/slices/authSlice';
 import { clearDiagram } from '@redux/slices/flowSlice';
 import { clearUser, selectUser } from '@redux/slices/userSlice';
+import ContactForm from '@/components/shared/ContactForm';
+import ChangeEmailForm from './ChangeEmailForm';
 
 interface AccountSettingsContentProps {
     selectedMenu: string;
@@ -64,8 +66,7 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-    const logoutUrl = process.env.NEXT_PUBLIC_LOGOUT_URL;
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     useEffect(() => {
         const performLogoutAndRedirect = async () => {
@@ -73,21 +74,15 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                 try {
                     logout({ logoutParams: { returnTo: window.location.origin } });
                     router.replace('/');
-                    await loginWithRedirect({
-                        authorizationParams: {
-                            redirect_uri: logoutUrl
-                        }
-                    });
+                    await loginWithRedirect();
                 } catch (error) {
                     console.error('Logout failed:', error);
                 }
             }
         };
 
-        console.log(user);
-
         performLogoutAndRedirect();
-    }, [credentialsCleared, logout, loginWithRedirect, router, user, logoutUrl]);
+    }, [credentialsCleared, logout, loginWithRedirect, router, user]);
 
     const handlePasswordChange = () => {
         handleClearCredentials();
@@ -113,7 +108,7 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
         }
 
         try {
-            const response = await fetch(`${backendUrl}/contact/help`, {
+            const response = await fetch(`${BACKEND_URL}/contact/help`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -184,7 +179,7 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
         }
 
         try {
-            const response = await fetch(`${backendUrl}/user/delete/account`, {
+            const response = await fetch(`${BACKEND_URL}/user/delete/account`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -208,7 +203,7 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
     };
 
     const updateEmail = async () => {
-        const response = await fetch(`${backendUrl}/user/update/email`, {
+        const response = await fetch(`${BACKEND_URL}/user/update/email`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -241,80 +236,28 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
         ),
         changeEmail: (
             <Box sx={boxStyle}>
-                <TextField
-                    label="Current Email"
-                    type="email"
-                    fullWidth
-                    margin="normal"
-                    value={currentEmail}
-                    onChange={(e) => setCurrentEmail(e.target.value)}
-                    className="text-field-selector"
-                    sx={textFieldStyle}
+                <ChangeEmailForm
+                    currentEmail={currentEmail}
+                    newEmail={newEmail}
+                    confirmEmail={confirmEmail}
+                    setCurrentEmail={setCurrentEmail}
+                    setNewEmail={setNewEmail}
+                    setConfirmEmail={setConfirmEmail}
+                    handleEmailChange={handleEmailChange}
                 />
-                <TextField
-                    label="New Email"
-                    type="email"
-                    fullWidth
-                    margin="normal"
-                    value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)}
-                    className="text-field-selector"
-                    sx={textFieldStyle}
-                />
-                <TextField
-                    label="Confirm New Email"
-                    type="email"
-                    fullWidth
-                    margin="normal"
-                    value={confirmEmail}
-                    onChange={(e) => setConfirmEmail(e.target.value)}
-                    onPaste={(e) => {
-                        e.preventDefault();
-                        console.error('Pasting email is not allowed.');
-                    }}
-                    className="text-field-selector"
-                    sx={textFieldStyle}
-                />
-                <Button variant="contained" className="primary-btn" onClick={handleEmailChange}>
-                    Change Email
-                </Button>
             </Box>
         ),
         help: (
             <Box sx={{ boxStyle }}>
-                <TextField
-                    label="Email"
-                    type="email"
-                    fullWidth
-                    margin="normal"
-                    value={userEmail}
-                    onChange={(e) => setUserEmail(e.target.value)}
-                    className="text-field-selector"
-                    sx={textFieldStyle}
+                <ContactForm
+                    userEmail={userEmail}
+                    subject={subject}
+                    message={message}
+                    setUserEmail={setUserEmail}
+                    setSubject={setSubject}
+                    setMessage={setMessage}
+                    handleSubmitMsg={handleSubmitMsg}
                 />
-                <TextField
-                    label="Subject"
-                    fullWidth
-                    margin="normal"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    className="text-field-selector"
-                    sx={textFieldStyle}
-                />
-                <TextField
-                    label="Message"
-                    fullWidth
-                    margin="normal"
-                    multiline
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="text-field-selector"
-                    sx={textFieldStyle}
-                />
-                <Button variant="contained" className="primary-btn" onClick={handleSubmitMsg}>
-                    Send
-                </Button>
             </Box>
         ),
         deleteAccount: (

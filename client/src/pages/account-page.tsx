@@ -7,8 +7,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { setAuthState } from '@/redux/slices/authSlice';
 import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
 import { updateLayout } from '@/redux/slices/uiSlice';
-import { User } from '../interfaces/User';
-import LoadingSpinner from '@/components/shared/components/LoadingSpinner';
+import { User } from '@/interfaces/User';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 function AccountPage() {
     const [loggedIn, setLoggedIn] = useState(false);

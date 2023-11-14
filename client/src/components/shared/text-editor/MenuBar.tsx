@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
@@ -8,8 +7,7 @@ import Button from '@mui/material/Button';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
-import { stylesItems, formatItems, headerSizeItems } from '../../assets/data/menu-items';
-import { HorizontalRule, South } from '@mui/icons-material';
+import { stylesItems, formatItems, headerSizeItems } from '@/assets/data/menu-items';
 
 type EditorType = {
     chain: any,
@@ -146,17 +144,8 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
     }
 
     return (
-        <Container style={{
-            position: 'fixed',
-            width: '4rem',
-            right: '0',
-            top: '0',
-            padding: 0,
-            margin: 0,
-            zIndex: 1000,
-            transform: 'translate(100%, 0)',
-        }}>
-            <IconButton onClick={handleMenuOpen} className="secondary-btn" >
+        <>
+            <IconButton onClick={handleMenuOpen} className="ternary-btn">
                 <FormatBoldIcon style={menuIconStyle} />
                 <FormatItalicIcon style={menuIconStyle} />
                 <FormatUnderlinedIcon style={menuIconStyle} />
@@ -203,7 +192,7 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                     ))
                 ))}
             </Menu>
-        </Container>
+        </>
     );
 
 };

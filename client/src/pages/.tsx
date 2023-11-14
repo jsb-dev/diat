@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { updateLayout } from "@/redux/slices/uiSlice";
 import PageShell from "@/components/shared/page-shell/PageShell";
-import SignupSection from "@/components/page-components/root/sections/SignupSection";
-import AboutSection from "@/components/page-components/root/sections/AboutSection";
-import SiteFooter from "@/components/shared/components/SiteFooter";
+import SignupSection from "@/components/page-components/root/SignupSection";
+import AboutSection from "@/components/page-components/root/AboutSection";
+import SiteFooter from "@/components/shared/SiteFooter";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 

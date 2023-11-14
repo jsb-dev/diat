@@ -1,6 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
-import { RootState } from '../store'; 
-import { Diagram } from '../../interfaces/Diagram';
+import { RootState } from '@redux/store'; 
+import { Diagram } from '@/interfaces/Diagram';
 
 const SYNC_INTERVAL = 60 * 1000;
 

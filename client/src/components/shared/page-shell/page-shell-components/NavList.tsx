@@ -21,23 +21,23 @@ const NavList: React.FC = () => {
         <ul style={listStyle}>
             <li style={itemStyle}>
                 <Link href="/" passHref >
-                    <Button className='primary-btn'>Home</Button>
+                    <Button className='ternary-btn'>Home</Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}>
                 <Link href="/info-page" passHref >
-                    <Button className='primary-btn'>Info</Button>
+                    <Button className='ternary-btn'>Info</Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translateY(250%)' }}>
                 <Link href="/contact-page" passHref >
-                    <Button className='primary-btn'>Contact</Button>
+                    <Button className='ternary-btn'>Contact</Button>
                 </Link>
             </li>
             {isAuthenticated ? (
                 <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
                     <Link href="/account-page" passHref >
-                        <Button className='primary-btn'>Account</Button>
+                        <Button className='ternary-btn'>Account</Button>
                     </Link>
                 </li>
             ) : (

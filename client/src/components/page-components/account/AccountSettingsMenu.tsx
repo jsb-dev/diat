@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Container } from '@mui/material';
 import { RootState } from '@/redux/store';
 import AccountSettingsList from './AccountSettingsList';
-import AccountSettingsContent from './AccountSettingsContent';
+import AccountSettingsContent from './account-settings-content/AccountSettingsContent';
 
 const AccountSettingsMenu = () => {
     const { viewportIsPortable, viewportIsVertical } = useSelector((state: RootState) => state.ui);
