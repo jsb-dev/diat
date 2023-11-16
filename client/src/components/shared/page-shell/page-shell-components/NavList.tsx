@@ -5,8 +5,9 @@ import Link from 'next/link';
 import AuthToggle from '@/components/shared/page-shell/page-shell-components/AuthToggle';
 
 const listStyle: CSSProperties = {
-    listStyleType: 'none',
     position: 'fixed',
+    right: '32.5rem',
+    bottom: '30%',
 };
 
 const itemStyle: CSSProperties = {
@@ -24,24 +25,24 @@ const NavList: React.FC = () => {
                     <Button className='primary-btn'>Home</Button>
                 </Link>
             </li>
-            <li style={{ ...itemStyle, transform: 'translate(75%, 125%)' }}>
+            <li style={{ ...itemStyle, transform: 'translate(50%, 100%)' }}>
                 <Link href="/info-page" passHref >
                     <Button className='primary-btn'>Info</Button>
                 </Link>
             </li>
-            <li style={{ ...itemStyle, transform: 'translateY(250%)' }}>
+            <li style={{ ...itemStyle, transform: 'translateY(200%)' }}>
                 <Link href="/contact-page" passHref >
                     <Button className='primary-btn'>Contact</Button>
                 </Link>
             </li>
             {isAuthenticated ? (
-                <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
+                <li style={{ ...itemStyle, transform: 'translate(-50%, 100%)' }}>
                     <Link href="/account-page" passHref >
                         <Button className='primary-btn'>Account</Button>
                     </Link>
                 </li>
             ) : (
-                <li style={{ ...itemStyle, transform: 'translate(-75%, 125%)' }}>
+                <li style={{ ...itemStyle, transform: 'translate(-50%, 100%)' }}>
                     <AuthToggle />
                 </li>
             )}

@@ -6,6 +6,14 @@ import ContentBanner from '@/components/shared/ContentBanner';
 import contentData from '@/assets/data/RootContent.json';
 import { RootState } from '@/redux/store';
 
+const gridContainerStyles = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0',
+    padding: '0',
+};
+
 const SignupSection: React.FC = () => {
 
     const renderContent = (type: string, content: string) => {
@@ -42,30 +50,27 @@ const SignupSection: React.FC = () => {
     const gridDirection = (viewportIsVertical || viewportIsPortable) ? 'column-reverse' : 'row';
 
     return (
-        <Container component="section" className='section-selector'>
-            <Grid container spacing={2} direction={gridDirection} sx={{ padding: '0' }}>
-                <Grid item xs={12} md={6} sx={{
-                    overflowY: viewportIsPortable || viewportIsVertical ? 'hidden' : 'scroll',
-                    height: viewportIsPortable || viewportIsVertical ? '68dvh' : '88dvh',
-                    margin: '2rem 0',
-                    padding: '0',
-                }}>
-                    <Container component="div">
-                        <Typography variant='h1' className='h1-selector'>
-                            {contentData.signupSection.title}
-                        </Typography>
-                        {contentData.signupSection.sections.map((section, index) => (
-                            <div className='article-div' key={index}>
-                                {renderContent(section.type, section.content)}
-                            </div>
-                        ))}
-                    </Container>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <ContentBanner />
-                </Grid>
+        <Grid container spacing={1} direction={gridDirection} sx={gridContainerStyles}>
+            <Grid item xs={12} md={6} sx={{
+                overflowY: viewportIsPortable || viewportIsVertical ? 'hidden' : 'scroll',
+                height: viewportIsPortable || viewportIsVertical ? '58dvh' : '78dvh',
+                padding: '0',
+            }}>
+                <Container component="div">
+                    <Typography variant='h1' className='h1-selector'>
+                        {contentData.signupSection.title}
+                    </Typography>
+                    {contentData.signupSection.sections.map((section, index) => (
+                        <div className='article-div' key={index}>
+                            {renderContent(section.type, section.content)}
+                        </div>
+                    ))}
+                </Container>
             </Grid>
-        </Container>
+            <Grid item xs={12} md={6}>
+                <ContentBanner />
+            </Grid>
+        </Grid>
     );
 }
 

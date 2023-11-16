@@ -23,6 +23,7 @@ import { selectUser, setUser } from '@/redux/slices/userSlice';
 import DocumentNode from './nodes/DocumentNode'
 import ImgNode from './nodes/ImgNode';
 import UrlNode from './nodes/UrlNode';
+import { Container } from '@mui/material';
 import 'reactflow/dist/style.css';
 
 interface FlowProps {
@@ -34,6 +35,13 @@ const nodeTypes: NodeTypes = {
     documentNode: DocumentNode as ComponentType<NodeProps>,
     imgNode: ImgNode as ComponentType<NodeProps>,
     urlNode: UrlNode as ComponentType<NodeProps>,
+};
+
+const rfStyle: React.CSSProperties = {
+    backgroundColor: 'rgb(100, 100, 100)',
+    boxShadow: 'inset 0 0 10px rgba(255, 255, 255, 0.5)',
+    padding: 0,
+    margin: 0,
 };
 
 const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
@@ -49,11 +57,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [deletedEdges, setDeletedEdges] = useState<Edge[]>([]);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
     const [diagramEdited, setDiagramEdited] = useState(false);
-
-    const rfStyle: React.CSSProperties = {
-        backgroundColor: 'rgb(100, 100, 100)',
-        boxShadow: 'inset 0 0 10px rgba(255, 255, 255, 0.5)',
-    };
 
     const dispatch = useDispatch();
 

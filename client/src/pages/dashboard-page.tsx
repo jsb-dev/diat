@@ -10,6 +10,7 @@ import { User } from '@/interfaces/User';
 import { Node, Edge } from 'reactflow';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import PageShell from '@/components/shared/page-shell/PageShell';
+import Container from '@mui/material/Container';
 import Flow from '@/components/diagram/Flow';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -118,12 +119,14 @@ const DashboardPage: FC = () => {
   };
 
   const main = loading ? (
-    <>
+    <Container component="main" className='primary-section' id='FlowContainer'>
       <LoadingSpinner />
       <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
-    </>
+    </Container>
   ) : (
-    <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
+    <Container component="main" className='primary-section' id='FlowContainer'>
+      <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
+    </Container>
   );
 
   return <PageShell content={main} page={'/dashboard-page'} />;

@@ -13,23 +13,29 @@ type SectionType = {
   sections: ItemType[];
 };
 
+const ulStyles = {
+  padding: '3rem 5rem',
+  listStyleType: 'disc',
+  color: '#fff',
+};
+
 function InfoPage() {
   const renderSection = (section: SectionType) => (
     section.sections.map((item: ItemType, index: number) => {
       switch (item.type) {
         case 'heading':
-          return <Typography key={index} variant="h4">{item.content}</Typography>;
+          return <Typography key={index} variant="h3" component="h3" className="h3-selector">{item.content}</Typography>;
         case 'subheading':
-          return <Typography key={index} variant="h5">{item.content}</Typography>;
+          return <Typography key={index} variant="h4" component="h4" className="h4-selector">{item.content}</Typography>;
         case 'paragraph':
-          return <Typography key={index} variant="body1" className="p.selector">{item.content}</Typography>;
+          return <Typography key={index} variant="body1" className="p-selector">{item.content}</Typography>;
         case 'list':
           if (Array.isArray(item.content)) {
             return (
-              <ul key={index}>
+              <ul key={index} style={ulStyles}>
                 {item.content.map((listItem, listItemIndex) => (
-                  <li key={listItemIndex}>
-                    <Typography variant="body1">{listItem}</Typography>
+                  <li key={listItemIndex} >
+                    <Typography variant="body1" className="p-selector">{listItem}</Typography>
                   </li>
                 ))}
               </ul>
@@ -37,7 +43,7 @@ function InfoPage() {
           }
           break;
         default:
-          return <Typography key={index}>{item.content}</Typography>;
+          return <Typography key={index} variant="body1" className="p-selector">{item.content}</Typography>;
       }
     })
   );
@@ -48,7 +54,7 @@ function InfoPage() {
         Info
       </Typography>
       <Divider />
-      <Container component="section">
+      <Container component="section" className='section-selector'>
         {renderSection(infoContent.infoSection)}
       </Container>
       <Divider />

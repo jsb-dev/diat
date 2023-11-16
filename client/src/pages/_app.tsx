@@ -19,7 +19,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <ReduxProvider store={store}>
-        <Component {...pageProps} />
+        <Component {...pageProps}
+        />
       </ReduxProvider>
     </Auth0Provider>
   );

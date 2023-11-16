@@ -39,10 +39,11 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
   };
 
   return (
-    <Container
-      component="menu"
-      className='ui-container'
-    >
+    <Container className='main-container'>
+
+      <Paper elevation={3} >
+        {content}
+      </Paper>
       <div style={{
         position: 'fixed',
         zIndex: 1005,
@@ -51,9 +52,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
       }}>
         <AuthToggle />
       </div>
-      <Paper className='main-container' elevation={3}>
-        {content}
-      </Paper>
+
 
       {/* ////////// Nav Menu ////////// */}
       {!isDrawerOpen ? (
@@ -74,6 +73,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
               maxWidth: '250px',
               height: '32rem',
               maxHeight: '250px',
+
             }}>
               <NavList />
             </div>

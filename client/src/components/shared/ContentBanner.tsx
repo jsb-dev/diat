@@ -24,11 +24,11 @@ const styles = {
     Card: {
         ...commonStyles,
         ...cardStyles,
-        height: '90dvh',
+        height: '80dvh',
     },
     PortableCard: {
         ...cardStyles,
-        height: '70dvh',
+        height: '60dvh',
     }
 };
 

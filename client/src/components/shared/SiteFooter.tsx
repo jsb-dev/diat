@@ -14,7 +14,6 @@ const SiteFooter: React.FC = () => {
     };
 
     const footerContainerStyles = {
-        minHeight: '25vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

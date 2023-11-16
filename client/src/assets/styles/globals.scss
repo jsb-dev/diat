@@ -19,10 +19,11 @@ $text-secondary-color: #252c2b;
 $text-ternary-color: #3b5353;
 $text-quarternary-color: #426462;
 
-$text-quarternary-color-light: #d2fff7d7;
-$text-ternary-color-light: #bbede1d8;
-$text-secondary-color-light: #9ce9e9d7;
 $text-primary-color-light: #41dedbd9;
+$text-secondary-color-light: #9ce9e9d7;
+$text-ternary-color-light: #bbede1d8;
+$text-quarternary-color-light: #d2fff7d7;
+$text-pentenary-color-light: #e8f9f5d7;
 
 @keyframes fadeIn {
   from {
@@ -138,13 +139,7 @@ body {
 }
 
 .primary-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  border-radius: 0;
   background-color: $bg-color-dark;
-  min-height: 100dvh;
 }
 
 .primary-container {
@@ -159,7 +154,8 @@ body {
   $priColor: $text-primary-color-light,
   $secColor: $text-secondary-color-light,
   $terColor: $text-secondary-color-light,
-  $quaColor: $text-quarternary-color-light) {
+  $quaColor: $text-quarternary-color-light,
+  $penColor: $text-pentenary-color-light) {
 
   ul,
   .ul-selector {
@@ -179,65 +175,58 @@ body {
   h6,
   .h6-selector {
     text-transform: uppercase;
-    letter-spacing: 0.2rem * $scaleFactor;
+    letter-spacing: 0.4rem * $scaleFactor;
+    word-spacing: 0.4rem * $scaleFactor;
     margin: 1rem;
   }
 
   h1,
   .h1-selector {
-    font-size: 18pt * $scaleFactor;
+    font-size: 15pt * $scaleFactor;
     font-weight: 800;
     margin-top: 3dvh * $scaleFactor;
     margin-bottom: 3dvh * $scaleFactor;
     color: $priColor;
+    letter-spacing: .5rem * $scaleFactor;
+    word-spacing: .5rem * $scaleFactor;
     padding: 1rem * $scaleFactor;
-    letter-spacing: 0.5rem * $scaleFactor;
-    word-spacing: 0.5rem * $scaleFactor;
   }
 
   h2,
   .h2-selector {
-    font-size: 11pt * $scaleFactor;
-    font-weight: 600;
-    margin-left: 0.5rem * $scaleFactor;
+    font-size: 14pt * $scaleFactor;
     color: $secColor;
-    padding: 1rem * $scaleFactor;
+    padding: 1.5rem 1rem * $scaleFactor;
   }
 
   h3,
-  .h3-selector,
+  .h3-selector {
+    font-size: 13pt * $scaleFactor;
+    color: $terColor;
+    padding: 1.5rem * $scaleFactor;
+  }
+
   h4,
   .h4-selector,
   h5,
   .h5-selector,
   h6,
   .h6-selector {
-    color: $terColor;
-    font-size: 11pt * $scaleFactor;
-    padding: 1rem * $scaleFactor;
-  }
-
-  .footer-h6-selector {
-    font-size: 7pt * $scaleFactor;
-    text-align: center;
-  }
-
-  .footer-a-selector,
-  .footer-p-selector {
-    font-size: 6pt * $scaleFactor;
     color: $quaColor;
-    text-align: center;
+    font-size: 12pt * $scaleFactor;
+    padding: 1.5rem 2rem * $scaleFactor;
   }
 
-  p,
+  p,  
   .p-selector,
   a,
   .a-selector,
   .radio-control {
-    font-size: 12pt * $scaleFactor;
-    color: $quaColor;
+    font-size: 11pt * $scaleFactor;
+    color: $penColor;
     letter-spacing: 0.1rem * $scaleFactor;
     word-spacing: 0.1rem * $scaleFactor;
+    padding: 2rem * $scaleFactor;
   }
 
   .text-field-selector,
@@ -257,6 +246,20 @@ body {
     font-size: 10pt * $scaleFactor;
     font-weight: 700;
     padding: 0;
+  }
+
+  .footer-h6-selector {
+    font-size: 7pt * $scaleFactor;
+    text-align: center;
+  }
+
+  .footer-a-selector,
+  .footer-p-selector {
+    font-size: 6pt * $scaleFactor;
+    color: $quaColor;
+    text-align: center;
+    padding: 1rem;
+    margin: 0;
   }
 
 }
@@ -284,7 +287,7 @@ body {
   border-radius: 2rem;
 }
 
-////////////////////////////////////////////////////////////// DESIGN //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////// LAYOUT //////////////////////////////////////////////////////////////
 :root {
   font-size: 1dvmax;
   letter-spacing: 1rem;
@@ -304,31 +307,45 @@ html {
   scroll-behavior: smooth;
 }
 
-.ui-container {
+#__next {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100dvh;
-  width: 100dvw;
-  overflow: hidden;
 }
 
 .main-container {
-  width: 98dvw;
-  height: 98dvh;
-  overflow-Y: scroll;
-  overflow-X: hidden;
-  border-radius: 2rem;
-  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+  max-width: 98dvw;
+  max-height: 95dvh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  margin: 0;
+  padding: 0;
+box-shadow: 0 0 2rem 1rem rgba(0, 0, 0, .5);
 }
+
+.primary-section {
+  max-width: 100%;
+  max-height: 100%;
+  padding: 2rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  }
 
 section,
 .section-selector {
-  margin-top: 1rem;
-  border-radius: 0;
+  margin: 8dvh 0;
+  padding: 0;
 }
 
-////////////////////////////////////////////////////////////// TIPTAP.JS //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////// COMPONENTS //////////////////////////////////////////////////////////////
 .DocumentNode,
 .RichTextEditor * {
   @include textStyles(0.7);
@@ -395,4 +412,11 @@ section,
   padding: .5rem .2rem;
   outline: none;
   box-shadow: 0 0 1rem .1rem rgba(0, 0, 0, .5);
+}
+
+#FlowContainer {
+  width: 98dvw;
+  height: 95dvh;
+  padding: 0;
+  z-index: 1;
 }
