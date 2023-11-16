@@ -82,7 +82,8 @@ body {
 .primary-btn,
 .secondary-btn,
 .ternary-btn,
-.quarternary-btn {
+.quarternary-btn,
+.pentenary-btn {
   color: #fff;
   padding: 0.5rem 1rem;
   margin: 0.5rem;
@@ -125,6 +126,14 @@ body {
 
   &:hover {
     background-color: darken($object-quaternary-color, 10%);
+  }
+}
+
+.pentenary-btn {
+  background-color: $object-pentenary-color;
+
+  &:hover {
+    background-color: darken($object-pentenary-color, 10%);
   }
 }
 
@@ -171,15 +180,19 @@ body {
   .h6-selector {
     text-transform: uppercase;
     letter-spacing: 0.2rem * $scaleFactor;
+    margin: 1rem;
   }
 
   h1,
   .h1-selector {
-    font-size: 12pt * $scaleFactor;
+    font-size: 18pt * $scaleFactor;
     font-weight: 800;
-    margin-top: 5dvh * $scaleFactor;
-    margin-bottom: 5dvh * $scaleFactor;
+    margin-top: 3dvh * $scaleFactor;
+    margin-bottom: 3dvh * $scaleFactor;
     color: $priColor;
+    padding: 1rem * $scaleFactor;
+    letter-spacing: 0.5rem * $scaleFactor;
+    word-spacing: 0.5rem * $scaleFactor;
   }
 
   h2,
@@ -188,6 +201,7 @@ body {
     font-weight: 600;
     margin-left: 0.5rem * $scaleFactor;
     color: $secColor;
+    padding: 1rem * $scaleFactor;
   }
 
   h3,
@@ -199,7 +213,8 @@ body {
   h6,
   .h6-selector {
     color: $terColor;
-    font-size: 10pt * $scaleFactor;
+    font-size: 11pt * $scaleFactor;
+    padding: 1rem * $scaleFactor;
   }
 
   .footer-h6-selector {
@@ -221,6 +236,8 @@ body {
   .radio-control {
     font-size: 12pt * $scaleFactor;
     color: $quaColor;
+    letter-spacing: 0.1rem * $scaleFactor;
+    word-spacing: 0.1rem * $scaleFactor;
   }
 
   .text-field-selector,
@@ -234,14 +251,6 @@ body {
   article,
   .article-selector {
     margin-top: 3rem * $scaleFactor;
-  }
-
-  p,
-  .p-selector,
-  h3,
-  .h3-selector {
-    padding-left: 1rem * $scaleFactor;
-    padding-right: 1rem * $scaleFactor;
   }
 
   strong {

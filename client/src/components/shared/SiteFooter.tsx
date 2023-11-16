@@ -13,16 +13,12 @@ const SiteFooter: React.FC = () => {
         padding: '1rem',
     };
 
-    const gridItemStyle = {
-        padding: '1rem',
-    };
-
     const footerContainerStyles = {
-        minHeight: '30vh',
+        minHeight: '25vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem',
+        padding: '1rem',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         borderTopLeftRadius: '1rem',
         borderTopRightRadius: '1rem',
@@ -33,7 +29,7 @@ const SiteFooter: React.FC = () => {
     return (
         <Container className='footer-selector' component='footer' sx={footerContainerStyles}>
             <Grid container spacing={3}>
-                <Grid item xs={gridSize} sx={gridItemStyle}>
+                <Grid item xs={gridSize} >
                     <Typography variant="h6" className='footer-h6-selector'>
                         Contact
                     </Typography>
@@ -46,7 +42,7 @@ const SiteFooter: React.FC = () => {
                         </Link>
                     </Container>
                 </Grid>
-                <Grid item xs={gridSize} sx={gridItemStyle}>
+                <Grid item xs={gridSize} >
                     <Typography variant="h6" className='footer-h6-selector'>
                         Terms & Conditions
                     </Typography>
@@ -56,7 +52,7 @@ const SiteFooter: React.FC = () => {
                         </Link>
                     </Container>
                 </Grid>
-                <Grid item xs={gridSize} sx={gridItemStyle}>
+                <Grid item xs={gridSize} >
                     <Typography variant="h6" className='footer-h6-selector'>
                         Connect
                     </Typography>
@@ -72,7 +68,7 @@ const SiteFooter: React.FC = () => {
                         </Link>
                     </Container>
                 </Grid>
-                <Grid item xs={gridSize} sx={gridItemStyle}>
+                <Grid item xs={gridSize} >
                     <Typography variant="h6" className='footer-h6-selector'>
                         Portfolio Project
                     </Typography>

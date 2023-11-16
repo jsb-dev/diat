@@ -43,9 +43,14 @@ const SignupSection: React.FC = () => {
 
     return (
         <Container component="section" className='section-selector'>
-            <Grid container spacing={2} direction={gridDirection}>
-                <Grid item xs={12} md={6}>
-                    <div>
+            <Grid container spacing={2} direction={gridDirection} sx={{ padding: '0' }}>
+                <Grid item xs={12} md={6} sx={{
+                    overflowY: viewportIsPortable || viewportIsVertical ? 'hidden' : 'scroll',
+                    height: viewportIsPortable || viewportIsVertical ? '68dvh' : '88dvh',
+                    margin: '2rem 0',
+                    padding: '0',
+                }}>
+                    <Container component="div">
                         <Typography variant='h1' className='h1-selector'>
                             {contentData.signupSection.title}
                         </Typography>
@@ -54,7 +59,7 @@ const SignupSection: React.FC = () => {
                                 {renderContent(section.type, section.content)}
                             </div>
                         ))}
-                    </div>
+                    </Container>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <ContentBanner />

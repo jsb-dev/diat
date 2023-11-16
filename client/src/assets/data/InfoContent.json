@@ -1,0 +1,38 @@
+{
+  "infoSection": {
+    "sections": [
+      {
+        "type": "heading",
+        "content": "Welcome to Our Information Page"
+      },
+      {
+        "type": "subheading",
+        "content": "Discover essential insights about our services, company policies, and more."
+      },
+      {
+        "type": "subheading",
+        "content": "Our Mission"
+      },
+      {
+        "type": "paragraph",
+        "content": "We are dedicated to providing top-notch services with a focus on customer satisfaction."
+      },
+      {
+        "type": "list",
+        "content": [
+          "Quality Service",
+          "Innovative Solutions",
+          "Sustainable Practices"
+        ]
+      },
+      {
+        "type": "subheading",
+        "content": "Our Services"
+      },
+      {
+        "type": "paragraph",
+        "content": "We offer a diverse range of services tailored to meet your needs."
+      }
+    ]
+  }
+}

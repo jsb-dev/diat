@@ -14,9 +14,9 @@ const SignupButton: React.FC = () => {
     return (
         <>
             {isAuthenticated ? (
-                <Button onClick={handleDashboard} className='secondary-btn'>Go to Dashboard</Button>
+                <Button onClick={handleDashboard} className='pentenary-btn'>Go to Dashboard</Button>
             ) : (
-                <Button onClick={() => loginWithRedirect()} className='secondary-btn'>Sign Up</Button>
+                <Button onClick={() => loginWithRedirect()} className='pentenary-btn'>Sign Up</Button>
             )}
         </>
     );

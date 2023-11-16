@@ -61,9 +61,7 @@ function ContactPage() {
 
     const renderSection = (section: any) => (
         section.sections.map((item: any, index: number) => (
-            <Typography key={index} variant={item.type === 'subheading' ? 'h5' : 'body1'} sx={{
-                fontSize: item.type === 'subheading' ? '2.5rem' : '1.5rem',
-            }}>
+            <Typography key={index} variant={item.type === 'subheading' ? 'h5' : 'body1'} className={item.type === 'subheading' ? 'h5-selector' : 'p-selector'}>
                 {item.content}
             </Typography>
         ))
