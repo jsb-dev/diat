@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { NodeProps, Handle, Position } from '@reactflow/core';
-import { Box } from '@mui/material';
+import { Box, Container, Button } from '@mui/material';
+import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded';
 import NodeDeleteButton from './node-components/NodeDeleteButton';
+import handleStyles from './node-components/NodeHandleStyles';
 
 const UrlNode: React.FC<NodeProps> = ({ data }) => {
     const asset = data.content.asset as string;
@@ -47,42 +49,79 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
         fetchData();
     }, [asset, webpageInfo]);
 
+    const commonStyles = {
+        margin: '2rem 1rem',
+        padding: 0,
+        wordWrap: 'break-word' as 'break-word',
+        lineHeight: '18pt',
+        letterSpacing: '1pt',
+    };
+
     return (
-        <div style={{ width: '300px', minHeight: '300px', padding: 8, backgroundColor: 'white' }}>
-            <h1>{webpageInfo.title}</h1>
-            <h2>{webpageInfo.description}</h2>
-            <article>
-                <p><strong>URL: {asset}</strong></p>
-                <p>{webpageInfo.websiteName}</p>
-            </article>
-            <Box>
-                <Handle
-                    id="top"
-                    type="target"
-                    position={Position.Top}
-                    isConnectable={true}
-                />
-                <Handle
-                    id="right"
-                    type="target"
-                    position={Position.Right}
-                    isConnectable={true}
-                />
-                <Handle
-                    id="bottom"
-                    type="target"
-                    position={Position.Bottom}
-                    isConnectable={true}
-                />
-                <Handle
-                    id="left"
-                    type="target"
-                    position={Position.Left}
-                    isConnectable={true}
-                />
-            </Box>
-            <NodeDeleteButton nodeId={data.id} />
-        </div>
+        <Box sx={{ width: '300px', padding: '1rem', backgroundColor: '#3c3c3c' }}>
+            <Button
+                variant="contained"
+                style={{ position: 'fixed', top: '0', right: '0', transform: 'translate(75%, -75%)', }}
+                onClick={() => window.open(asset, '_blank')}
+                className='pentenary-btn'
+            >
+                <OpenInNewRoundedIcon sx={{
+                    fontSize: '3rem'
+                }} />
+            </Button>
+            {
+                <>
+                    <h1 style={{ ...commonStyles, textAlign: 'center', fontSize: '12pt' }}>{webpageInfo.title}</h1>
+                    <h2 style={{ ...commonStyles, textAlign: 'center', fontSize: '11pt' }}>{webpageInfo.description}</h2>
+                </> || null
+            }
+            <Container sx={{
+                backgroundColor: 'rgba(255,255,255,0.3)',
+                padding: '1rem',
+                margin: '1rem 0',
+            }}>
+                <p style={commonStyles}><strong>URL:</strong> {
+                    asset.length > 75 ? asset.slice(0, 75) + '...' : asset
+                }</p>
+                <p style={commonStyles}><strong>{webpageInfo.websiteName}</strong></p>
+            </Container>
+            <Handle
+                id="top"
+                type="source"
+                position={Position.Top}
+                isConnectable={true}
+                style={handleStyles.top}
+            />
+            <Handle
+                id="right"
+                type="source"
+                position={Position.Right}
+                isConnectable={true}
+                style={handleStyles.right}
+            />
+            <Handle
+                id="bottom"
+                type="target"
+                position={Position.Bottom}
+                isConnectable={true}
+                style={handleStyles.bottom}
+            />
+            <Handle
+                id="left"
+                type="target"
+                position={Position.Left}
+                isConnectable={true}
+                style={handleStyles.left}
+            />
+            <Container sx={{
+                position: 'fixed',
+                bottom: '0',
+                left: '0',
+                transform: 'translate(-25%, 50%)',
+            }}>
+                <NodeDeleteButton nodeId={data.id} />
+            </Container>
+        </Box>
     );
 };
 

@@ -3,11 +3,11 @@ $bg-color-light: #3c3c3cc3;
 $bg-color-dark: #1d1d1dc0;
 $modal-bg-color: #181818b1;
 
-$object-primary-color: #5a9ac8bd;
-$object-secondary-color: #51c2b3b9;
-$object-ternary-color: #dcd085cc;
-$object-quaternary-color: #df8888d0;
-$object-pentenary-color: #d9acd6c2;
+$object-primary-color: #5a9ac8ab;
+$object-secondary-color: #51c2b3a9;
+$object-ternary-color: #dcd085b5;
+$object-quaternary-color: #df8888bb;
+$object-pentenary-color: #d9acd6b3;
 
 $container-primary-color: #80b781c2;
 $container-secondary-color: #7b7dafbc;
@@ -50,8 +50,8 @@ $text-pentenary-color-light: #e8f9f5d7;
   transition: all 0.1s ease-in-out;
 }
 
-.Flow:hover,
-.Flow *:hover {
+#Flow:hover,
+#Flow *:hover {
   transition: none;
 }
 
@@ -86,15 +86,12 @@ body {
 .quarternary-btn,
 .pentenary-btn {
   color: #fff;
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  font-size: 1.3rem;
-  font-weight: 700;
-  width: 10rem;
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 10pt;
   height: 5rem;
   max-height: 45px;
-  max-width: 100px;
-  border-radius: .5rem;
+  max-width: 45px;
   cursor: pointer;
 }
 
@@ -321,8 +318,6 @@ html {
 .main-container {
   max-width: 98dvw;
   max-height: 95dvh;
-  overflow-x: hidden;
-  overflow-y: scroll;
   margin: 0;
   padding: 0;
 box-shadow: 0 0 2rem 1rem rgba(0, 0, 0, .5);

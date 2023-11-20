@@ -3,11 +3,15 @@ import { Button } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 import Link from 'next/link';
 import AuthToggle from '@/components/shared/page-shell/page-shell-components/AuthToggle';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import ContactSupportRoundedIcon from '@mui/icons-material/ContactSupportRounded';
+import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 
 const listStyle: CSSProperties = {
     position: 'fixed',
-    right: '32.5rem',
-    bottom: '30%',
+    right: 'max(25rem, 180px)',
+    bottom: '38%',
 };
 
 const itemStyle: CSSProperties = {
@@ -22,23 +26,43 @@ const NavList: React.FC = () => {
         <ul style={listStyle}>
             <li style={itemStyle}>
                 <Link href="/" passHref >
-                    <Button className='primary-btn'>Home</Button>
+                    <Button className='primary-btn'>
+                        <HomeRoundedIcon sx={{
+                            fontSize: '3rem'
+                        }}
+                        />
+                    </Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translate(50%, 100%)' }}>
                 <Link href="/info-page" passHref >
-                    <Button className='primary-btn'>Info</Button>
+                    <Button className='primary-btn'>
+                        <InfoRoundedIcon sx={{
+                            fontSize: '3rem'
+                        }}
+                        />
+                    </Button>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translateY(200%)' }}>
                 <Link href="/contact-page" passHref >
-                    <Button className='primary-btn'>Contact</Button>
+                    <Button className='primary-btn'>
+                        <ContactSupportRoundedIcon sx={{
+                            fontSize: '3rem'
+                        }}
+                        />
+                    </Button>
                 </Link>
             </li>
             {isAuthenticated ? (
                 <li style={{ ...itemStyle, transform: 'translate(-50%, 100%)' }}>
                     <Link href="/account-page" passHref >
-                        <Button className='primary-btn'>Account</Button>
+                        <Button className='primary-btn'>
+                            <ManageAccountsRoundedIcon sx={{
+                                fontSize: '3rem'
+                            }}
+                            />
+                        </Button>
                     </Link>
                 </li>
             ) : (

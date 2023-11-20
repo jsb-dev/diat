@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Button, Container, Box } from '@mui/material';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
 import RichTextEditor from '@/components/shared/text-editor/RichTextEditor';
 import { RootState } from '@/redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleEditor, updateDocContent } from '@/redux/slices/tiptapSlice';
 import { NodeProps } from '@reactflow/core';
 import NodeDeleteButton from './node-components/NodeDeleteButton';
+import handleStyles from './node-components/NodeHandleStyles';
 
 const DocumentNode: React.FC<NodeProps> = ({ data }) => {
     const nodeContent = data.content as any;
@@ -48,15 +51,30 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
             style={{
                 width: '300px',
                 height: '600px',
-                backgroundColor: '#f5f5f5',
+                backgroundColor: 'rgb(235, 235, 235)',
                 padding: '1rem .5rem',
+                borderRadius: '1rem',
                 margin: 0,
             }}
             className="DocumentNode"
         >
-            <Button variant="contained" onClick={handleToggleEditor} className="ternary-btn" style={{ pointerEvents: 'auto', position: 'fixed', left: '-25%', top: 0 }}>
-                {editorIsOpen ? "Unlock" : "Edit"}
-            </Button>
+            <Container sx={{
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                transform: 'translate(-25%, -50%)',
+            }}>
+                <Button variant="contained" onClick={handleToggleEditor} className="ternary-btn" style={{ pointerEvents: 'auto' }}>
+                    {editorIsOpen ?
+                        <LockOpenRoundedIcon sx={{
+                            fontSize: '3rem'
+                        }} /> :
+                        <EditRoundedIcon sx={{
+                            fontSize: '3rem'
+                        }} />
+                    }
+                </Button>
+            </Container>
             <RichTextEditor content={content} onUpdate={handleContentUpdate} isFocusable={editorIsOpen} />
             <Box>
                 <Handle
@@ -64,27 +82,38 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                     type="source"
                     position={Position.Top}
                     isConnectable={true}
+                    style={handleStyles.top}
                 />
                 <Handle
                     id="right"
                     type="source"
                     position={Position.Right}
                     isConnectable={true}
+                    style={handleStyles.right}
                 />
                 <Handle
                     id="bottom"
-                    type="source"
+                    type="target"
                     position={Position.Bottom}
                     isConnectable={true}
+                    style={handleStyles.bottom}
                 />
                 <Handle
                     id="left"
-                    type="source"
+                    type="target"
                     position={Position.Left}
                     isConnectable={true}
+                    style={handleStyles.left}
                 />
             </Box>
-            <NodeDeleteButton nodeId={data.id} />
+            <Container sx={{
+                position: 'fixed',
+                bottom: '0',
+                left: '0',
+                transform: 'translate(-25%, 50%)',
+            }}>
+                <NodeDeleteButton nodeId={data.id} />
+            </Container>
         </Container>
     );
 };

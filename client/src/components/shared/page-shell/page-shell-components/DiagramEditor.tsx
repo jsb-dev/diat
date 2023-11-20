@@ -1,6 +1,9 @@
 import React, { useState, ChangeEvent, CSSProperties } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
 import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
@@ -50,9 +53,8 @@ const DiagramEditor: React.FC = () => {
 
     const listStyle: CSSProperties = {
         position: 'fixed',
-        right: '31rem',
-        top: '35%',
-        transform: 'translateX(-15%)',
+        right: 'max(23rem, 170px)',
+        top: '27%',
     };
 
     const itemStyle: CSSProperties = {
@@ -63,9 +65,21 @@ const DiagramEditor: React.FC = () => {
     return (
         <>
             <ul style={listStyle}>
-                <li style={itemStyle}><Button onClick={handleAddDocument} className='ternary-btn'>Add Document</Button></li>
-                <li style={{ ...itemStyle, transform: 'translate(70%, 100%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='ternary-btn'>Add Image</Button></li>
-                <li style={{ ...itemStyle, transform: 'translateY(200%)' }}><Button onClick={() => setCurrentDialog('url')} className='ternary-btn'>Add URL</Button></li>
+                <li style={itemStyle}><Button onClick={handleAddDocument} className='ternary-btn'>
+                    <NoteAddOutlinedIcon sx={{
+                        fontSize: '3rem',
+                    }} />
+                </Button></li>
+                <li style={{ ...itemStyle, transform: 'translate(70%, 100%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='ternary-btn'>
+                    <AddPhotoAlternateOutlinedIcon sx={{
+                        fontSize: '3rem',
+                    }} />
+                </Button></li>
+                <li style={{ ...itemStyle, transform: 'translateY(200%)' }}><Button onClick={() => setCurrentDialog('url')} className='ternary-btn'>
+                    <AddLinkOutlinedIcon sx={{
+                        fontSize: '3rem',
+                    }} />
+                </Button></li>
             </ul>
 
             <Dialog open={currentDialog === 'ImgOrUrl'} onClose={() => setCurrentDialog(null)}>

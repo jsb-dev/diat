@@ -9,6 +9,8 @@ const AUTH0_DOMAIN = process.env.NEXT_PUBLIC_AUTH0_DOMAIN!;
 const AUTH0_CLIENT_ID = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!;
 const CALLBACK_URL = process.env.NEXT_PUBLIC_CALLBACK_URL!;
 
+
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Auth0Provider

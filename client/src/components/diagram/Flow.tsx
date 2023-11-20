@@ -4,7 +4,7 @@ import React, {
     useEffect,
     ComponentType,
 } from 'react';
-import ReactFlow from 'reactflow'
+import ReactFlow, { ReactFlowProvider, useStoreApi } from 'reactflow';
 import {
     applyNodeChanges,
     Node,
@@ -23,7 +23,6 @@ import { selectUser, setUser } from '@/redux/slices/userSlice';
 import DocumentNode from './nodes/DocumentNode'
 import ImgNode from './nodes/ImgNode';
 import UrlNode from './nodes/UrlNode';
-import { Container } from '@mui/material';
 import 'reactflow/dist/style.css';
 
 interface FlowProps {
@@ -56,9 +55,38 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [deletedNodes, setDeletedNodes] = useState<Node[]>([]);
     const [deletedEdges, setDeletedEdges] = useState<Edge[]>([]);
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
-    const [diagramEdited, setDiagramEdited] = useState(false);
+    const [diagramEdited, setDiagramEdited] = useState<boolean>(false);
+    const [centerCoordinates, setCenterCoordinates] = useState<number[]>([0, 0]);
 
     const dispatch = useDispatch();
+    const store = useStoreApi();
+
+    ////////////////////////////// CENTER COORDS //////////////////////////////
+    const calculateCenterCoords = useCallback(() => {
+        const {
+            height,
+            width,
+            transform: [transformX, transformY, zoomLevel]
+        } = store.getState();
+        const zoomMultiplier = 1 / zoomLevel;
+
+        const centerX = (-transformX * zoomMultiplier + (width * zoomMultiplier) / 2) - (width / 2);
+        const centerY =
+            (-transformY * zoomMultiplier + (height * zoomMultiplier) / 2) - (height / 2);
+
+        return { centerX, centerY };
+    }, [store]);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const { centerX, centerY } = calculateCenterCoords();
+            setCenterCoordinates([centerX, centerY]);
+        }, 500);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
 
     ////////////////////////////// SAVE DIAGRAM ON UPDATE //////////////////////////////
     useEffect(() => {
@@ -242,14 +270,14 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     ////////////////////////////// EDITING ACTIONS //////////////////////////////
 
-    const addDocNode = useCallback((type: string, x: number, y: number) => {
+    const addDocNode = useCallback((type: string) => {
         const id = uuid();
         const newNode: Node = {
             id: id,
             type,
             position: {
-                x: x,
-                y: y
+                x: centerCoordinates[0],
+                y: centerCoordinates[1]
             },
             data: {
                 id,
@@ -258,8 +286,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                     type: 'doc',
                 },
                 position: {
-                    x: x,
-                    y: y
+                    x: centerCoordinates[0],
+                    y: centerCoordinates[1]
                 },
                 nodeType: 'documentNode',
             },
@@ -271,16 +299,16 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         setNodes([...nodes, newNode]);
         dispatch(setDiagram({ nodes: [...nodes, newNode], edges }));
     }
-        , [nodes, edges, dispatch]);
+        , [centerCoordinates, nodes, dispatch, edges]);
 
-    const addImgNode = useCallback((type: string, asset: any, x: number, y: number) => {
+    const addImgNode = useCallback((type: string, asset: any,) => {
         const id = uuid();
         const newNode: Node = {
             id: id,
             type,
             position: {
-                x: x,
-                y: y
+                x: centerCoordinates[0],
+                y: centerCoordinates[1]
             },
             data: {
                 id,
@@ -288,8 +316,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                     asset: asset,
                 },
                 position: {
-                    x: x,
-                    y: y
+                    x: centerCoordinates[0],
+                    y: centerCoordinates[1]
                 },
                 nodeType: type,
             },
@@ -297,25 +325,25 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         setNodes([...nodes, newNode]);
         dispatch(setDiagram({ nodes: [...nodes, newNode], edges }));
     }
-        , [nodes, edges, dispatch]);
+        , [centerCoordinates, nodes, dispatch, edges]);
 
     // NOTE: addUrlNode isn't identical to addImgNode, asset is a string here
-    const addUrlNode = useCallback((type: string, asset: string, x: number, y: number) => {
+    const addUrlNode = useCallback((type: string, asset: string) => {
         const id = uuid();
         const newNode: Node = {
             id: id,
             type,
             position: {
-                x: x,
-                y: y
+                x: centerCoordinates[0],
+                y: centerCoordinates[1]
             },
             data: {
                 id,
                 content: {
                     asset: asset,
                     position: {
-                        x: x,
-                        y: y
+                        x: centerCoordinates[0],
+                        y: centerCoordinates[1]
                     },
                 },
                 nodeType: type,
@@ -324,7 +352,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
         setNodes([...nodes, newNode]);
         dispatch(setDiagram({ nodes: [...nodes, newNode], edges }));
     }
-        , [nodes, edges, dispatch]);
+        , [centerCoordinates, nodes, dispatch, edges]);
 
     const deleteNode = useCallback((nodeId: string) => {
 
@@ -370,10 +398,10 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     const handleAddDocNode = useCallback((type: string, x: number, y: number, action: string) => {
         if (lastActionProcessed !== action) {
-            addDocNode(type, x, y);
+            addDocNode(type);
             setLastActionProcessed(action);
         } else {
-            addDocNode(type, x, y);
+            addDocNode(type);
             dispatch(clearDiagramEditorState());
         }
     }, [addDocNode, dispatch, lastActionProcessed]);
@@ -390,20 +418,20 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
 
     const handleAddImgNode = useCallback((type: string, asset: string, x: number, y: number, action: string) => {
         if (lastActionProcessed !== action) {
-            addImgNode(type, asset, x, y);
+            addImgNode(type, asset);
             setLastActionProcessed(action);
         } else {
-            addImgNode(type, asset, x, y);
+            addImgNode(type, asset);
             dispatch(clearDiagramEditorState());
         }
     }, [addImgNode, lastActionProcessed, dispatch]);
 
     const handleAddUrlNode = useCallback((type: string, asset: string, x: number, y: number, action: string) => {
         if (lastActionProcessed !== action) {
-            addUrlNode(type, asset, x, y);
+            addUrlNode(type, asset);
             setLastActionProcessed(action);
         } else {
-            addUrlNode(type, asset, x, y);
+            addUrlNode(type, asset);
             dispatch(clearDiagramEditorState());
         }
     }, [addUrlNode, dispatch, lastActionProcessed]);
@@ -498,10 +526,35 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                     handleNodeClick(node.id);
                 }
             }
-            className='Flow'
+            onEdgeClick={
+                (event, edge) => {
+                    const updatedEdge = {
+                        ...edge,
+                        sourceHandle: null,
+                        targetHandle: null,
+                    };
+
+                    const updatedEdges = edges.filter((e) => e.id !== edge.id);
+                    setEdges(updatedEdges);
+                    dispatch(setDiagram({ nodes, edges: updatedEdges }));
+
+                    setDeletedEdges([...deletedEdges, updatedEdge]);
+                    setDiagramEdited(true);
+                }
+            }
+            id='Flow'
         />
 
     );
 };
 
-export default Flow;
+const FlowWrapper: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
+    return (
+        <ReactFlowProvider
+        >
+            <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
+        </ReactFlowProvider>
+    );
+};
+
+export default FlowWrapper;

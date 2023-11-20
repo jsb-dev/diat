@@ -27,7 +27,8 @@ const submitNodeUrl = async (req, res) => {
     const path = parsedUrl.pathname;
 
     if (!url) {
-      return res.status(400).json({ message: 'URL is required' });
+      res.status(400).json({ message: 'URL is required' });
+      return;
     }
 
     const robotsRes = await fetch(`${parsedUrl.origin}/robots.txt`);
@@ -35,15 +36,21 @@ const submitNodeUrl = async (req, res) => {
     if (robotsRes.ok) {
       const robotsTxt = await robotsRes.text();
       if (isPathDisallowed(robotsTxt, path)) {
-        return res
-          .status(403)
-          .json({ message: 'Not allowed to scrape this website' });
+        if (!res.finished) {
+          res
+            .status(403)
+            .json({ message: 'Not allowed to scrape this website' });
+        }
+        return;
       }
     } else {
-      return res.status(403).json({
-        message:
-          'No robots.txt found or could not be retrieved. URL cannot be summarized.',
-      });
+      if (!res.finished) {
+        res.status(403).json({
+          message:
+            'No robots.txt found or could not be retrieved. URL cannot be summarized.',
+        });
+      }
+      return;
     }
 
     const response = await fetch(url);
@@ -64,10 +71,14 @@ const submitNodeUrl = async (req, res) => {
 
     const websiteName = parsedUrl.host || 'N/A';
 
-    return res.json({ title, description, websiteName });
+    if (!res.finished) {
+      res.json({ title, description, websiteName });
+    }
   } catch (error) {
     console.error('Error scraping webpage:', error);
-    return res.status(500).json({ message: 'Internal Server Error', error });
+    if (!res.finished) {
+      res.status(500).json({ message: 'Internal Server Error', error });
+    }
   }
 };
 
