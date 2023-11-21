@@ -60,7 +60,7 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
     return (
         <Box sx={{ width: '300px', padding: '1rem', backgroundColor: '#3c3c3c' }}>
             <Button
-                variant="contained"
+                variant='contained'
                 style={{ position: 'fixed', top: '0', right: '0', transform: 'translate(75%, -75%)', }}
                 onClick={() => window.open(asset, '_blank')}
                 className='pentenary-btn'
@@ -86,29 +86,29 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
                 <p style={commonStyles}><strong>{webpageInfo.websiteName}</strong></p>
             </Container>
             <Handle
-                id="top"
-                type="source"
+                id='top'
+                type='source'
                 position={Position.Top}
                 isConnectable={true}
                 style={handleStyles.top}
             />
             <Handle
-                id="right"
-                type="source"
+                id='right'
+                type='source'
                 position={Position.Right}
                 isConnectable={true}
                 style={handleStyles.right}
             />
             <Handle
-                id="bottom"
-                type="target"
+                id='bottom'
+                type='target'
                 position={Position.Bottom}
                 isConnectable={true}
                 style={handleStyles.bottom}
             />
             <Handle
-                id="left"
-                type="target"
+                id='left'
+                type='target'
                 position={Position.Left}
                 isConnectable={true}
                 style={handleStyles.left}

@@ -25,40 +25,42 @@ const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({
     return (
         <>
             <TextField
-                label="Current Email"
-                type="email"
+                label='Current Email'
+                type='email'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 value={currentEmail}
                 onChange={(e) => setCurrentEmail(e.target.value)}
-                className="text-field-selector"
+                className='text-field-selector'
                 sx={textFieldStyle}
             />
             <TextField
-                label="New Email"
-                type="email"
+                label='New Email'
+                type='email'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-                className="text-field-selector"
+                className='text-field-selector'
                 sx={textFieldStyle}
             />
             <TextField
-                label="Confirm New Email"
-                type="email"
+                label='Confirm New Email'
+                type='email'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 value={confirmEmail}
                 onChange={(e) => setConfirmEmail(e.target.value)}
                 onPaste={(e) => {
                     e.preventDefault();
                     console.error('Pasting email is not allowed.');
                 }}
-                className="text-field-selector"
-                sx={textFieldStyle}
+                className='text-field-selector'
+                sx={{ ...textFieldStyle, marginBottom: '3rem' }}
             />
-            <Button variant="contained" className="primary-btn" onClick={handleEmailChange}>
+            <Button variant='contained' className='primary-btn' onClick={handleEmailChange} sx={{
+                minWidth: '200px',
+            }}>
                 Change Email
             </Button>
         </>

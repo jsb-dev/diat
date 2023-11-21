@@ -1,8 +1,8 @@
-import React from "react";
-import { Button } from "@mui/material";
+import React from 'react';
+import { Button } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 import { useDispatch } from 'react-redux';
 import { clearAuthState } from '@redux/slices/authSlice';
 import { clearDiagram } from '@redux/slices/flowSlice';

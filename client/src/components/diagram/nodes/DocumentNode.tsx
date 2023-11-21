@@ -47,7 +47,7 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
         , [content, data.id, dispatch, requestUpdate]);
 
     return (
-        <Container component="div"
+        <Container component='div'
             style={{
                 width: '300px',
                 height: '600px',
@@ -56,7 +56,7 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                 borderRadius: '1rem',
                 margin: 0,
             }}
-            className="DocumentNode"
+            className='DocumentNode'
         >
             <Container sx={{
                 position: 'fixed',
@@ -64,7 +64,7 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                 left: '0',
                 transform: 'translate(-25%, -50%)',
             }}>
-                <Button variant="contained" onClick={handleToggleEditor} className="ternary-btn" style={{ pointerEvents: 'auto' }}>
+                <Button variant='contained' onClick={handleToggleEditor} className='ternary-btn' style={{ pointerEvents: 'auto' }}>
                     {editorIsOpen ?
                         <LockOpenRoundedIcon sx={{
                             fontSize: '3rem'
@@ -78,29 +78,29 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
             <RichTextEditor content={content} onUpdate={handleContentUpdate} isFocusable={editorIsOpen} />
             <Box>
                 <Handle
-                    id="top"
-                    type="source"
+                    id='top'
+                    type='source'
                     position={Position.Top}
                     isConnectable={true}
                     style={handleStyles.top}
                 />
                 <Handle
-                    id="right"
-                    type="source"
+                    id='right'
+                    type='source'
                     position={Position.Right}
                     isConnectable={true}
                     style={handleStyles.right}
                 />
                 <Handle
-                    id="bottom"
-                    type="target"
+                    id='bottom'
+                    type='target'
                     position={Position.Bottom}
                     isConnectable={true}
                     style={handleStyles.bottom}
                 />
                 <Handle
-                    id="left"
-                    type="target"
+                    id='left'
+                    type='target'
                     position={Position.Left}
                     isConnectable={true}
                     style={handleStyles.left}

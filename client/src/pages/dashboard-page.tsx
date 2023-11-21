@@ -4,7 +4,7 @@ import { AppDispatch } from '@/redux/store';
 import { setAuthState } from '@/redux/slices/authSlice';
 import { setDiagram, setDiagramInCache } from '@/redux/slices/flowSlice';
 import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
-import { updateLayout } from "@/redux/slices/uiSlice";
+import { updateLayout } from '@/redux/slices/uiSlice';
 import { useAuth0 } from '@auth0/auth0-react';
 import { User } from '@/interfaces/User';
 import { Node, Edge } from 'reactflow';
@@ -69,7 +69,7 @@ const DashboardPage: FC = () => {
           try {
             const responseData = await getUserDetails(user.email);
             if (!responseData) {
-              console.log("No response data.");
+              console.log('No response data.');
               return;
             }
 
@@ -119,12 +119,12 @@ const DashboardPage: FC = () => {
   };
 
   const main = loading ? (
-    <Container component="main" className='primary-section' id='FlowContainer'>
+    <Container component='main' className='main-content' id='FlowContainer'>
       <LoadingSpinner />
       <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
     </Container>
   ) : (
-    <Container component="main" className='primary-section' id='FlowContainer'>
+    <Container component='main' className='main-content' id='FlowContainer'>
       <Flow diagramNodes={diagramNodes} diagramEdges={diagramEdges} />
     </Container>
   );

@@ -145,7 +145,7 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
 
     return (
         <>
-            <IconButton onClick={handleMenuOpen} className="ternary-btn">
+            <IconButton onClick={handleMenuOpen} className='ternary-btn'>
                 <FormatBoldIcon style={menuIconStyle} />
                 <FormatItalicIcon style={menuIconStyle} />
                 <FormatUnderlinedIcon style={menuIconStyle} />

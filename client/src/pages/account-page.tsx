@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container } from '@mui/material';
+import { Container, Divider } from '@mui/material';
 import PageShell from '@/components/shared/page-shell/PageShell';
 import AccountSettingsMenu from '@/components/page-components/account/AccountSettingsMenu';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -9,6 +9,7 @@ import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/s
 import { updateLayout } from '@/redux/slices/uiSlice';
 import { User } from '@/interfaces/User';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import SiteFooter from '@/components/shared/SiteFooter';
 
 function AccountPage() {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -59,11 +60,11 @@ function AccountPage() {
                     try {
                         const responseData = await getUserDetails(user.email);
                         if (!responseData) {
-                            console.log("No response data.");
+                            console.log('No response data.');
                             return;
                         }
 
-                        const { user: fetchedUser, diagram: fetchedDiagram } = responseData;
+                        const { user: fetchedUser } = responseData;
 
                         dispatch(setUser(fetchedUser));
                         dispatch(setAuthState({
@@ -98,20 +99,29 @@ function AccountPage() {
         return () => window.removeEventListener('resize', handleResize);
     }, [dispatch]);
 
-
-    const containerStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        width: '100%',
-    };
-
     const main = loading ? (
         <LoadingSpinner />
     ) : (
-        <Container component="main" className='primary-section' sx={containerStyle}>
-            <AccountSettingsMenu />
+        <Container component='main' className='main-content'>
+            <Container component='section' className='section-selector'>
+                <Container sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '80dvh',
+                    padding: 0,
+                    margin: 0,
+                }}>
+                    <AccountSettingsMenu />
+                </Container>
+                <Divider
+                    sx={{
+                        marginTop: '5rem',
+                    }}
+                />
+            </Container>
+            <SiteFooter />
         </Container>
     );
 

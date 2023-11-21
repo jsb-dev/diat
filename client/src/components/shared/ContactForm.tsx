@@ -25,36 +25,38 @@ const ContactForm: React.FC<ContactFormProps> = ({
     return (
         <>
             <TextField
-                label="Email"
-                type="email"
+                label='Email'
+                type='email'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 value={userEmail}
                 onChange={(e) => setUserEmail(e.target.value)}
-                className="text-field-selector"
+                className='text-field-selector'
                 sx={textFieldStyle}
             />
             <TextField
-                label="Subject"
+                label='Subject'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="text-field-selector"
+                className='text-field-selector'
                 sx={textFieldStyle}
             />
             <TextField
-                label="Message"
+                label='Message'
                 fullWidth
-                margin="normal"
+                margin='normal'
                 multiline
                 rows={4}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="text-field-selector"
-                sx={textFieldStyle}
+                className='text-field-selector'
+                sx={{ ...textFieldStyle, marginBottom: '3rem' }}
             />
-            <Button variant="contained" className="primary-btn" onClick={handleSubmitMsg}>
+            <Button variant='contained' className='primary-btn' onClick={handleSubmitMsg} sx={{
+                minWidth: '200px',
+            }}>
                 Send
             </Button>
         </>

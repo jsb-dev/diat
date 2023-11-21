@@ -45,7 +45,7 @@ const ContentBanner: React.FC = () => {
                 LOGO HERE
             </Box>
             <CardContent sx={commonStyles}>
-                <Typography variant="h6" align="center" sx={commonStyles}>
+                <Typography variant='h6' align='center' sx={commonStyles}>
                     Join Us
                 </Typography>
                 <SignupButton />

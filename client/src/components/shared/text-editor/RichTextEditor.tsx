@@ -110,7 +110,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate, isFo
                     onUpdate(translatedContent);
 
                 } else {
-                    console.error("Received invalid document structure from editor:", rawJson);
+                    console.error('Received invalid document structure from editor:', rawJson);
                 }
             },
         });
@@ -125,11 +125,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onUpdate, isFo
             padding: 0,
             margin: 0,
             pointerEvents: isFocusable ? 'auto' : 'none',
-        }} className="RichTextEditor"
+        }} className='RichTextEditor'
         >
             <EditorContent editor={editor} />
             {isFocusable ? (
-                <Container component="div" style={{
+                <Container component='div' style={{
                     position: 'fixed',
                     width: '4rem',
                     right: '0',

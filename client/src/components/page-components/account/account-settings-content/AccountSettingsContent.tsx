@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Box, TextField, Button } from '@mui/material';
+import { Container, TextField, Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 import { clearAuthState } from '@redux/slices/authSlice';
 import { clearDiagram } from '@redux/slices/flowSlice';
 import { clearUser, selectUser } from '@redux/slices/userSlice';
@@ -13,12 +13,18 @@ interface AccountSettingsContentProps {
     selectedMenu: string;
 }
 
-const boxStyle = {
+const containerStyle = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
+    width: '100%',
+    height: '100%',
 };
+
+const buttonStyles = {
+    minWidth: '200px',
+}
 
 const textFieldStyle = {
     '& label.Mui-focused': {
@@ -227,15 +233,23 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
 
     const contentMap: { [key: string]: JSX.Element } = {
         changePassword: (
-            <Box sx={boxStyle}>
-                <p>To change your password, you will be logged out and redirected to our secure authentication page.</p>
-                <Button variant="contained" className="primary-btn" onClick={handlePasswordChange}>
+            <Container sx={containerStyle}>
+                <Typography
+                    variant='body1'
+                    className='p-selector'
+                    sx={{
+                        marginBottom: '3rem',
+                        padding: 0,
+                        textAlign: 'center',
+                    }}
+                >To change your password, you will be logged out and redirected to our secure authentication page.</Typography>
+                <Button variant='contained' className='primary-btn' onClick={handlePasswordChange} sx={buttonStyles}>
                     Change Password
                 </Button>
-            </Box>
+            </Container>
         ),
         changeEmail: (
-            <Box sx={boxStyle}>
+            <Container sx={containerStyle}>
                 <ChangeEmailForm
                     currentEmail={currentEmail}
                     newEmail={newEmail}
@@ -245,10 +259,10 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     setConfirmEmail={setConfirmEmail}
                     handleEmailChange={handleEmailChange}
                 />
-            </Box>
+            </Container>
         ),
         help: (
-            <Box sx={{ boxStyle }}>
+            <Container sx={containerStyle}>
                 <ContactForm
                     userEmail={userEmail}
                     subject={subject}
@@ -258,55 +272,55 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     setMessage={setMessage}
                     handleSubmitMsg={handleSubmitMsg}
                 />
-            </Box>
+            </Container>
         ),
         deleteAccount: (
-            <Box sx={boxStyle}>
+            <Container sx={containerStyle}>
                 <TextField
-                    label="Email"
-                    type="email"
+                    label='Email'
+                    type='email'
                     fullWidth
-                    margin="normal"
+                    margin='normal'
                     value={deleteEmail}
                     onChange={(e) => setDeleteEmail(e.target.value)}
-                    className="text-field-selector"
+                    className='text-field-selector'
                     sx={textFieldStyle}
                 />
                 <TextField
-                    label="Confirm Email"
-                    type="email"
+                    label='Confirm Email'
+                    type='email'
                     fullWidth
-                    margin="normal"
+                    margin='normal'
                     value={confirmDeleteEmail}
                     onChange={(e) => setConfirmDeleteEmail(e.target.value)}
                     onPaste={(e) => {
                         e.preventDefault();
                         console.error('Pasting email is not allowed.');
                     }}
-                    className="text-field-selector"
+                    className='text-field-selector'
                     sx={textFieldStyle}
                 />
                 <TextField
-                    label="Type DELETE to confirm"
+                    label='Type DELETE to confirm'
                     fullWidth
-                    margin="normal"
+                    margin='normal'
                     value={deleteConfirmation}
                     onChange={(e) => setDeleteConfirmation(e.target.value)}
                     onPaste={(e) => {
                         e.preventDefault();
                         console.error('Pasting is not allowed.');
                     }}
-                    className="text-field-selector"
-                    sx={textFieldStyle}
+                    className='text-field-selector'
+                    sx={{ ...textFieldStyle, marginBottom: '3rem' }}
                 />
-                <Button variant="contained" className="primary-btn" onClick={handleDeleteAccount}>
+                <Button variant='contained' className='primary-btn' onClick={handleDeleteAccount} sx={buttonStyles}>
                     Delete Account
                 </Button>
-            </Box>
+            </Container>
         ),
     };
 
-    return contentMap[selectedMenu] || <Box sx={boxStyle}>Select an option from the menu.</Box>;
+    return contentMap[selectedMenu] || <Container sx={containerStyle}>Select an option from the menu.</Container>;
 };
 
 export default AccountSettingsContent;

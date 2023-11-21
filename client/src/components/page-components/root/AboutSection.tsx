@@ -5,7 +5,7 @@ import contentData from '@/assets/data/RootContent.json';
 const AboutSection: React.FC = () => {
 
     return (
-        <Container component="section" className='section-selector'>
+        <Container component='section' className='section-selector'>
             <Box>
                 <Typography variant='h1' className='h1-selector' align='center'>
                     {contentData.aboutSection.title}

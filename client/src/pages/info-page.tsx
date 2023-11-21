@@ -1,8 +1,10 @@
-import React from "react";
-import { Container, Divider, Typography } from "@mui/material";
-import PageShell from "@/components/shared/page-shell/PageShell";
-import SiteFooter from "@/components/shared/SiteFooter";
-import infoContent from "@/assets/data/InfoContent.json";
+import React, { useEffect } from 'react';
+import { Container, Divider, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { updateLayout } from '@/redux/slices/uiSlice';
+import PageShell from '@/components/shared/page-shell/PageShell';
+import SiteFooter from '@/components/shared/SiteFooter';
+import infoContent from '@/assets/data/InfoContent.json';
 
 type ItemType = {
   type: string;
@@ -20,22 +22,37 @@ const ulStyles = {
 };
 
 function InfoPage() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleResize = () => {
+      dispatch(updateLayout({ innerWidth: window.innerWidth, innerHeight: window.innerHeight }));
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [dispatch]);
+
+
   const renderSection = (section: SectionType) => (
     section.sections.map((item: ItemType, index: number) => {
       switch (item.type) {
         case 'heading':
-          return <Typography key={index} variant="h3" component="h3" className="h3-selector">{item.content}</Typography>;
+          return <Typography key={index} variant='h3' component='h3' className='h3-selector'>{item.content}</Typography>;
         case 'subheading':
-          return <Typography key={index} variant="h4" component="h4" className="h4-selector">{item.content}</Typography>;
+          return <Typography key={index} variant='h4' component='h4' className='h4-selector'>{item.content}</Typography>;
         case 'paragraph':
-          return <Typography key={index} variant="body1" className="p-selector">{item.content}</Typography>;
+          return <Typography key={index} variant='body1' className='p-selector'>{item.content}</Typography>;
         case 'list':
           if (Array.isArray(item.content)) {
             return (
               <ul key={index} style={ulStyles}>
                 {item.content.map((listItem, listItemIndex) => (
                   <li key={listItemIndex} >
-                    <Typography variant="body1" className="p-selector">{listItem}</Typography>
+                    <Typography variant='body1' className='p-selector'>{listItem}</Typography>
                   </li>
                 ))}
               </ul>
@@ -43,21 +60,23 @@ function InfoPage() {
           }
           break;
         default:
-          return <Typography key={index} variant="body1" className="p-selector">{item.content}</Typography>;
+          return <Typography key={index} variant='body1' className='p-selector'>{item.content}</Typography>;
       }
     })
   );
 
   const main = (
-    <Container component="main" className='primary-section'>
-      <Typography variant='h1' className='h1-selector'>
-        Info
-      </Typography>
-      <Divider />
-      <Container component="section" className='section-selector'>
-        {renderSection(infoContent.infoSection)}
+    <Container component='main' className='main-content'>
+      <Container component='section' className='section-selector'>
+        <Typography variant='h1' className='h1-selector'>
+          Info
+        </Typography>
+        <Divider />
+        <Container component='section' className='section-selector'>
+          {renderSection(infoContent.infoSection)}
+        </Container>
+        <Divider />
       </Container>
-      <Divider />
       <SiteFooter />
     </Container>
   );

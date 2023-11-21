@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Container } from '@mui/material';
+import { Container, Divider } from '@mui/material';
 import { RootState } from '@/redux/store';
 import AccountSettingsList from './AccountSettingsList';
 import AccountSettingsContent from './account-settings-content/AccountSettingsContent';
@@ -11,18 +11,44 @@ const AccountSettingsMenu = () => {
 
     const containerStyle = {
         display: 'flex',
-        borderRadius: '1rem',
         flexDirection: viewportIsPortable || viewportIsVertical ? 'column' : 'row',
-        justifyContent: 'center',
         alignItems: 'center',
-        width: '85%',
-        height: '85%',
+        width: viewportIsPortable || viewportIsVertical ? '95%' : '100%',
+        margin: 0,
+        height: 'fit-content',
+        padding: '2rem 0'
     };
 
+    const subContainerStyles = {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        margin: '1rem',
+        padding: 0
+    }
+
     return (
-        <Container component="section" className="secondary-container" sx={containerStyle}>
-            <AccountSettingsList selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />
-            <AccountSettingsContent selectedMenu={selectedMenu} />
+        <Container component='section' className='secondary-container' sx={containerStyle}>
+            <Container sx={{
+                ...subContainerStyles, width: viewportIsPortable || viewportIsVertical ? '100%' : '60%',
+            }}>
+                <AccountSettingsList selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} viewportIsPortable={viewportIsPortable} viewportIsVertical={viewportIsVertical} />
+            </Container>
+            {viewportIsPortable || viewportIsVertical && (<Divider sx={{
+                margin: '3rem'
+            }} />)}
+            <Container sx={{
+                ...subContainerStyles,
+                backgroundColor: '#7fb0d1c5',
+                width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
+                height: '100%',
+                minHeight: viewportIsPortable || viewportIsVertical ? '350px' : '450px',
+                padding: '3rem',
+            }} >
+                <AccountSettingsContent selectedMenu={selectedMenu} />
+            </Container>
         </Container>
     );
 };

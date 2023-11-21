@@ -4,6 +4,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
@@ -14,6 +16,7 @@ const DiagramEditor: React.FC = () => {
     const [currentDialog, setCurrentDialog] = useState<DialogType>(null);
     const [asset, setAsset] = useState('');
     const [sourceType, setSourceType] = useState<'img' | 'url'>('url');
+    const { viewportIsVertical, viewportIsPortable } = useSelector((state: RootState) => state.ui);
 
     const handleAddDocument = () => {
         dispatch(addDocNode({ type: 'documentNode', x: 0, y: 0 }));
@@ -53,8 +56,12 @@ const DiagramEditor: React.FC = () => {
 
     const listStyle: CSSProperties = {
         position: 'fixed',
-        right: 'max(23rem, 170px)',
-        top: '27%',
+        right: !viewportIsVertical && viewportIsPortable ? '26rem'
+            : viewportIsVertical ? 'max(24rem, 160px)'
+                : '18rem',
+        top: !viewportIsVertical && viewportIsPortable ? '7%'
+            : viewportIsVertical ? '32%'
+                : '20%',
     };
 
     const itemStyle: CSSProperties = {
@@ -98,8 +105,8 @@ const DiagramEditor: React.FC = () => {
                 <DialogTitle>Add Image</DialogTitle>
                 <DialogContent>
                     <input
-                        type="file"
-                        accept="image/*"
+                        type='file'
+                        accept='image/*'
                         onChange={handleFileUpload}
                     />
                 </DialogContent>
@@ -114,9 +121,9 @@ const DiagramEditor: React.FC = () => {
                 <DialogContent>
                     <TextField
                         autoFocus
-                        margin="dense"
-                        label="Website URL"
-                        type="text"
+                        margin='dense'
+                        label='Website URL'
+                        type='text'
                         fullWidth
                         value={asset}
                         onChange={(e) => setAsset(e.target.value)}
