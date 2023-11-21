@@ -78,6 +78,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     }, [store]);
 
     useEffect(() => {
+        console.log('Nodes: ', nodes);
         const intervalId = setInterval(() => {
             const { centerX, centerY } = calculateCenterCoords();
             setCenterCoordinates([centerX, centerY]);

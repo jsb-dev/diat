@@ -65,9 +65,7 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
                 onClick={() => window.open(asset, '_blank')}
                 className='pentenary-btn'
             >
-                <OpenInNewRoundedIcon sx={{
-                    fontSize: '3rem'
-                }} />
+                <OpenInNewRoundedIcon />
             </Button>
             {
                 <>

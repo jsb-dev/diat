@@ -10,6 +10,8 @@ type JSONContent = {
     content: any[];
 };
 
+// Only does block content type, needs to cover the tags used e.g. code and italics for each scenario
+
 const translateDocContent = (input: JSONContent): DocContent | null => {
     if (input.type !== 'doc' || !Array.isArray(input.content)) {
         return null;
