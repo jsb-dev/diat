@@ -109,7 +109,6 @@ function AccountPage() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     width: '100%',
-                    height: '80dvh',
                     padding: 0,
                     margin: 0,
                 }}>

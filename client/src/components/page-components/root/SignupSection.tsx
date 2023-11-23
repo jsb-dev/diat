@@ -56,7 +56,7 @@ const SignupSection: React.FC = () => {
                 height: viewportIsPortable || viewportIsVertical ? '58dvh' : '78dvh',
                 padding: '0',
             }}>
-                <Container component='div'>
+                <Container>
                     <Typography variant='h1' className='h1-selector'>
                         {contentData.signupSection.title}
                     </Typography>

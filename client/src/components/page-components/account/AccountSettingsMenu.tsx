@@ -13,7 +13,7 @@ const AccountSettingsMenu = () => {
         display: 'flex',
         flexDirection: viewportIsPortable || viewportIsVertical ? 'column' : 'row',
         alignItems: 'center',
-        width: viewportIsPortable || viewportIsVertical ? '95%' : '100%',
+        width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
         margin: 0,
         height: 'fit-content',
         padding: '2rem 0'
@@ -32,7 +32,8 @@ const AccountSettingsMenu = () => {
     return (
         <Container component='section' className='secondary-container' sx={containerStyle}>
             <Container sx={{
-                ...subContainerStyles, width: viewportIsPortable || viewportIsVertical ? '100%' : '60%',
+                ...subContainerStyles, width: viewportIsPortable || viewportIsVertical ? '' : '60%',
+                padding: '2rem',
             }}>
                 <AccountSettingsList selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} viewportIsPortable={viewportIsPortable} viewportIsVertical={viewportIsVertical} />
             </Container>
@@ -43,8 +44,7 @@ const AccountSettingsMenu = () => {
                 ...subContainerStyles,
                 backgroundColor: '#7fb0d1c5',
                 width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
-                height: '100%',
-                minHeight: viewportIsPortable || viewportIsVertical ? '350px' : '450px',
+                minHeight: viewportIsPortable || viewportIsVertical ? '380px' : '480px',
                 padding: '3rem',
             }} >
                 <AccountSettingsContent selectedMenu={selectedMenu} />

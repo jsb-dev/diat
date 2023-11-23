@@ -29,6 +29,7 @@ const styles = {
     PortableCard: {
         ...cardStyles,
         height: '60dvh',
+        width: '95%',
     }
 };
 
