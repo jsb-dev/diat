@@ -2,6 +2,7 @@ import React, {
     useCallback,
     useState,
     useEffect,
+    useRef,
     ComponentType,
 } from 'react';
 import ReactFlow, { ReactFlowProvider, useStoreApi } from 'reactflow';
@@ -46,6 +47,7 @@ const rfStyle: React.CSSProperties = {
 const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const user = useSelector(selectUser);
     const editorIsOpen = useSelector((state: RootState) => state.editor.editorIsOpen);
+    const prevEditorIsOpen = useRef(editorIsOpen);
     const diagramEditorState = useSelector((state: RootState) => state.diagramEditor);
     const tiptapState = useSelector((state: RootState) => state.editor);
     const [nodes, setNodes] = useState<Node[]>(diagramNodes);
@@ -57,9 +59,25 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [lastActionProcessed, setLastActionProcessed] = useState<string | null>(null);
     const [diagramEdited, setDiagramEdited] = useState<boolean>(false);
     const [centerCoordinates, setCenterCoordinates] = useState<number[]>([0, 0]);
+    const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null);
 
     const dispatch = useDispatch();
     const store = useStoreApi();
+
+    ////////////////////////////// NODE FOCUSING //////////////////////////////
+    useEffect(() => {
+        if (prevEditorIsOpen.current === true && !editorIsOpen) {
+            setFocusedNodeId(null);
+
+            const updatedNodes = nodes.map((n) => {
+                return { ...n, className: '' };
+            });
+
+            setNodes(updatedNodes);
+        }
+
+        prevEditorIsOpen.current = editorIsOpen;
+    }, [editorIsOpen, nodes]);
 
     ////////////////////////////// CENTER COORDS //////////////////////////////
     const calculateCenterCoords = useCallback(() => {
@@ -78,7 +96,6 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     }, [store]);
 
     useEffect(() => {
-        console.log('Nodes: ', nodes);
         const intervalId = setInterval(() => {
             const { centerX, centerY } = calculateCenterCoords();
             setCenterCoordinates([centerX, centerY]);
@@ -516,6 +533,22 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
+            onNodeDoubleClick={
+                (event, node) => {
+                    setFocusedNodeId(node.id);
+
+                    const updatedNodes = nodes.map(n => {
+                        if (n.id === node.id) {
+                            return { ...n, className: 'focused-node', draggable: editorIsOpen ? false : n.draggable };
+                        } else if (n.className === 'focused-node') {
+                            return { ...n, className: '' };
+                        }
+                        return n;
+                    });
+
+                    setNodes(updatedNodes);
+                }
+            }
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             style={rfStyle}

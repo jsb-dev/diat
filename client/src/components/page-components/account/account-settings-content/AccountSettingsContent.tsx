@@ -78,7 +78,7 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
         const performLogoutAndRedirect = async () => {
             if (credentialsCleared) {
                 try {
-                    logout({ logoutParams: { returnTo: window.location.origin } });
+                    await logout({ logoutParams: { returnTo: window.location.origin } });
                     router.replace('/');
                     await loginWithRedirect();
                 } catch (error) {

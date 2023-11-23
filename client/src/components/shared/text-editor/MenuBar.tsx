@@ -4,6 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -23,11 +24,12 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
     };
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+        anchorEl ? setAnchorEl(null) : setAnchorEl(event.currentTarget);
     };
 
     const handleMenuClose = () => {
         setAnchorEl(null);
+        editor?.chain().focus().run();
     };
 
     if (!editor) {
@@ -144,8 +146,8 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
     }
 
     return (
-        <>
-            <IconButton onClick={handleMenuOpen} className='ternary-btn'>
+        <Container>
+            <IconButton onClick={handleMenuOpen} className='ternary-btn' >
                 <FormatBoldIcon style={menuIconStyle} />
                 <FormatItalicIcon style={menuIconStyle} />
                 <FormatUnderlinedIcon style={menuIconStyle} />
@@ -154,14 +156,22 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
-                style={{
-                    transform: 'translate(7rem, 2rem)',
-                    maxHeight: '400px',
-                }}
+                sx={
+                    {
+                        height: '80dvh',
+                        width: '100px',
+                        margin: '1rem',
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        '& .MuiPaper-root': {
+                            backgroundColor: 'rgba(255,255,255,0.92)',
+                        },
+                    }}
             >
                 {[stylesItems, formatItems, headerSizeItems].map((items, idx) => (
                     items.map((item, innerIdx) => (
-                        <MenuItem key={`${idx}-${innerIdx}`} onClick={() => { performAction(item.type); handleMenuClose(); }}>
+                        <MenuItem key={`${idx}-${innerIdx}`} onClick={() => { performAction(item.type); }}>
                             <Tooltip title={item.tooltip}>
                                 {
                                     'icon' in item ?
@@ -192,7 +202,7 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                     ))
                 ))}
             </Menu>
-        </>
+        </Container>
     );
 
 };

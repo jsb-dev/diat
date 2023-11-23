@@ -47,22 +47,14 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
         , [content, data.id, dispatch, requestUpdate]);
 
     return (
-        <Container component='div'
-            style={{
-                width: '300px',
-                height: '600px',
-                backgroundColor: 'rgb(235, 235, 235)',
-                padding: '1rem .5rem',
-                borderRadius: '1rem',
-                margin: 0,
-            }}
+        <Container
             className='DocumentNode'
         >
             <Container sx={{
                 position: 'fixed',
                 top: '0',
                 left: '0',
-                transform: 'translate(-25%, -50%)',
+                transform: 'translate(-10%, -50%)',
             }}>
                 <Button variant='contained' onClick={handleToggleEditor} className='ternary-btn' style={{ pointerEvents: 'auto' }}>
                     {editorIsOpen ?
@@ -110,7 +102,7 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                 position: 'fixed',
                 bottom: '0',
                 left: '0',
-                transform: 'translate(-25%, 50%)',
+                transform: 'translate(-10%, 50%)',
             }}>
                 <NodeDeleteButton nodeId={data.id} />
             </Container>

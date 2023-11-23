@@ -14,18 +14,26 @@ interface PageShellProps {
 
 const btnStyle: CSSProperties = {
   position: 'fixed',
-  zIndex: 1003
+  zIndex: 1005,
 };
 
 const menuBtnStyle: CSSProperties = {
   ...btnStyle,
   bottom: '10dvh',
   right: '1dvw',
+  zIndex: 1005,
 }
 
 const editBtnStyle: CSSProperties = {
   ...btnStyle,
   bottom: '45dvh',
+  right: '1dvw',
+};
+
+const elevatedStyle: CSSProperties = {
+  position: 'fixed',
+  zIndex: 1005,
+  top: '10dvh',
   right: '1dvw',
 };
 
@@ -49,12 +57,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
       <Paper elevation={3} >
         {content}
       </Paper>
-      <div style={{
-        position: 'fixed',
-        zIndex: 1005,
-        top: '10dvh',
-        right: '1dvw',
-      }}>
+      <div style={elevatedStyle}>
         <AuthToggle />
       </div>
 
@@ -67,7 +70,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
           }} />
         </Button>
       ) : (
-        <>
+        <div style={elevatedStyle}>
           <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>
             <CloseOutlinedIcon sx={{
               fontSize: '3rem'
@@ -91,7 +94,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
               <NavList />
             </div>
           </Box>
-        </>
+        </div>
       )}
 
       {/* ////////// Diagram Editor ////////// */}

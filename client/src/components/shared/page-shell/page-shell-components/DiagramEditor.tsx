@@ -1,9 +1,10 @@
 import React, { useState, ChangeEvent, CSSProperties } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Box, Paper } from '@mui/material';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
@@ -11,12 +12,18 @@ import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditor
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
 
 const DiagramEditor: React.FC = () => {
-    const dispatch = useDispatch();
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDialog, setCurrentDialog] = useState<DialogType>(null);
     const [asset, setAsset] = useState('');
     const [sourceType, setSourceType] = useState<'img' | 'url'>('url');
     const { viewportIsVertical, viewportIsPortable } = useSelector((state: RootState) => state.ui);
+    const dispatch = useDispatch();
+
+    const gridStyle = {
+        gridTemplateColumns: 'repeat(2, 1fr)', // 2 columns for the 2x2 grid
+    };
+
+    const toggleModal = () => setIsModalOpen(!isModalOpen);
 
     const handleAddDocument = () => {
         dispatch(addDocNode({ type: 'documentNode', x: 0, y: 0 }));
@@ -59,9 +66,9 @@ const DiagramEditor: React.FC = () => {
         right: !viewportIsVertical && viewportIsPortable ? '26rem'
             : viewportIsVertical ? 'max(24rem, 160px)'
                 : '18rem',
-        top: !viewportIsVertical && viewportIsPortable ? '7%'
-            : viewportIsVertical ? '32%'
-                : '20%',
+        top: !viewportIsVertical && viewportIsPortable ? '10%'
+            : viewportIsVertical ? '30%'
+                : '15%',
     };
 
     const itemStyle: CSSProperties = {
@@ -72,34 +79,56 @@ const DiagramEditor: React.FC = () => {
     return (
         <>
             <ul style={listStyle}>
-                <li style={itemStyle}><Button onClick={handleAddDocument} className='ternary-btn'>
-                    <NoteAddOutlinedIcon sx={{
-                        fontSize: '3rem',
-                    }} />
-                </Button></li>
-                <li style={{ ...itemStyle, transform: 'translate(70%, 100%)' }}><Button onClick={() => setCurrentDialog('ImgOrUrl')} className='ternary-btn'>
-                    <AddPhotoAlternateOutlinedIcon sx={{
-                        fontSize: '3rem',
-                    }} />
-                </Button></li>
-                <li style={{ ...itemStyle, transform: 'translateY(200%)' }}><Button onClick={() => setCurrentDialog('url')} className='ternary-btn'>
-                    <AddLinkOutlinedIcon sx={{
-                        fontSize: '3rem',
-                    }} />
-                </Button></li>
+                <li style={itemStyle}>
+                    <Button onClick={handleAddDocument} className='ternary-btn'>
+                        <NoteAddOutlinedIcon sx={{
+                            fontSize: '3rem',
+                        }} />
+                    </Button>
+                </li>
+                <li style={{ ...itemStyle, transform: 'translate(70%, 100%)' }}>
+                    <Button onClick={() => setCurrentDialog('ImgOrUrl')} className='ternary-btn'>
+                        <AddPhotoAlternateOutlinedIcon sx={{
+                            fontSize: '3rem',
+                        }} />
+                    </Button>
+                </li>
+                <li style={{ ...itemStyle, transform: 'translateY(200%)' }}>
+                    <Button onClick={() => setCurrentDialog('url')} className='ternary-btn'>
+                        <AddLinkOutlinedIcon sx={{
+                            fontSize: '3rem',
+                        }} />
+                    </Button>
+                </li>
+                <li style={{ ...itemStyle, transform: 'translate(-70%, 100%)' }}>
+                    <Button onClick={toggleModal} className='ternary-btn'>
+                        <HelpOutlineOutlinedIcon
+                            sx={{
+                                fontSize: '3rem',
+                            }} />
+                    </Button>
+                </li>
             </ul>
 
             <Dialog open={currentDialog === 'ImgOrUrl'} onClose={() => setCurrentDialog(null)}>
                 <DialogTitle>Select Source</DialogTitle>
-                <DialogContent>
-                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('img') }}>From File</Button>
-                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('url') }}>From URL</Button>
+                <DialogContent sx={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: '25rem',
+                    width: '100%',
+                    padding: '3rem',
+                    overflow: 'hidden',
+                }}>
+                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('img') }} className='secondary-btn' sx={{ width: '100%' }}>From File</Button>
+                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('url') }} className='secondary-btn' sx={{ width: '100%' }}>From URL</Button>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }}>Cancel</Button>
+                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
                 </DialogActions>
             </Dialog>
-
 
             <Dialog open={currentDialog === 'img'} onClose={() => setCurrentDialog(null)}>
                 <DialogTitle>Add Image</DialogTitle>
@@ -111,8 +140,8 @@ const DiagramEditor: React.FC = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }}>Cancel</Button>
-                    <Button onClick={() => handleAddResource()}>Add</Button>
+                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
+                    <Button onClick={() => handleAddResource()} className='secondary-btn'>Add</Button>
                 </DialogActions>
             </Dialog>
 
@@ -127,13 +156,23 @@ const DiagramEditor: React.FC = () => {
                         fullWidth
                         value={asset}
                         onChange={(e) => setAsset(e.target.value)}
+                        className='text-field-selector'
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }}>Cancel</Button>
-                    <Button onClick={() => handleAddResource()}>Add</Button>
+                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
+                    <Button onClick={() => handleAddResource()} className='secondary-btn'>Add</Button>
                 </DialogActions>
             </Dialog>
+
+            {isModalOpen && (
+                <Box style={gridStyle} className="modal-bg modal-container">
+                    <Paper className="quarter-container">Content 1</Paper>
+                    <Paper className="quarter-container">Content 2</Paper>
+                    <Paper className="quarter-container">Content 3</Paper>
+                    <Paper className="quarter-container">Content 4</Paper>
+                </Box>
+            )}
         </>
     );
 };

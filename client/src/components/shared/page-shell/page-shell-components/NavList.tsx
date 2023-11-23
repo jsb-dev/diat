@@ -22,11 +22,12 @@ const NavList: React.FC = () => {
 
     const listStyle: CSSProperties = {
         position: 'fixed',
+        zIndex: 1006,
         right: !viewportIsVertical && viewportIsPortable ? '28rem'
             : viewportIsVertical ? 'max(26rem, 175px)'
                 : '20rem',
         bottom: !viewportIsVertical && viewportIsPortable ? '50%'
-            : viewportIsVertical ? '32.5%'
+            : viewportIsVertical ? '35%'
                 : '45%',
     };
 

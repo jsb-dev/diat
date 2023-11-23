@@ -5,7 +5,24 @@ import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded';
 import NodeDeleteButton from './node-components/NodeDeleteButton';
 import handleStyles from './node-components/NodeHandleStyles';
 
+const commonStyles = {
+    margin: 0,
+    padding: 0,
+    wordWrap: 'break-word' as 'break-word',
+    lineHeight: '18pt',
+    letterSpacing: '1pt',
+    marginBottom: '1rem'
+};
+
+const containerStyle = {
+    width: '300px',
+    height: '200px',
+    margin: '1rem',
+    padding: '1rem 0',
+}
+
 const UrlNode: React.FC<NodeProps> = ({ data }) => {
+
     const asset = data.content.asset as string;
 
     const [webpageInfo, setWebpageInfo] = useState({
@@ -49,31 +66,31 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
         fetchData();
     }, [asset, webpageInfo]);
 
-    const commonStyles = {
-        margin: '2rem 1rem',
-        padding: 0,
-        wordWrap: 'break-word' as 'break-word',
-        lineHeight: '18pt',
-        letterSpacing: '1pt',
-    };
+
 
     return (
-        <Box sx={{ width: '300px', padding: '1rem', backgroundColor: '#3c3c3c' }}>
+        <Box sx={{ padding: '1rem 2rem', backgroundColor: '#3c3c3c', display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
             <Button
                 variant='contained'
-                style={{ position: 'fixed', top: '0', right: '0', transform: 'translate(75%, -75%)', }}
+                style={{ position: 'fixed', bottom: '0', right: '0', transform: 'translate(-40%, -80%)', }}
                 onClick={() => window.open(asset, '_blank')}
                 className='pentenary-btn'
             >
                 <OpenInNewRoundedIcon />
             </Button>
-            {
-                <>
-                    <h1 style={{ ...commonStyles, textAlign: 'center', fontSize: '12pt' }}>{webpageInfo.title}</h1>
-                    <h2 style={{ ...commonStyles, textAlign: 'center', fontSize: '11pt' }}>{webpageInfo.description}</h2>
-                </> || null
-            }
+            {webpageInfo.title && webpageInfo.description && (
+                <Container sx={{
+                    ...containerStyle,
+                    overflowY: 'scroll',
+                    padding: 0,
+                    margin: '0 2rem 0 0'
+                }}>
+                    <h1 style={{ ...commonStyles, fontSize: '12pt' }}>{webpageInfo.title}</h1>
+                    <h2 style={{ ...commonStyles, fontSize: '11pt' }}>{webpageInfo.description}</h2>
+                </Container> || null
+            )}
             <Container sx={{
+                ...containerStyle,
                 backgroundColor: 'rgba(255,255,255,0.3)',
                 padding: '1rem',
                 margin: '1rem 0',
@@ -115,7 +132,7 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
                 position: 'fixed',
                 bottom: '0',
                 left: '0',
-                transform: 'translate(-25%, 50%)',
+                transform: 'translate(-9%, 45%)',
             }}>
                 <NodeDeleteButton nodeId={data.id} />
             </Container>

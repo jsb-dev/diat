@@ -42,7 +42,7 @@ const NodeDeleteButton: React.FC<NodeDeleteButtonProps> = ({ nodeId }) => {
                         Are you sure you want to delete this node?
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions >
                     <Button onClick={handleClose} className='primary-btn'>
                         Back
                     </Button>
