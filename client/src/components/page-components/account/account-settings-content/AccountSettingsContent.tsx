@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Container, TextField, Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { Container, TextField, Button, Typography, Divider } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 import { clearAuthState } from '@redux/slices/authSlice';
 import { clearDiagram } from '@redux/slices/flowSlice';
@@ -15,11 +16,10 @@ interface AccountSettingsContentProps {
 
 const containerStyle = {
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
     width: '100%',
-    height: '100%',
+    height: 'fit-content',
 };
 
 const buttonStyles = {
@@ -66,6 +66,11 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
     const [deleteEmail, setDeleteEmail] = useState('');
     const [confirmDeleteEmail, setConfirmDeleteEmail] = useState('');
     const [deleteConfirmation, setDeleteConfirmation] = useState('');
+    const { viewportIsPortable, viewportIsVertical } = useSelector((state: RootState) => state.ui);
+
+    const dividerStyle = {
+        marginTop: '20rem',
+    };
 
     const user = useSelector(selectUser);
     const { loginWithRedirect, logout } = useAuth0();
@@ -233,7 +238,10 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
 
     const contentMap: { [key: string]: JSX.Element } = {
         changePassword: (
-            <Container sx={containerStyle}>
+            <Container sx={
+                containerStyle
+            }>
+                <Divider sx={{ marginTop: '6rem' }} />
                 <Typography
                     variant='body1'
                     className='p-selector'
@@ -249,7 +257,14 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
             </Container>
         ),
         changeEmail: (
-            <Container sx={containerStyle}>
+            <Container sx={
+                containerStyle
+            }>
+                {
+                    (viewportIsPortable || viewportIsVertical) && (
+                        <Divider sx={dividerStyle} />
+                    )
+                }
                 <ChangeEmailForm
                     currentEmail={currentEmail}
                     newEmail={newEmail}
@@ -263,6 +278,11 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
         ),
         help: (
             <Container sx={containerStyle}>
+                {
+                    (viewportIsPortable || viewportIsVertical) && (
+                        <Divider sx={{ marginTop: '30rem' }} />
+                    )
+                }
                 <ContactForm
                     userEmail={userEmail}
                     subject={subject}
@@ -275,7 +295,14 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
             </Container>
         ),
         deleteAccount: (
-            <Container sx={containerStyle}>
+            <Container sx={
+                containerStyle
+            }>
+                {
+                    (viewportIsPortable || viewportIsVertical) && (
+                        <Divider sx={dividerStyle} />
+                    )
+                }
                 <TextField
                     label='Email'
                     type='email'

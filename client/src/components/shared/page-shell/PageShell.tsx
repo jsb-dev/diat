@@ -21,7 +21,6 @@ const menuBtnStyle: CSSProperties = {
   ...btnStyle,
   bottom: '10dvh',
   right: '1dvw',
-  zIndex: 1005,
 }
 
 const editBtnStyle: CSSProperties = {

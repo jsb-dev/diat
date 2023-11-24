@@ -15,8 +15,8 @@ const AccountSettingsMenu = () => {
         alignItems: 'center',
         width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
         margin: 0,
-        height: 'fit-content',
-        padding: '2rem 0'
+        minHeight: viewportIsPortable || viewportIsVertical ? '90dvh' : '80dvh',
+        padding: '2dvh 0'
     };
 
     const subContainerStyles = {
@@ -32,20 +32,25 @@ const AccountSettingsMenu = () => {
     return (
         <Container component='section' className='secondary-container' sx={containerStyle}>
             <Container sx={{
-                ...subContainerStyles, width: viewportIsPortable || viewportIsVertical ? '' : '60%',
-                padding: '2rem',
+                ...subContainerStyles,
+                width: viewportIsPortable || viewportIsVertical ? '' : '60%',
+                padding: '2dvh',
             }}>
                 <AccountSettingsList selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} viewportIsPortable={viewportIsPortable} viewportIsVertical={viewportIsVertical} />
             </Container>
             {viewportIsPortable || viewportIsVertical && (<Divider sx={{
-                margin: '3rem'
+                margin: '3dvh'
             }} />)}
             <Container sx={{
                 ...subContainerStyles,
                 backgroundColor: '#7fb0d1c5',
                 width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
-                minHeight: viewportIsPortable || viewportIsVertical ? '380px' : '480px',
-                padding: '3rem',
+                padding: viewportIsPortable || viewportIsVertical ? 0 : '3dvh',
+                ...(viewportIsPortable || viewportIsVertical) && {
+                    maxHeight: '30dvh',
+                    overflowY: 'scroll',
+                    overflowX: 'hidden',
+                }
             }} >
                 <AccountSettingsContent selectedMenu={selectedMenu} />
             </Container>

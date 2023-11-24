@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, CSSProperties } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Box, Paper } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
@@ -8,6 +8,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
+import HelpModal from './HelpModal';
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
 
@@ -18,10 +19,6 @@ const DiagramEditor: React.FC = () => {
     const [sourceType, setSourceType] = useState<'img' | 'url'>('url');
     const { viewportIsVertical, viewportIsPortable } = useSelector((state: RootState) => state.ui);
     const dispatch = useDispatch();
-
-    const gridStyle = {
-        gridTemplateColumns: 'repeat(2, 1fr)', // 2 columns for the 2x2 grid
-    };
 
     const toggleModal = () => setIsModalOpen(!isModalOpen);
 
@@ -165,14 +162,7 @@ const DiagramEditor: React.FC = () => {
                 </DialogActions>
             </Dialog>
 
-            {isModalOpen && (
-                <Box style={gridStyle} className="modal-bg modal-container">
-                    <Paper className="quarter-container">Content 1</Paper>
-                    <Paper className="quarter-container">Content 2</Paper>
-                    <Paper className="quarter-container">Content 3</Paper>
-                    <Paper className="quarter-container">Content 4</Paper>
-                </Box>
-            )}
+            {isModalOpen && <HelpModal />}
         </>
     );
 };

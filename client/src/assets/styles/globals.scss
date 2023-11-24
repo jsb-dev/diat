@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////// THEME //////////////////////////////////////////////////////////////
 $bg-color-light: #3c3c3cc3;
-$bg-color-dark: #1d1d1dc0;
+$bg-color-dark: #1d1d1dd1;
 $modal-bg-color: #181818b1;
 
 $object-primary-color: #5a9ac8ab;
@@ -91,9 +91,9 @@ body {
 }
 
 .quarter-container {
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 5px .5rem .25rem rgba(0, 0, 0, .75), inset 0 0 .5rem .25rem rgba(0, 0, 0, .5);
-  padding: 2rem;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 5px 1rem .25rem rgba(0, 0, 0, .75), inset 0 0 .5rem .25rem rgba(255, 255, 255, .5);
+  padding: .5rem;
 }
 
 .primary-btn,
@@ -222,7 +222,7 @@ body {
   .h2-selector {
     font-size: 14pt * $scaleFactor;
     color: $secColor;
-    padding: 1.5rem 1rem * $scaleFactor;
+    padding: 1rem * $scaleFactor;
   }
 
   h3,
@@ -247,6 +247,8 @@ body {
   .p-selector,
   a,
   .a-selector,
+  li,
+  .li-selector,
   .radio-control,
   .MuiFormControlLabel-label {
     font-size: 11pt * $scaleFactor;
@@ -324,23 +326,23 @@ body {
 ////////////////////////////////////////////////////////////// SCROLLBAR //////////////////////////////////////////////////////////////
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 2rem;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background-color: #c9c9c9;
   border-radius: 2rem;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background-color: rgb(89, 86, 93);
   border-radius: 2rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background-color: rgb(105, 125, 133);
   border-radius: 2rem;
 }
 

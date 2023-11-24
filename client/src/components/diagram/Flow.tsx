@@ -60,6 +60,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
     const [diagramEdited, setDiagramEdited] = useState<boolean>(false);
     const [centerCoordinates, setCenterCoordinates] = useState<number[]>([0, 0]);
     const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null);
+    const [panOnDrag, setPanOnDrag] = useState<boolean>(true);
 
     const dispatch = useDispatch();
     const store = useStoreApi();
@@ -74,6 +75,9 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             });
 
             setNodes(updatedNodes);
+
+            // Allow panning as soon as the editor is closed
+            setPanOnDrag(true);
         }
 
         prevEditorIsOpen.current = editorIsOpen;
@@ -474,6 +478,8 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 if (n.id === id) {
                     return { ...n, draggable: false };
                 }
+                // allow panning until the user starts editing
+                setPanOnDrag(false);
                 return n;
             });
 
@@ -485,6 +491,7 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
                 if (n.id === id) {
                     return { ...n, draggable: true };
                 }
+
                 return n;
             });
 
@@ -535,18 +542,32 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             onNodesChange={onNodesChange}
             onNodeDoubleClick={
                 (event, node) => {
-                    setFocusedNodeId(node.id);
+                    if (focusedNodeId === node.id) {
+                        setFocusedNodeId(null);
+                        const updatedNodes = nodes.map(n => {
+                            if (n.id === node.id) {
+                                return { ...n, className: '' };
+                            }
+                            return n;
+                        });
 
-                    const updatedNodes = nodes.map(n => {
-                        if (n.id === node.id) {
-                            return { ...n, className: 'focused-node', draggable: editorIsOpen ? false : n.draggable };
-                        } else if (n.className === 'focused-node') {
-                            return { ...n, className: '' };
-                        }
-                        return n;
-                    });
+                        setNodes(updatedNodes);
+                    }
 
-                    setNodes(updatedNodes);
+                    else {
+                        setFocusedNodeId(node.id);
+
+                        const updatedNodes = nodes.map(n => {
+                            if (n.id === node.id) {
+                                return { ...n, className: 'focused-node', draggable: editorIsOpen ? false : n.draggable };
+                            } else if (n.className === 'focused-node') {
+                                return { ...n, className: '' };
+                            }
+                            return n;
+                        });
+
+                        setNodes(updatedNodes);
+                    }
                 }
             }
             onConnect={onConnect}
@@ -554,7 +575,9 @@ const Flow: React.FC<FlowProps> = ({ diagramNodes, diagramEdges }) => {
             style={rfStyle}
             nodesDraggable={!editorIsOpen}
             nodesFocusable={!editorIsOpen}
-            panOnDrag={!editorIsOpen}
+            panOnDrag={
+                panOnDrag
+            }
             onNodeClick={
                 (event, node) => {
                     handleNodeClick(node.id);
