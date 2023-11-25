@@ -46,15 +46,24 @@ const AccountSettingsMenu = () => {
                 backgroundColor: '#7fb0d1c5',
                 width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
                 padding: viewportIsPortable || viewportIsVertical ? 0 : '3dvh',
-                ...(viewportIsPortable || viewportIsVertical) && {
-                    maxHeight: '30dvh',
-                    overflowY: 'scroll',
+                height: viewportIsPortable || viewportIsVertical ? '30dvh' : '70dvh',
+                minHeight: 'max(250px, 40dvh)',
+                ...viewportIsPortable && {
                     overflowX: 'hidden',
+                    ...(selectedMenu !== 'changePassword' && {
+                        ...viewportIsVertical && {
+                            overflowY: 'scroll',
+                        },
+                    }),
                 }
             }} >
-                <AccountSettingsContent selectedMenu={selectedMenu} />
+                <AccountSettingsContent
+                    selectedMenu={selectedMenu}
+                    viewportIsPortable={viewportIsPortable}
+                    viewportIsVertical={viewportIsVertical}
+                />
             </Container>
-        </Container>
+        </Container >
     );
 };
 

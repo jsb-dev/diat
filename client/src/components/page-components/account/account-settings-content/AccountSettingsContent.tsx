@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { Container, TextField, Button, Typography, Divider } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 import { clearAuthState } from '@redux/slices/authSlice';
@@ -12,6 +11,8 @@ import ChangeEmailForm from './ChangeEmailForm';
 
 interface AccountSettingsContentProps {
     selectedMenu: string;
+    viewportIsPortable: boolean;
+    viewportIsVertical: boolean;
 }
 
 const containerStyle = {
@@ -25,6 +26,10 @@ const containerStyle = {
 const buttonStyles = {
     minWidth: '200px',
 }
+
+const dividerStyle = {
+    padding: '3rem 0'
+};
 
 const textFieldStyle = {
     '& label.Mui-focused': {
@@ -55,7 +60,7 @@ const textFieldStyle = {
     },
 };
 
-const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selectedMenu }) => {
+const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selectedMenu, viewportIsPortable, viewportIsVertical }) => {
     const [credentialsCleared, setCredentialsCleared] = useState(false);
     const [currentEmail, setCurrentEmail] = useState('');
     const [newEmail, setNewEmail] = useState('');
@@ -66,11 +71,6 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
     const [deleteEmail, setDeleteEmail] = useState('');
     const [confirmDeleteEmail, setConfirmDeleteEmail] = useState('');
     const [deleteConfirmation, setDeleteConfirmation] = useState('');
-    const { viewportIsPortable, viewportIsVertical } = useSelector((state: RootState) => state.ui);
-
-    const dividerStyle = {
-        marginTop: '20rem',
-    };
 
     const user = useSelector(selectUser);
     const { loginWithRedirect, logout } = useAuth0();
@@ -241,7 +241,6 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
             <Container sx={
                 containerStyle
             }>
-                <Divider sx={{ marginTop: '6rem' }} />
                 <Typography
                     variant='body1'
                     className='p-selector'
@@ -261,8 +260,11 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                 containerStyle
             }>
                 {
-                    (viewportIsPortable || viewportIsVertical) && (
-                        <Divider sx={dividerStyle} />
+                    (viewportIsPortable) && (
+                        <>
+                            <Divider sx={dividerStyle} />
+                            <Divider sx={dividerStyle} />
+                        </>
                     )
                 }
                 <ChangeEmailForm
@@ -274,13 +276,23 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     setConfirmEmail={setConfirmEmail}
                     handleEmailChange={handleEmailChange}
                 />
+                {
+                    (viewportIsPortable) && (
+                        <Divider sx={dividerStyle} />
+                    )
+                }
             </Container>
         ),
         help: (
             <Container sx={containerStyle}>
                 {
-                    (viewportIsPortable || viewportIsVertical) && (
-                        <Divider sx={{ marginTop: '30rem' }} />
+                    (viewportIsPortable) && (
+                        <>
+                            <Divider sx={dividerStyle} />
+                            <Divider sx={dividerStyle} />
+                            <Divider sx={dividerStyle} />
+                            <Divider sx={dividerStyle} />
+                        </>
                     )
                 }
                 <ContactForm
@@ -292,6 +304,11 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     setMessage={setMessage}
                     handleSubmitMsg={handleSubmitMsg}
                 />
+                {
+                    (viewportIsPortable) && (
+                        <Divider sx={dividerStyle} />
+                    )
+                }
             </Container>
         ),
         deleteAccount: (
@@ -299,8 +316,11 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                 containerStyle
             }>
                 {
-                    (viewportIsPortable || viewportIsVertical) && (
-                        <Divider sx={dividerStyle} />
+                    (viewportIsPortable) && (
+                        <>
+                            <Divider sx={dividerStyle} />
+                            <Divider sx={dividerStyle} />
+                        </>
                     )
                 }
                 <TextField
@@ -340,9 +360,14 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     className='text-field-selector'
                     sx={{ ...textFieldStyle, marginBottom: '3rem' }}
                 />
-                <Button variant='contained' className='primary-btn' onClick={handleDeleteAccount} sx={buttonStyles}>
+                <Button variant='contained' className='quarternary-btn' onClick={handleDeleteAccount} sx={buttonStyles}>
                     Delete Account
                 </Button>
+                {
+                    (viewportIsPortable) && (
+                        <Divider sx={dividerStyle} />
+                    )
+                }
             </Container>
         ),
     };

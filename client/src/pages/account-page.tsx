@@ -111,6 +111,8 @@ function AccountPage() {
                     width: '100%',
                     padding: 0,
                     margin: 0,
+                    height: '80dvh',
+                    minHeight: '500px',
                 }}>
                     <AccountSettingsMenu />
                 </Container>

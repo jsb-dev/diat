@@ -9,7 +9,7 @@ const ImgNode: React.FC<NodeProps> = ({ data }) => {
     const asset = data.content.asset as any;
 
     return (
-        <Box>
+        <Box className='ImgNode'>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={asset} alt='An image you uploaded' style={{ width: '600px', borderRadius: '1rem' }} />
             <Handle

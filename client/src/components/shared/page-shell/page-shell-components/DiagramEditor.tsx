@@ -60,12 +60,12 @@ const DiagramEditor: React.FC = () => {
 
     const listStyle: CSSProperties = {
         position: 'fixed',
-        right: !viewportIsVertical && viewportIsPortable ? '26rem'
+        right: !viewportIsVertical && viewportIsPortable ? '28rem'
             : viewportIsVertical ? 'max(24rem, 160px)'
-                : '18rem',
+                : '16rem',
         top: !viewportIsVertical && viewportIsPortable ? '10%'
             : viewportIsVertical ? '30%'
-                : '15%',
+                : '25%',
     };
 
     const itemStyle: CSSProperties = {

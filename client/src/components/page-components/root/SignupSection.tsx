@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Container, Grid, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLayout } from '@/redux/slices/uiSlice';
-import ContentBanner from '@/components/shared/ContentBanner';
+import ContentBanner from '@/components/page-components/root/ContentBanner';
 import contentData from '@/assets/data/RootContent.json';
 import { RootState } from '@/redux/store';
 
@@ -54,6 +54,7 @@ const SignupSection: React.FC = () => {
             <Grid item xs={12} md={6} sx={{
                 overflowY: viewportIsPortable || viewportIsVertical ? 'hidden' : 'scroll',
                 height: viewportIsPortable || viewportIsVertical ? '58dvh' : '78dvh',
+                backgroundColor: !viewportIsPortable ? 'rgba(0,0,0,0.6)' : 'transparent',
                 padding: '0',
             }}>
                 <Container>
@@ -70,7 +71,7 @@ const SignupSection: React.FC = () => {
             <Grid item xs={12} md={6}>
                 <ContentBanner />
             </Grid>
-        </Grid>
+        </Grid >
     );
 }
 

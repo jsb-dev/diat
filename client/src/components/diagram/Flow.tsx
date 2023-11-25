@@ -38,8 +38,7 @@ const nodeTypes: NodeTypes = {
 };
 
 const rfStyle: React.CSSProperties = {
-    backgroundColor: 'rgb(100, 100, 100)',
-    boxShadow: 'inset 0 0 10px rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgb(70, 70, 70)',
     padding: 0,
     margin: 0,
 };

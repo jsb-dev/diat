@@ -20,20 +20,20 @@ const btnStyle: CSSProperties = {
 const menuBtnStyle: CSSProperties = {
   ...btnStyle,
   bottom: '10dvh',
-  right: '1dvw',
+  right: '.4dvw',
 }
 
 const editBtnStyle: CSSProperties = {
   ...btnStyle,
   bottom: '45dvh',
-  right: '1dvw',
+  right: '.4dvw',
 };
 
 const elevatedStyle: CSSProperties = {
   position: 'fixed',
   zIndex: 1005,
   top: '10dvh',
-  right: '1dvw',
+  right: '.5dvw',
 };
 
 const PageShell: FC<PageShellProps> = ({ content, page }) => {
@@ -51,9 +51,9 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
   return (
     <Container className='main-container' sx={{
       overflowX: 'hidden',
-      overflowY: page === '/dashboard-page' ? 'hidden' : 'auto'
+      overflowY: page === '/dashboard-page' ? 'hidden' : 'auto',
     }}>
-      <Paper elevation={3} >
+      <Paper>
         {content}
       </Paper>
       <div style={elevatedStyle}>

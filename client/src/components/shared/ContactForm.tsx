@@ -54,7 +54,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 className='text-field-selector'
                 sx={{ ...textFieldStyle, marginBottom: '3rem' }}
             />
-            <Button variant='contained' className='primary-btn' onClick={handleSubmitMsg} sx={{
+            <Button variant='contained' className='secondary-btn' onClick={handleSubmitMsg} sx={{
                 minWidth: '200px',
             }}>
                 Send

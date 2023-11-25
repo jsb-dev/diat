@@ -69,7 +69,7 @@ const UrlNode: React.FC<NodeProps> = ({ data }) => {
 
 
     return (
-        <Box sx={{ padding: '1rem 2rem', backgroundColor: '#3c3c3c', display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+        <Box className='UrlNode' sx={{ padding: '1rem 2rem', backgroundColor: '#3c3c3c', display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
             <Button
                 variant='contained'
                 style={{ position: 'fixed', bottom: '0', right: '0', transform: 'translate(-40%, -80%)', }}

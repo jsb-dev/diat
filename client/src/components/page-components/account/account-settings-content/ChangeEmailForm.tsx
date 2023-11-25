@@ -58,7 +58,7 @@ const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({
                 className='text-field-selector'
                 sx={{ ...textFieldStyle, marginBottom: '3rem' }}
             />
-            <Button variant='contained' className='primary-btn' onClick={handleEmailChange} sx={{
+            <Button variant='contained' className='secondary-btn' onClick={handleEmailChange} sx={{
                 minWidth: '200px',
             }}>
                 Change Email

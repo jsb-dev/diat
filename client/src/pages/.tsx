@@ -6,6 +6,7 @@ import PageShell from '@/components/shared/page-shell/PageShell';
 import SignupSection from '@/components/page-components/root/SignupSection';
 import AboutSection from '@/components/page-components/root/AboutSection';
 import SiteFooter from '@/components/shared/SiteFooter';
+import bgImage from '@/assets/images/raluca-seceleanu-huUwh7AOqb4-unsplash.jpg';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -42,12 +43,20 @@ function RootPage() {
   }, []);
 
   const main = (
-    <Container component='main' className='main-content' >
+    <Container component='main' className='main-content' sx={{
+      backgroundImage: `url(${bgImage.src})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+    }}>
+
       <Container component='section' className='section-selector'>
         <SignupSection />
         <AboutSection />
       </Container>
-      <SiteFooter />
+      <Container component='div' className='footer-container'>
+        <SiteFooter />
+      </Container>
     </Container >
   );
 

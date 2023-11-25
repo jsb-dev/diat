@@ -6,8 +6,8 @@ const AboutSection: React.FC = () => {
 
     return (
         <Container component='section' className='section-selector'>
-            <Box>
-                <Typography variant='h1' className='h1-selector' align='center'>
+            <Box sx={{ padding: '1rem 4rem' }}>
+                <Typography variant='h1' className='h1-selector'>
                     {contentData.aboutSection.title}
                 </Typography>
                 <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
