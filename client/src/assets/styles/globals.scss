@@ -7,12 +7,13 @@ $object-primary-color: #5a9ac8d1;
 $object-secondary-color: #51c2b3de;
 $object-ternary-color: #dcd085d5;
 $object-quaternary-color: #df8888d0;
-$object-pentenary-color: #ac73a9d3;
+$object-pentenary-color: #8773acd3;
 
-$container-primary-color: rgba(107, 131, 151, 0.447);
-$container-secondary-color: #7b7dafbc;
-$container-ternary-color: #7fb0d1c5;
-$container-quarternary-color: #9681adc7;
+
+$container-primary-color: rgba(32, 63, 131, 0.287);
+$container-secondary-color: rgba(80, 32, 131, 0.549);
+$container-ternary-color: rgba(131, 32, 108, 0.549);
+$container-quarternary-color: rgba(131, 32, 32, 0.549);
 
 $text-primary-color: #191a1a;
 $text-secondary-color: #252c2b;
@@ -103,7 +104,7 @@ body {
   margin: 1rem;
   cursor: pointer;
   border-radius: 15px;
-  box-shadow: 0 0 2px 1px rgba(0, 0, 0, .75), inset 0 0 10px 1px rgba(255, 255, 255, .25) ;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, .75), inset 0 0 15px 1px rgba(255, 255, 255, .25) ;
   * {
     font-size: 16pt;
     transition: all 0.2s ease-in-out;

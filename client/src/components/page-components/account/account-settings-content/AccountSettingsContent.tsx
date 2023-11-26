@@ -8,6 +8,7 @@ import { clearDiagram } from '@redux/slices/flowSlice';
 import { clearUser, selectUser } from '@redux/slices/userSlice';
 import ContactForm from '@/components/shared/ContactForm';
 import ChangeEmailForm from './ChangeEmailForm';
+import ErrorModal from '@/components/shared/ErrorModal';
 
 interface AccountSettingsContentProps {
     selectedMenu: string;
@@ -71,6 +72,7 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
     const [deleteEmail, setDeleteEmail] = useState('');
     const [confirmDeleteEmail, setConfirmDeleteEmail] = useState('');
     const [deleteConfirmation, setDeleteConfirmation] = useState('');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const user = useSelector(selectUser);
     const { loginWithRedirect, logout } = useAuth0();
@@ -86,8 +88,10 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     await logout({ logoutParams: { returnTo: window.location.origin } });
                     router.replace('/');
                     await loginWithRedirect();
-                } catch (error) {
-                    console.error('Logout failed:', error);
+                } catch (error
+                ) {
+                    console.error('Error logging out:', error);
+                    setErrorMessage('Error logging out.');
                 }
             }
         };
@@ -109,12 +113,15 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
     const handleSubmitMsg = async () => {
         if (!userEmail || !subject || !message) {
             console.error('All fields are required.');
+            setErrorMessage('All fields are required.')
             return;
         } else if (!userEmail.includes('@') || !userEmail.includes('.')) {
             console.error('Invalid email.');
+            setErrorMessage('Invalid email.')
             return;
         } else if (userEmail !== user.email) {
             console.error('The email does not match your account.');
+            setErrorMessage('The email does not match your account.')
             return;
         }
 
@@ -138,24 +145,30 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
 
         } catch (err) {
             console.error('Error submitting form:', err);
+            setErrorMessage(`Error submitting form: ${err}`);
         }
     };
 
     const handleEmailChange = async () => {
         if (!currentEmail || !newEmail || !confirmEmail) {
             console.error('All fields are required.');
+            setErrorMessage('All fields are required.');
             return;
         } else if (!currentEmail.includes('@') || !currentEmail.includes('.')) {
             console.error('Invalid current email.');
+            setErrorMessage('Invalid current email.');
             return;
         } else if (newEmail === currentEmail) {
             console.error('The new email must be different from the current email.');
+            setErrorMessage('The new email must be different from the current email.');
             return;
         } else if (currentEmail !== user.email) {
             console.error('The current email does not match your account.');
+            setErrorMessage('The current email does not match your account.');
             return;
         } else if (newEmail !== confirmEmail) {
             console.error('The new emails do not match.');
+            setErrorMessage('The new emails do not match.');
             return;
         }
 
@@ -169,23 +182,26 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                 handleClearCredentials();
             } else {
                 console.error('Failed to update email.');
+                setErrorMessage('Failed to update email.');
             }
         } catch (error) {
             console.error('Error updating email:', error);
+            setErrorMessage(`Error updating email: ${error}`);
         }
     };
 
     const handleDeleteAccount = async () => {
         if (!deleteEmail || !confirmDeleteEmail || deleteConfirmation !== 'DELETE') {
             console.error('All fields are required and DELETE must be typed in the confirmation field.');
+            setErrorMessage('All fields are required and DELETE must be typed in the confirmation field.');
             return;
         } else if (deleteEmail !== confirmDeleteEmail) {
             console.error('Email addresses must match.');
+            setErrorMessage('Email addresses must match.');
             return;
         } else if (deleteEmail !== user.email) {
             console.error('The email does not match your account.');
-            console.log(deleteEmail);
-            console.log(user.email);
+            setErrorMessage('The email does not match your account.');
             return;
         }
 
@@ -210,7 +226,12 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
 
         } catch (error) {
             console.error('Error deleting account:', error);
+            setErrorMessage(`Error deleting account: ${error}`);
         }
+    };
+
+    const handleCloseModal = () => {
+        setErrorMessage(null);
     };
 
     const updateEmail = async () => {
@@ -342,7 +363,6 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     onChange={(e) => setConfirmDeleteEmail(e.target.value)}
                     onPaste={(e) => {
                         e.preventDefault();
-                        console.error('Pasting email is not allowed.');
                     }}
                     className='text-field-selector'
                     sx={textFieldStyle}
@@ -355,7 +375,6 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
                     onChange={(e) => setDeleteConfirmation(e.target.value)}
                     onPaste={(e) => {
                         e.preventDefault();
-                        console.error('Pasting is not allowed.');
                     }}
                     className='text-field-selector'
                     sx={{ ...textFieldStyle, marginBottom: '3rem' }}
@@ -372,7 +391,15 @@ const AccountSettingsContent: React.FC<AccountSettingsContentProps> = ({ selecte
         ),
     };
 
-    return contentMap[selectedMenu] || <Container sx={containerStyle}>Select an option from the menu.</Container>;
+    return (
+        <> {errorMessage && <ErrorModal message={errorMessage} onClose={handleCloseModal} />}
+            {contentMap[selectedMenu]}
+        </>
+        ||
+        <Container sx={containerStyle}>
+            Select an option from the menu.
+        </Container>
+    );
 };
 
 export default AccountSettingsContent;

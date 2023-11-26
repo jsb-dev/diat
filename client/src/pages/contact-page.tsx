@@ -5,7 +5,9 @@ import { updateLayout } from '@/redux/slices/uiSlice';
 import PageShell from '@/components/shared/page-shell/PageShell';
 import ContactForm from '@/components/shared/ContactForm';
 import SiteFooter from '@/components/shared/SiteFooter';
+import ErrorModal from '@/components/shared/ErrorModal';
 import contactContent from '@/assets/data/ContactContent.json';
+import bigImage from '@/assets/images/hanna-morris-_XXNjSziZuA-unsplash.jpg';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -28,15 +30,23 @@ function ContactPage() {
     const [userEmail, setUserEmail] = useState('');
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [messageSent, setMessageSent] = useState(false);
+
+    const handleCloseModal = () => {
+        setErrorMessage(null);
+    };
 
     const dispatch = useDispatch();
 
     const handleSubmitMsg = async () => {
         if (!userEmail || !subject || !message) {
             console.error('All fields are required.');
+            setErrorMessage('All fields are required.');
             return;
         } else if (!userEmail.includes('@') || !userEmail.includes('.')) {
             console.error('Invalid email.');
+            setErrorMessage('Invalid email.');
             return;
         }
 
@@ -50,16 +60,21 @@ function ContactPage() {
             });
 
             if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
+                console.error('Error submitting form:', response.status);
+                setErrorMessage(`Error: ${response.status}`);
+                return;
             } else if (response.status === 200) {
                 console.log('Message sent successfully.');
                 setUserEmail('');
                 setSubject('');
                 setMessage('');
+                setMessageSent(true);
             }
 
         } catch (err) {
             console.error('Error submitting form:', err);
+            setErrorMessage(`Error: ${err}`);
+            return;
         }
     };
 
@@ -82,41 +97,54 @@ function ContactPage() {
     }, [dispatch]);
 
     const main = (
-        <Container component='main' className='main-content' >
-            <Container component='section' className='section-selector'>
-                <Typography variant='h1' className='h1-selector'>
-                    Contact Us
-                </Typography>
-                <Divider />
-                <Container component='section' className='section-selector' sx={sectionStyles}>
-                    {renderSection(contactContent.contactSection)}
-                </Container>
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    width: '100%',
-                }}>
-                    <ContactForm
-                        userEmail={userEmail}
-                        subject={subject}
-                        message={message}
-                        setUserEmail={setUserEmail}
-                        setSubject={setSubject}
-                        setMessage={setMessage}
-                        handleSubmitMsg={handleSubmitMsg}
+        <>
+            {
+                errorMessage && <ErrorModal message={errorMessage} onClose={handleCloseModal} />
+            }
+            <Container component='main' className='main-content' sx={{
+                backgroundImage: `url(${bigImage.src})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed',
+            }}>
+                <Container component='section' className='section-selector'>
+                    <Typography variant='h1' className='h1-selector'>
+                        Contact Us
+                    </Typography>
+                    <Divider />
+                    <Container component='section' className='section-selector' sx={sectionStyles}>
+                        {renderSection(contactContent.contactSection)}
+                    </Container>
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        width: '100%',
+                        padding: '0 2rem',
+                    }}>
+                        <ContactForm
+                            userEmail={userEmail}
+                            subject={subject}
+                            message={message}
+                            setUserEmail={setUserEmail}
+                            setSubject={setSubject}
+                            setMessage={setMessage}
+                            handleSubmitMsg={handleSubmitMsg}
+                        />
+                        messageSent && <Typography variant='h5' align='center' className='h5-selector'>Message sent successfully!</Typography>
+                    </Box>
+                    <Divider sx={dividerStyles}
                     />
-                </Box>
-                <Divider sx={dividerStyles}
-                />
-                <Container component='section' className='section-selector' sx={sectionStyles}>
-                    {renderSection(contactContent.postContactSection)}
+                    <Container component='section' className='section-selector' sx={sectionStyles}>
+                        {renderSection(contactContent.postContactSection)}
+                    </Container>
+                    <Divider sx={dividerStyles} />
                 </Container>
-                <Divider sx={dividerStyles} />
+                <SiteFooter />
             </Container>
-            <SiteFooter />
-        </Container>
+        </>
     );
 
     return <PageShell content={main} page={'/contact'} />;

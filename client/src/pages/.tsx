@@ -49,7 +49,6 @@ function RootPage() {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
     }}>
-
       <Container component='section' className='section-selector'>
         <SignupSection />
         <AboutSection />

@@ -5,6 +5,7 @@ import { updateLayout } from '@/redux/slices/uiSlice';
 import PageShell from '@/components/shared/page-shell/PageShell';
 import SiteFooter from '@/components/shared/SiteFooter';
 import infoContent from '@/assets/data/InfoContent.json';
+import bgImage from '@/assets/images/ux-store-jJT2r2n7lYA-unsplash.jpg';
 
 type ItemType = {
   type: string;
@@ -18,7 +19,6 @@ type SectionType = {
 const ulStyles = {
   padding: '3rem 5rem',
   listStyleType: 'disc',
-  color: '#fff',
 };
 
 function InfoPage() {
@@ -66,7 +66,13 @@ function InfoPage() {
   );
 
   const main = (
-    <Container component='main' className='main-content'>
+    <Container component='main' className='main-content' sx={{
+      backgroundImage: `url(${bgImage.src})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed',
+    }}>
       <Container component='section' className='section-selector'>
         <Typography variant='h1' className='h1-selector'>
           Info

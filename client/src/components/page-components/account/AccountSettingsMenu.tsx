@@ -30,7 +30,7 @@ const AccountSettingsMenu = () => {
     }
 
     return (
-        <Container component='section' className='secondary-container' sx={containerStyle}>
+        <Container component='section' sx={containerStyle}>
             <Container sx={{
                 ...subContainerStyles,
                 width: viewportIsPortable || viewportIsVertical ? '' : '60%',
@@ -41,12 +41,12 @@ const AccountSettingsMenu = () => {
             {viewportIsPortable || viewportIsVertical && (<Divider sx={{
                 margin: '3dvh'
             }} />)}
-            <Container sx={{
+            <Container className='primary-container' sx={{
                 ...subContainerStyles,
-                backgroundColor: '#7fb0d1c5',
                 width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
                 padding: viewportIsPortable || viewportIsVertical ? 0 : '3dvh',
                 height: viewportIsPortable || viewportIsVertical ? '30dvh' : '70dvh',
+                boxShadow: '0 0 1rem 0.5rem rgba(0, 0, 0, 0.2), inset 0 0.5rem 1rem 0.5rem rgba(0, 0, 0, 0.19)',
                 minHeight: 'max(250px, 40dvh)',
                 ...viewportIsPortable && {
                     overflowX: 'hidden',

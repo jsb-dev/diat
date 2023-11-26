@@ -10,6 +10,7 @@ import { updateLayout } from '@/redux/slices/uiSlice';
 import { User } from '@/interfaces/User';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import SiteFooter from '@/components/shared/SiteFooter';
+import bgImage from '@/assets/images/raluca-seceleanu-huUwh7AOqb4-unsplash.jpg';
 
 function AccountPage() {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -100,19 +101,23 @@ function AccountPage() {
     }, [dispatch]);
 
     const main = loading ? (
-        <LoadingSpinner />
-    ) : (
         <Container component='main' className='main-content'>
+            <LoadingSpinner />
+        </Container>
+    ) : (
+        <Container component='main' className='main-content' sx={{
+            backgroundImage: `url(${bgImage.src})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+        }}>
             <Container component='section' className='section-selector'>
                 <Container sx={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: '100%',
                     padding: 0,
                     margin: 0,
-                    height: '80dvh',
-                    minHeight: '500px',
                 }}>
                     <AccountSettingsMenu />
                 </Container>
