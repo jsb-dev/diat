@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -11,13 +12,15 @@ import { clearUser } from '@redux/slices/userSlice';
 const AuthToggle: React.FC = () => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleLogout = () => {
     dispatch(clearAuthState());
     dispatch(clearDiagram());
     dispatch(clearUser());
-    logout({ logoutParams: { returnTo: window.location.origin } });
-  };
+    router.replace('/');
+    logout();
+  }
 
   if (isAuthenticated) {
     return (

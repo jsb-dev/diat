@@ -133,7 +133,7 @@ function ContactPage() {
                             setMessage={setMessage}
                             handleSubmitMsg={handleSubmitMsg}
                         />
-                        messageSent && <Typography variant='h5' align='center' className='h5-selector'>Message sent successfully!</Typography>
+                        {messageSent && <Typography variant='h5' align='center' className='h5-selector'>Message sent successfully!</Typography>}
                     </Box>
                     <Divider sx={dividerStyles}
                     />

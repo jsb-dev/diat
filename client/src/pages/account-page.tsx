@@ -8,13 +8,11 @@ import { setAuthState } from '@/redux/slices/authSlice';
 import { setUser, getCachedAuthState, getCachedUserCredentials } from '@/redux/slices/userSlice';
 import { updateLayout } from '@/redux/slices/uiSlice';
 import { User } from '@/interfaces/User';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import SiteFooter from '@/components/shared/SiteFooter';
 import bgImage from '@/assets/images/raluca-seceleanu-huUwh7AOqb4-unsplash.jpg';
 
 function AccountPage() {
     const [loggedIn, setLoggedIn] = useState(false);
-    const [loading, setLoading] = useState(true);
     const [userCredentials] = useState<User | null>(null);
     const dispatch = useDispatch();
     const authState = useSelector((state: any) => state.auth);
@@ -23,10 +21,6 @@ function AccountPage() {
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     useEffect(() => {
-        if (isLoading) {
-            return;
-        }
-
         const initializeFromCache = async () => {
             const cachedUserCredentials = await getCachedUserCredentials();
             const cachedAuthState = getCachedAuthState();
@@ -72,7 +66,6 @@ function AccountPage() {
                             isAuthenticated: true,
                             user: fetchedUser,
                         }));
-                        setLoading(false);
                     } catch (e) {
                         console.error('Error fetching user details', e);
                     }
@@ -80,15 +73,15 @@ function AccountPage() {
             }
         };
 
-        initializeFromCache();
-        fetchAndUpdateDetails();
-        setLoggedIn(isAuthenticated);
-
-        if (!loading) {
-            return
+        if (isLoading) {
+            return;
+        } else if (isAuthenticated && user) {
+            initializeFromCache();
+            fetchAndUpdateDetails();
+            setLoggedIn(isAuthenticated);
         }
     }
-        , [isAuthenticated, user, dispatch, authState.accessToken, isLoading, loading, loggedIn, BACKEND_URL, userCredentials]);
+        , [isAuthenticated, user, dispatch, authState.accessToken, isLoading, loggedIn, BACKEND_URL, userCredentials]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -100,11 +93,7 @@ function AccountPage() {
         return () => window.removeEventListener('resize', handleResize);
     }, [dispatch]);
 
-    const main = loading ? (
-        <Container component='main' className='main-content'>
-            <LoadingSpinner />
-        </Container>
-    ) : (
+    const main = (
         <Container component='main' className='main-content' sx={{
             backgroundImage: `url(${bgImage.src})`,
             backgroundSize: 'cover',

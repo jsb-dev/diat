@@ -259,25 +259,26 @@ body {
     word-spacing: 0.1rem * $scaleFactor;
   }
 
-  .MuiFormControlLabel-label {
-    text-align: center;
-  }
-
   .MuiDialog-paper {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 2rem 1rem;
     border-radius: 1rem;
     box-shadow: inset 0 0 1rem .1rem rgba(255, 255, 255, .4);
-  
-    .MuiDialogTitle-root {
-      color: $text-primary-color-light;
-      font-size: 12pt * $scaleFactor;
-    }
-  
-    .MuiDialogContentText-root {
-      color: $text-secondary-color-light;
-      font-size: 10pt * $scaleFactor;
-    }
+  }
+
+  .MuiDialogTitle-root {
+    color: $text-primary-color-light;
+    font-size: 12pt * $scaleFactor;
+  }
+
+  .MuiDialogContentText-root {
+    color: $text-secondary-color-light;
+    font-size: 10pt * $scaleFactor;
+  }
+
+  .MuiDialogActions-root {
+    color: $text-ternary-color-light;
+    font-size: 10pt * $scaleFactor;
   }
 
   .text-field-selector,
@@ -395,7 +396,6 @@ html {
   margin: 0;
   padding: 0;
   box-shadow:0 0 10px 3px rgba(255,255,255, 0.4);
-
 }
 
 .main-content {
@@ -414,6 +414,10 @@ section,
 .section-selector {
   margin: 4dvh 0;
   padding: 0;
+}
+
+.editor-dialog {
+  min-height: 100px;
 }
 
 .footer-container {

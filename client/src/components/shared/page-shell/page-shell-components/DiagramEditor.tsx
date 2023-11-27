@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, CSSProperties } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Container, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
@@ -9,8 +9,24 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
 import HelpModal from './HelpModal';
+import { textFieldStyle } from '@/assets/styles/SharedComponentStyles';
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
+
+const contentStyles: CSSProperties = {
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexDirection: 'column',
+    width: '100%',
+    padding: '3rem',
+    overflow: 'hidden',
+};
+
+const itemStyle: CSSProperties = {
+    position: 'fixed',
+    cursor: 'pointer',
+};
 
 const DiagramEditor: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +35,16 @@ const DiagramEditor: React.FC = () => {
     const [sourceType, setSourceType] = useState<'img' | 'url'>('url');
     const { viewportIsVertical, viewportIsPortable } = useSelector((state: RootState) => state.ui);
     const dispatch = useDispatch();
+
+    const listStyle: CSSProperties = {
+        position: 'fixed',
+        right: !viewportIsVertical && viewportIsPortable ? '28rem'
+            : viewportIsVertical ? 'max(24rem, 160px)'
+                : '16rem',
+        top: !viewportIsVertical && viewportIsPortable ? '10%'
+            : viewportIsVertical ? '30%'
+                : '25%',
+    };
 
     const toggleModal = () => setIsModalOpen(!isModalOpen);
 
@@ -58,21 +84,6 @@ const DiagramEditor: React.FC = () => {
         }
     };
 
-    const listStyle: CSSProperties = {
-        position: 'fixed',
-        right: !viewportIsVertical && viewportIsPortable ? '28rem'
-            : viewportIsVertical ? 'max(24rem, 160px)'
-                : '16rem',
-        top: !viewportIsVertical && viewportIsPortable ? '10%'
-            : viewportIsVertical ? '30%'
-                : '25%',
-    };
-
-    const itemStyle: CSSProperties = {
-        position: 'fixed',
-        cursor: 'pointer',
-    };
-
     return (
         <>
             <ul style={listStyle}>
@@ -108,58 +119,56 @@ const DiagramEditor: React.FC = () => {
             </ul>
 
             <Dialog open={currentDialog === 'ImgOrUrl'} onClose={() => setCurrentDialog(null)}>
-                <DialogTitle>Select Source</DialogTitle>
-                <DialogContent sx={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    height: '25rem',
-                    width: '100%',
-                    padding: '3rem',
-                    overflow: 'hidden',
-                }}>
-                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('img') }} className='secondary-btn' sx={{ width: '100%' }}>From File</Button>
-                    <Button onClick={() => { setSourceType('img'), setCurrentDialog('url') }} className='secondary-btn' sx={{ width: '100%' }}>From URL</Button>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
-                </DialogActions>
+                <Container className='editor-dialog'>
+                    <DialogTitle>Select Source</DialogTitle>
+                    <DialogContent sx={contentStyles}>
+                        <Button onClick={() => { setSourceType('img'), setCurrentDialog('img') }} className='secondary-btn' sx={{ width: '100%' }}>From File</Button>
+                        <Button onClick={() => { setSourceType('img'), setCurrentDialog('url') }} className='secondary-btn' sx={{ width: '100%' }}>From URL</Button>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
+                    </DialogActions>
+                </Container>
             </Dialog>
 
             <Dialog open={currentDialog === 'img'} onClose={() => setCurrentDialog(null)}>
-                <DialogTitle>Add Image</DialogTitle>
-                <DialogContent>
-                    <input
-                        type='file'
-                        accept='image/*'
-                        onChange={handleFileUpload}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
-                    <Button onClick={() => handleAddResource()} className='secondary-btn'>Add</Button>
-                </DialogActions>
+                <Container className='editor-dialog'>
+                    <DialogTitle>Add Image</DialogTitle>
+                    <DialogContent sx={contentStyles}>
+                        <input
+                            type='file'
+                            accept='image/*'
+                            onChange={handleFileUpload}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
+                        <Button onClick={() => handleAddResource()} className='secondary-btn'>Add</Button>
+                    </DialogActions>
+                </Container>
             </Dialog>
 
             <Dialog open={currentDialog === 'url'} onClose={() => setCurrentDialog(null)}>
-                <DialogTitle>Add URL</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin='dense'
-                        label='Website URL'
-                        type='text'
-                        fullWidth
-                        value={asset}
-                        onChange={(e) => setAsset(e.target.value)}
-                        className='text-field-selector'
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
-                    <Button onClick={() => handleAddResource()} className='secondary-btn'>Add</Button>
-                </DialogActions>
+                <Container className='editor-dialog'>
+                    <DialogTitle>Add URL</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin='dense'
+                            label='Website URL'
+                            type='text'
+                            fullWidth
+                            value={asset}
+                            onChange={(e) => setAsset(e.target.value)}
+                            className='text-field-selector'
+                            sx={textFieldStyle}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { setCurrentDialog(null), setAsset('') }} className='primary-btn'>Cancel</Button>
+                        <Button onClick={() => handleAddResource()} className='secondary-btn'>Add</Button>
+                    </DialogActions>
+                </Container>
             </Dialog>
 
             {isModalOpen && <HelpModal />}

@@ -1,5 +1,10 @@
-import React, { FC, ReactNode, useState, CSSProperties } from 'react';
+import React, { FC, ReactNode, useState, useEffect, CSSProperties } from 'react';
+import { useRouter } from 'next/router';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { setAppInitialised, setIsLoading } from '@/redux/slices/uiSlice';
 import { Container, Paper, Button, Box } from '@mui/material';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import NavList from './page-shell-components/NavList';
 import DiagramEditor from './page-shell-components/DiagramEditor';
 import AuthToggle from '@/components/shared/page-shell/page-shell-components/AuthToggle';
@@ -32,13 +37,41 @@ const editBtnStyle: CSSProperties = {
 const elevatedStyle: CSSProperties = {
   position: 'fixed',
   zIndex: 1005,
-  top: '10dvh',
-  right: '.5dvw',
 };
 
 const PageShell: FC<PageShellProps> = ({ content, page }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isDiagramDrawerOpen, setDiagramDrawerOpen] = useState(false);
+  const isLoading = useSelector((state: RootState) => state.ui.isLoading);
+  const appInitialised = useSelector(
+    (state: RootState) => state.ui.appInitialised
+  );
+  const user = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading && !appInitialised) {
+      const timer = setTimeout(() => {
+        dispatch(setIsLoading());
+        dispatch(setAppInitialised());
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [appInitialised, dispatch, isLoading]);
+
+  if (isLoading) {
+    return (
+      <Container className='main-container' sx={{
+        overflowX: 'hidden',
+        overflowY: 'hidden',
+        width: '100dvw',
+        height: '100dvh',
+      }}>
+        <LoadingSpinner />
+      </Container>
+    );
+  }
 
   const toggleDrawer = () => {
     setDrawerOpen(prev => !prev);
@@ -56,7 +89,11 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
       <Paper>
         {content}
       </Paper>
-      <div style={elevatedStyle}>
+      <div style={{
+        ...elevatedStyle,
+        top: '10dvh',
+        right: '.5dvw',
+      }}>
         <AuthToggle />
       </div>
 
@@ -122,6 +159,23 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
           </Box>
         </>
       )}
+
+      {/* ////////// Dashboard Btn ////////// */}
+      {(page !== '/dashboard-page' && user.authState.isAuthenticated) &&
+        (<div style={{
+          ...elevatedStyle,
+          left: '.5dvw',
+          bottom: '10dvh',
+        }}>
+          <Button onClick={
+            () => {
+              router.push('/dashboard-page');
+            }
+          } className='ternary-btn'>
+            Dashboard
+          </Button>
+        </div>
+        )}
     </Container>
   );
 }
