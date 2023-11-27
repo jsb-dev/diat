@@ -2,7 +2,6 @@ import React from 'react';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { Box, Paper, Typography, List, ListItem, ListItemIcon, Button, Container } from '@mui/material';
-import { Handle } from 'reactflow';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
@@ -14,6 +13,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import ContactSupportRoundedIcon from '@mui/icons-material/ContactSupportRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 
 const iconStyle = {
     fontSize: '3rem',
@@ -106,7 +106,16 @@ const HelpModal: React.FC = () => {
                         textAlign: 'center'
                     }}>The <Button className='primary-btn'>
                             <MenuRoundedIcon sx={iconStyle} />
-                        </Button> button can be used to get around.</Typography>
+                        </Button> button can be used to navigate
+                    </Typography>
+                    <Typography className='p-selector' sx={{
+                        textAlign: 'center'
+                    }}> The <Button className='ternary-btn'>
+                            <AccountTreeRoundedIcon sx={{
+                                fontSize: '3rem'
+                            }} />
+                        </Button>button will take you straight back to your diagram
+                    </Typography>
                     <List>
                         <ListItem><ListItemIcon><Button className='primary-btn'>
                             <HomeRoundedIcon sx={iconStyle}

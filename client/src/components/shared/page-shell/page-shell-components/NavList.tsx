@@ -9,7 +9,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import ContactSupportRoundedIcon from '@mui/icons-material/ContactSupportRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
-
+import Tooltip from '@mui/material/Tooltip';
 
 const itemStyle: CSSProperties = {
     position: 'fixed',
@@ -35,43 +35,67 @@ const NavList: React.FC = () => {
         <ul style={listStyle}>
             <li style={itemStyle}>
                 <Link href='/' passHref >
-                    <Button className='primary-btn'>
-                        <HomeRoundedIcon sx={{
-                            fontSize: '3rem'
-                        }}
-                        />
-                    </Button>
+                    <Tooltip
+                        title='Home'
+                        placement='bottom'
+                        arrow
+                    >
+                        <Button className='primary-btn'>
+                            <HomeRoundedIcon sx={{
+                                fontSize: '3rem'
+                            }}
+                            />
+                        </Button>
+                    </Tooltip>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translate(50%, 100%)' }}>
                 <Link href='/info-page' passHref >
-                    <Button className='primary-btn'>
-                        <InfoRoundedIcon sx={{
-                            fontSize: '3rem'
-                        }}
-                        />
-                    </Button>
+                    <Tooltip
+                        title='Info'
+                        placement='bottom'
+                        arrow
+                    >
+                        <Button className='primary-btn'>
+                            <InfoRoundedIcon sx={{
+                                fontSize: '3rem'
+                            }}
+                            />
+                        </Button>
+                    </Tooltip>
                 </Link>
             </li>
             <li style={{ ...itemStyle, transform: 'translateY(200%)' }}>
                 <Link href='/contact-page' passHref >
-                    <Button className='primary-btn'>
-                        <ContactSupportRoundedIcon sx={{
-                            fontSize: '3rem'
-                        }}
-                        />
-                    </Button>
+                    <Tooltip
+                        title='Contact'
+                        placement='bottom'
+                        arrow
+                    >
+                        <Button className='primary-btn'>
+                            <ContactSupportRoundedIcon sx={{
+                                fontSize: '3rem'
+                            }}
+                            />
+                        </Button>
+                    </Tooltip>
                 </Link>
             </li>
             {isAuthenticated ? (
                 <li style={{ ...itemStyle, transform: 'translate(-50%, 100%)' }}>
                     <Link href='/account-page' passHref >
-                        <Button className='primary-btn'>
-                            <ManageAccountsRoundedIcon sx={{
-                                fontSize: '3rem'
-                            }}
-                            />
-                        </Button>
+                        <Tooltip
+                            title='Account'
+                            placement='bottom'
+                            arrow
+                        >
+                            <Button className='primary-btn'>
+                                <ManageAccountsRoundedIcon sx={{
+                                    fontSize: '3rem'
+                                }}
+                                />
+                            </Button>
+                        </Tooltip>
                     </Link>
                 </li>
             ) : (

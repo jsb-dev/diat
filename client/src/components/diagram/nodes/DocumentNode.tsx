@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Button, Container, Box } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
 import RichTextEditor from '@/components/shared/text-editor/RichTextEditor';
@@ -56,16 +57,22 @@ const DocumentNode: React.FC<NodeProps> = ({ data }) => {
                 left: '0',
                 transform: 'translate(-10%, -50%)',
             }}>
-                <Button variant='contained' onClick={handleToggleEditor} className='ternary-btn' style={{ pointerEvents: 'auto' }}>
-                    {editorIsOpen ?
-                        <LockOpenRoundedIcon sx={{
-                            fontSize: '3rem'
-                        }} /> :
-                        <EditRoundedIcon sx={{
-                            fontSize: '3rem'
-                        }} />
-                    }
-                </Button>
+                <Tooltip
+                    title={editorIsOpen ? 'Release editor lock' : 'Edit Document'}
+                    placement='top'
+                    arrow
+                >
+                    <Button variant='contained' onClick={handleToggleEditor} className='ternary-btn' style={{ pointerEvents: 'auto' }}>
+                        {editorIsOpen ?
+                            <LockOpenRoundedIcon sx={{
+                                fontSize: '3rem'
+                            }} /> :
+                            <EditRoundedIcon sx={{
+                                fontSize: '3rem'
+                            }} />
+                        }
+                    </Button>
+                </Tooltip>
             </Container>
             <RichTextEditor content={content} onUpdate={handleContentUpdate} isFocusable={editorIsOpen} />
             <Box>

@@ -153,7 +153,6 @@ const DiagramEditor: React.FC = () => {
                     <DialogTitle>Add URL</DialogTitle>
                     <DialogContent>
                         <TextField
-                            autoFocus
                             margin='dense'
                             label='Website URL'
                             type='text'

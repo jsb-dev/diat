@@ -8,9 +8,11 @@ import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import NavList from './page-shell-components/NavList';
 import DiagramEditor from './page-shell-components/DiagramEditor';
 import AuthToggle from '@/components/shared/page-shell/page-shell-components/AuthToggle';
+import Tooltip from '@mui/material/Tooltip';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 
 interface PageShellProps {
   content: ReactNode;
@@ -100,56 +102,81 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
 
       {/* ////////// Nav Menu ////////// */}
       {!isDrawerOpen ? (
-        <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>
-          <MenuRoundedIcon sx={{
-            fontSize: '3rem'
-          }} />
-        </Button>
-      ) : (
-        <div style={elevatedStyle}>
+        <Tooltip
+          title='Navigation Menu'
+          placement='bottom'
+          arrow
+        >
           <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>
-            <CloseOutlinedIcon sx={{
+            <MenuRoundedIcon sx={{
               fontSize: '3rem'
             }} />
           </Button>
+        </Tooltip>
+      ) : (
+        <div style={elevatedStyle}>
+          <Tooltip
+            title='Close Menu'
+            placement='bottom'
+            arrow
+          >
+            <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>
+              <CloseOutlinedIcon sx={{
+                fontSize: '3rem'
+              }} />
+            </Button>
+          </Tooltip>
           <Box onClick={toggleDrawer}></Box>
-          <Box sx={{
-            zIndex: 1002,
-            opacity: isDrawerOpen ? 1 : 0,
-          }}>
-            <div style={{
-              position: 'fixed',
-              bottom: 0,
-              right: 0,
-              width: '30rem',
-              maxWidth: '250px',
-              height: '32rem',
-              maxHeight: '250px',
-
+          {isDrawerOpen && (
+            <Box sx={{
+              zIndex: 1005,
             }}>
-              <NavList />
-            </div>
-          </Box>
+              <div style={{
+                position: 'fixed',
+                bottom: 0,
+                right: 0,
+                width: '30rem',
+                maxWidth: '250px',
+                height: '32rem',
+                maxHeight: '250px',
+
+              }}>
+                <NavList />
+              </div>
+            </Box>
+          )}
         </div>
       )}
 
       {/* ////////// Diagram Editor ////////// */}
       {!isDiagramDrawerOpen ? (
         page === '/dashboard-page' && (
-          <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='ternary-btn'>
-            <ModeEditOutlinedIcon sx={{
-              fontSize: '3rem'
-            }} />
-          </Button>
+          <Tooltip
+            title='Edit Diagram'
+            placement='bottom'
+            arrow
+          >
+            <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='ternary-btn'>
+              <ModeEditOutlinedIcon sx={{
+                fontSize: '3rem'
+              }} />
+            </Button>
+          </Tooltip>
         )
 
       ) : (
         <>
-          <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='ternary-btn'>
-            <CloseOutlinedIcon sx={{
-              fontSize: '3rem'
-            }} />
-          </Button>
+          <Tooltip
+            title='Close Editor'
+            placement='bottom'
+            arrow
+          >
+            <Button onClick={toggleDiagramDrawer} sx={editBtnStyle} className='ternary-btn'>
+              <CloseOutlinedIcon sx={{
+                fontSize: '3rem'
+              }} />
+            </Button>
+          </Tooltip>
           <Box onClick={toggleDiagramDrawer} ></Box>
           <Box sx={{
             zIndex: 1002,
@@ -172,7 +199,9 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
               router.push('/dashboard-page');
             }
           } className='ternary-btn'>
-            Dashboard
+            <AccountTreeRoundedIcon sx={{
+              fontSize: '3rem'
+            }} />
           </Button>
         </div>
         )}

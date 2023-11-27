@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useRouter } from 'next/router';
 
 const buttonStyles = {
     minWidth: '120px',
@@ -9,21 +8,10 @@ const buttonStyles = {
 }
 
 const SignupButton: React.FC = () => {
-    const { isAuthenticated, loginWithRedirect } = useAuth0();
-    const router = useRouter();
-
-    const handleDashboard = () => {
-        router.push('/dashboard-page');
-    };
+    const { loginWithRedirect } = useAuth0();
 
     return (
-        <>
-            {isAuthenticated ? (
-                <Button onClick={handleDashboard} className='pentenary-btn' sx={buttonStyles}>Dashboard</Button>
-            ) : (
-                <Button onClick={() => loginWithRedirect()} className='pentenary-btn' sx={buttonStyles}>Sign Up</Button>
-            )}
-        </>
+        <Button onClick={() => loginWithRedirect()} className='secondary-btn' sx={buttonStyles}>Sign Up</Button>
     );
 };
 

@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { clearAuthState } from '@redux/slices/authSlice';
 import { clearDiagram } from '@redux/slices/flowSlice';
 import { clearUser } from '@redux/slices/userSlice';
+import Tooltip from '@mui/material/Tooltip';
 
 const AuthToggle: React.FC = () => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -22,21 +23,13 @@ const AuthToggle: React.FC = () => {
     logout();
   }
 
-  if (isAuthenticated) {
-    return (
-      <Button onClick={handleLogout} className='quarternary-btn' >
-        <LogoutIcon sx={{
-          fontSize: '3rem'
-        }} />
+  return (
+    <Tooltip title={isAuthenticated ? "Logout" : "Login"}>
+      <Button onClick={isAuthenticated ? handleLogout : () => loginWithRedirect()} className={isAuthenticated ? 'quarternary-btn' : 'primary-btn'}>
+        {isAuthenticated ? <LogoutIcon sx={{ fontSize: '3rem' }} /> : <LoginIcon sx={{ fontSize: '3rem' }} />}
       </Button>
-    );
-  } else {
-    return <Button onClick={() => loginWithRedirect()} className='secondary-btn' >
-      <LoginIcon sx={{
-        fontSize: '3rem'
-      }} />
-    </Button>;
-  }
+    </Tooltip>
+  );
 };
 
 export default AuthToggle;

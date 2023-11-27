@@ -3,14 +3,14 @@ $bg-color-light: rgba(60, 60, 60, 0.868);
 $bg-color-dark: #171717c7;
 $modal-bg-color: #181818b1;
 
-$object-primary-color: #5a9ac8d1;
-$object-secondary-color: #51c2b3de;
+$object-primary-color: #51c2b3de;
+$object-secondary-color: #5a9ac8d1;
 $object-ternary-color: #dcd085d5;
 $object-quaternary-color: #df8888d0;
 $object-pentenary-color: #8773acd3;
 
 
-$container-primary-color: rgba(32, 63, 131, 0.287);
+$container-primary-color: rgba(45, 61, 96, 0.287);
 $container-secondary-color: rgba(80, 32, 131, 0.549);
 $container-ternary-color: rgba(131, 32, 108, 0.549);
 $container-quarternary-color: rgba(131, 32, 32, 0.549);
@@ -41,11 +41,12 @@ $text-pentenary-color-light: #e8f9f5d7;
   font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   text-decoration: none;
   animation: fadeIn 0.5s ease-in-out;
+  transition: none;
   border: none;
 }
 
 *:hover {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 #Flow:hover,
@@ -104,17 +105,13 @@ body {
   margin: 1rem;
   cursor: pointer;
   border-radius: 15px;
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, .75), inset 0 0 15px 1px rgba(255, 255, 255, .25) ;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, .75), inset 0 0 15px 1px rgba(255, 255, 255, .25);
+  transition: all 0.3s ease-in-out;
   * {
     font-size: 16pt;
-    transition: all 0.2s ease-in-out;
   }
   &:hover {
     box-shadow: 0 0 20px 2px rgba(255, 255, 255, .75);
-    * { 
-      transition: all 0.2s ease-in-out;
-    }
-    transition: all 0.2s ease-in-out;
   }
 }
 
@@ -263,7 +260,8 @@ body {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 2rem 1rem;
     border-radius: 1rem;
-    box-shadow: inset 0 0 1rem .1rem rgba(255, 255, 255, .4);
+    box-shadow: 0 0 1.5rem .5rem rgba(0, 0, 0, .8);
+    z-index: 1004;
   }
 
   .MuiDialogTitle-root {
@@ -349,15 +347,24 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(142, 122, 145);
+  background-color: rgb(135, 122, 145);
   border-radius: 2rem;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: rgb(142, 122, 145);
+  background-color: rgb(84, 71, 86);
 }
 
 ////////////////////////////////////////////////////////////// LAYOUT //////////////////////////////////////////////////////////////
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  letter-spacing: 0.1rem;
+  scroll-behavior: smooth;
+}
+
 :root {
   font-size: 1dvmax;
   letter-spacing: 1rem;
@@ -368,13 +375,8 @@ html {
   text-size-adjust: 100%;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  border-radius: 0.5rem;
-  letter-spacing: 0.1rem;
-  scroll-behavior: smooth;
+#__next {
+  box-shadow: inset 0 0 5rem 1rem rgba(255,255,255, 0.2);
 }
 
 #__next, html, body {
@@ -395,7 +397,7 @@ html {
   max-height: 95dvh;
   margin: 0;
   padding: 0;
-  box-shadow:0 0 10px 3px rgba(255,255,255, 0.4);
+  animation: none;
 }
 
 .main-content {

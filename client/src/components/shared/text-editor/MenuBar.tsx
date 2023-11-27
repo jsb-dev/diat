@@ -147,11 +147,17 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
 
     return (
         <Container>
-            <IconButton onClick={handleMenuOpen} className='ternary-btn' >
-                <FormatBoldIcon style={menuIconStyle} />
-                <FormatItalicIcon style={menuIconStyle} />
-                <FormatUnderlinedIcon style={menuIconStyle} />
-            </IconButton>
+            <Tooltip
+                title='Styles'
+                placement='top'
+                arrow
+            >
+                <IconButton onClick={handleMenuOpen} className='ternary-btn' >
+                    <FormatBoldIcon style={menuIconStyle} />
+                    <FormatItalicIcon style={menuIconStyle} />
+                    <FormatUnderlinedIcon style={menuIconStyle} />
+                </IconButton>
+            </Tooltip>
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -172,7 +178,11 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                 {[stylesItems, formatItems, headerSizeItems].map((items, idx) => (
                     items.map((item, innerIdx) => (
                         <MenuItem key={`${idx}-${innerIdx}`} onClick={() => { performAction(item.type); }}>
-                            <Tooltip title={item.tooltip}>
+                            <Tooltip title={item.tooltip}
+                                placement='left'
+                                arrow
+                                disableHoverListener={!canPerformActionForType(item.type)}
+                            >
                                 {
                                     'icon' in item ?
                                         (

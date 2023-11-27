@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { useDispatch } from 'react-redux';
 import { deleteNode } from '@/redux/slices/diagramEditorSlice';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 interface NodeDeleteButtonProps {
     nodeId: string;
@@ -27,11 +28,17 @@ const NodeDeleteButton: React.FC<NodeDeleteButtonProps> = ({ nodeId }) => {
 
     return (
         <>
-            <Button variant='contained' onClick={handleClickOpen} className='quarternary-btn'>
-                <RemoveCircleOutlineOutlinedIcon sx={{
-                    fontSize: '3rem'
-                }} />
-            </Button>
+            <Tooltip
+                title='Delete Node'
+                placement='bottom'
+                arrow
+            >
+                <Button variant='contained' onClick={handleClickOpen} className='quarternary-btn'>
+                    <RemoveCircleOutlineOutlinedIcon sx={{
+                        fontSize: '3rem'
+                    }} />
+                </Button>
+            </Tooltip>
             <Dialog
                 open={open}
                 onClose={handleClose}
