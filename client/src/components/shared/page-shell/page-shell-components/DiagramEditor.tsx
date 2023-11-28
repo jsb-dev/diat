@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { addDocNode, addImgNode, addUrlNode } from '@/redux/slices/diagramEditorSlice';
 import HelpModal from './HelpModal';
-import { textFieldStyle } from '@/assets/styles/SharedComponentStyles';
+import { textFieldStyle } from '@/styles/SharedComponentStyles';
 
 type DialogType = 'ImgOrUrl' | 'img' | 'url' | null;
 
