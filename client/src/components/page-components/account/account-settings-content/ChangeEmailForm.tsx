@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { textFieldStyle } from '@/assets/styles/SharedComponentStyles';
+import { textFieldStyle } from '@/styles/SharedComponentStyles';
 
 interface ChangeEmailFormProps {
     currentEmail: string;
