@@ -68,7 +68,18 @@ const ContentBanner: React.FC = () => {
             </CardContent>
             <Typography variant='h6' align='center' className='h6-selector' sx={commonStyles}>
                 <Divider />
-                EULA Link
+                <Typography variant='body1' className='p-selector'>
+                    Use of this website is subject to the{' '}
+                    <a
+                        target="_blank"
+                        href="https://www.gdprprivacynotice.com/live.php?token=zttlJJlfb14DkIjUNfn0DPBF9cLs6usX"
+                        style={{
+                            textDecoration: 'underline',
+                        }}
+                    >
+                        privacy policy
+                    </a>
+                </Typography>
                 <Divider />
             </Typography>
         </Card>

@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, CSSProperties } from 'react';
 import { useDispatch } from 'react-redux';
-import { Container, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Container, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
@@ -88,33 +88,57 @@ const DiagramEditor: React.FC = () => {
         <>
             <ul style={listStyle}>
                 <li style={itemStyle}>
-                    <Button onClick={handleAddDocument} className='ternary-btn'>
-                        <NoteAddOutlinedIcon sx={{
-                            fontSize: '3rem',
-                        }} />
-                    </Button>
-                </li>
-                <li style={{ ...itemStyle, transform: 'translate(70%, 100%)' }}>
-                    <Button onClick={() => setCurrentDialog('ImgOrUrl')} className='ternary-btn'>
-                        <AddPhotoAlternateOutlinedIcon sx={{
-                            fontSize: '3rem',
-                        }} />
-                    </Button>
-                </li>
-                <li style={{ ...itemStyle, transform: 'translateY(200%)' }}>
-                    <Button onClick={() => setCurrentDialog('url')} className='ternary-btn'>
-                        <AddLinkOutlinedIcon sx={{
-                            fontSize: '3rem',
-                        }} />
-                    </Button>
-                </li>
-                <li style={{ ...itemStyle, transform: 'translate(-70%, 100%)' }}>
-                    <Button onClick={toggleModal} className='ternary-btn'>
-                        <HelpOutlineOutlinedIcon
-                            sx={{
+                    <Tooltip
+                        title='Add Document'
+                        placement='bottom'
+                        arrow
+                    >
+                        <Button onClick={handleAddDocument} className='ternary-btn'>
+                            <NoteAddOutlinedIcon sx={{
                                 fontSize: '3rem',
                             }} />
-                    </Button>
+                        </Button>
+                    </Tooltip>
+                </li>
+                <li style={{ ...itemStyle, transform: 'translate(70%, 100%)' }}>
+                    <Tooltip
+                        title='Add Image'
+                        placement='bottom'
+                        arrow
+                    >
+                        <Button onClick={() => setCurrentDialog('ImgOrUrl')} className='ternary-btn'>
+                            <AddPhotoAlternateOutlinedIcon sx={{
+                                fontSize: '3rem',
+                            }} />
+                        </Button>
+                    </Tooltip>
+                </li>
+                <li style={{ ...itemStyle, transform: 'translateY(200%)' }}>
+                    <Tooltip
+                        title='Add Link'
+                        placement='bottom'
+                        arrow
+                    >
+                        <Button onClick={() => setCurrentDialog('url')} className='ternary-btn'>
+                            <AddLinkOutlinedIcon sx={{
+                                fontSize: '3rem',
+                            }} />
+                        </Button>
+                    </Tooltip>
+                </li>
+                <li style={{ ...itemStyle, transform: 'translate(-70%, 100%)' }}>
+                    <Tooltip
+                        title='Help'
+                        placement='bottom'
+                        arrow
+                    >
+                        <Button onClick={toggleModal} className='ternary-btn'>
+                            <HelpOutlineOutlinedIcon
+                                sx={{
+                                    fontSize: '3rem',
+                                }} />
+                        </Button>
+                    </Tooltip>
                 </li>
             </ul>
 
@@ -154,7 +178,7 @@ const DiagramEditor: React.FC = () => {
                     <DialogContent>
                         <TextField
                             margin='dense'
-                            label='Website URL'
+                            label='URL'
                             type='text'
                             fullWidth
                             value={asset}

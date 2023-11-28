@@ -2,36 +2,83 @@
   "infoSection": {
     "sections": [
       {
-        "type": "heading",
-        "content": "Welcome to Our Information Page"
+        "type": "subheading",
+        "content": "So how does Diat work?"
       },
       {
         "type": "subheading",
-        "content": "Discover essential insights about our services, company policies, and more."
-      },
-      {
-        "type": "subheading",
-        "content": "Our Mission"
+        "content": "Tech Stack"
       },
       {
         "type": "paragraph",
-        "content": "We are dedicated to providing top-notch services with a focus on customer satisfaction."
+        "content": "Diat is a MERN stack application written in TypeScript and built in Next.js. Redux is used for state management and MUI / SASS for styling."
+      },
+      {
+        "type": "subheading",
+        "content": "Libraries"
+      },
+      {
+        "type": "paragraph",
+        "content": "Apart from being built with React, Diat uses two main libaries to achieve its functionality: "
       },
       {
         "type": "list",
         "content": [
-          "Quality Service",
-          "Innovative Solutions",
-          "Sustainable Practices"
+          "ReactFlow - a library for building drag-and-drop, node-edge based graphical interfaces. This is the heart of Diat.",
+          "TipTap.js - a library based on Prosemirror for building rich-text editors. This provides Diat's Document Nodes with WYSIWYG functionality."
         ]
       },
       {
         "type": "subheading",
-        "content": "Our Services"
+        "content": "State management"
       },
       {
         "type": "paragraph",
-        "content": "We offer a diverse range of services tailored to meet your needs."
+        "content": "Integrating TipTap.js with ReactFlow was surprisingly straightforward, as their component content interfaces for custom instances are very similar."
+      },
+      {
+        "type": "paragraph",
+        "content": "The main challenge involved was navigating the complex state management required to maintain the diagram content correctly. I needed to integrate Prosemirror in a custom ReactFlow node, and sync the state between these two with Redux."
+      },
+      {
+        "type": "paragraph",
+        "content": "This was due to the fact that edits to the diagram would update correctly in the editor, but not the diagram. ReactFlow uses Zustand for its internal state management, so updates in the DOM would not be reflected in the Zustand store. This meant that the diagram would not update correctly when the user made changes to the editor, despite looking as if it had updated."
+      },
+      {
+        "type": "paragraph",
+        "content": "To solve this, I developed a basic flag-and-collection system that works across all nodes: "
+      },
+      {
+        "type": "list",
+        "content": [
+          "Leveraging the onNodesChange prop, the ReactFlow wrapper uses a mechanism that signals node changes and adds their ids to a list.",
+          "The ReactFlow wrapper simultaneously listens for this flag and sets a timer of 800ms to collect all the nodes matching the submitted ids, restarting after each additional edit to allow for batch submissions."
+        ]
+      },
+      {
+        "type": "subheading",
+        "content": "There's just one thing missing from this solution"
+      },
+      {
+        "type": "paragraph",
+        "content": "ReactFlow could now see when the editor's content had changed, but it didn't know what had changed. Changes were flagging correctly but the content wasn't traversing the between the two."
+      },
+      {
+        "type": "paragraph",
+        "content": "To solve this, I included an additional implementation in the collection process, exclusive to the Document Node: "
+      },
+      {
+        "type": "list",
+        "content": [
+          "The Document Node component includes a state variable that initialises to whatever content is passed to it (database-fetched content or default).",
+          "The variable is passed to the editor component as a prop, allowing Prosemirror to update it as the user makes changes.",
+          "The component uses a useEffect hook to listen for changes to the content state variable, and updates the node's content accordingly.",
+          "The node component can now flag changes, and its content will reflect exactly what appears in the editor."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": "Constructing this solution provided a great opportunity to learn Redux, and made obvious how useful it is for managing complex state."
       }
     ]
   }

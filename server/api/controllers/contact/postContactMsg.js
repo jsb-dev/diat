@@ -41,6 +41,10 @@ const postContactMsg = (emailType) => (req, res) => {
       success: true,
       message: 'Your message has been sent. We will be in touch soon!',
     });
+    console.log('Email sent successfully');
+    console.log('User emailo: ' + userEmail);
+    console.log('Email subject: ' + subject);
+    console.log('Email message: ' + message);
   } catch (e) {
     console.error(e);
     console.log(e.message);

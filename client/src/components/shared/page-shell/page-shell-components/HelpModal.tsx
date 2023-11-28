@@ -39,7 +39,7 @@ const HelpModal: React.FC = () => {
     return (
         <Box style={gridStyle} className="modal-bg modal-container" >
             <Paper className="quarter-container" sx={paperStyle}>
-                <Typography variant="h2" className='h2-selector'>How Diat works</Typography>
+                <Typography variant="h2" className='h2-selector'>How the diagram works</Typography>
                 <Container sx={containerStyle}>
                     <Typography className='p-selector'>The diagram editor has 4 tools:</Typography>
                     <List>
@@ -91,9 +91,11 @@ const HelpModal: React.FC = () => {
                 <Container sx={containerStyle}>
                     <Typography className='p-selector'>Each node has 4 anchors along the outside; 2 green and 2 pink</Typography>
                     <List>
-                        <ListItem>Click-and-drag from a green anchor to start creating an edge.</ListItem>
-                        <ListItem>Connect the edge to a pink anchor to create a link between the two nodes.</ListItem>
-                        <ListItem>Click on an edge to delete it from the diagram.</ListItem>
+                        <Container>
+                            <ListItem>Click-and-drag from a green anchor to start creating an edge.</ListItem>
+                            <ListItem>Connect the edge to a pink anchor to create a link between the two nodes.</ListItem>
+                            <ListItem>Click on an edge to delete it from the diagram.</ListItem>
+                        </Container>
                     </List>
                     <Typography className='p-selector'>This will help preserve the natural logical flow within your diagram.</Typography>
                 </Container>
@@ -104,17 +106,17 @@ const HelpModal: React.FC = () => {
                 <Container sx={containerStyle}>
                     <Typography className='p-selector' sx={{
                         textAlign: 'center'
-                    }}>The <Button className='primary-btn'>
-                            <MenuRoundedIcon sx={iconStyle} />
-                        </Button> button can be used to navigate
-                    </Typography>
-                    <Typography className='p-selector' sx={{
-                        textAlign: 'center'
                     }}> The <Button className='ternary-btn'>
                             <AccountTreeRoundedIcon sx={{
                                 fontSize: '3rem'
                             }} />
                         </Button>button will take you straight back to your diagram
+                    </Typography>
+                    <Typography className='p-selector' sx={{
+                        textAlign: 'center'
+                    }}>The <Button className='primary-btn'>
+                            <MenuRoundedIcon sx={iconStyle} />
+                        </Button> button can be used to navigate
                     </Typography>
                     <List>
                         <ListItem><ListItemIcon><Button className='primary-btn'>

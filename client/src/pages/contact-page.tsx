@@ -124,6 +124,14 @@ function ContactPage() {
                         width: '100%',
                         padding: '0 2rem',
                     }}>
+                        <Typography variant='body1' className='p-selector' align='center'>
+                            For professional enquiries, please contact
+                            <a href='mailto:jsb-dev@outlook.com' style={{
+                                color: 'inherit',
+                                textDecoration: 'underline',
+                                margin: 0,
+                            }}>jsb-dev@outlook.com</a>
+                        </Typography>
                         <ContactForm
                             userEmail={userEmail}
                             subject={subject}

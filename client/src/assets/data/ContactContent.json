@@ -3,11 +3,11 @@
     "sections": [
       {
         "type": "subheading",
-        "content": "We'd love to hear from you"
+        "content": "Got any questions? We'd love to hear from you!"
       },
       {
         "type": "paragraph",
-        "content": "Just fill out the form below and we'll get back to you as soon as possible!"
+        "content": "Fill out the form below and we'll get back to you ASAP"
       }
     ]
   },
@@ -19,7 +19,7 @@
       },
       {
         "type": "paragraph",
-        "content": "If you'd like, you can check out our info page for more information"
+        "content": "If you'd like, you can check out our info page for more about this project"
       }
     ]
   }

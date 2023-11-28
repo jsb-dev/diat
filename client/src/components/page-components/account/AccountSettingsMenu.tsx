@@ -41,7 +41,7 @@ const AccountSettingsMenu = () => {
             {viewportIsPortable || viewportIsVertical && (<Divider sx={{
                 margin: '3dvh'
             }} />)}
-            <Container className='primary-container' sx={{
+            <Container sx={{
                 ...subContainerStyles,
                 width: viewportIsPortable || viewportIsVertical ? '90%' : '100%',
                 padding: viewportIsPortable || viewportIsVertical ? 0 : '3dvh',

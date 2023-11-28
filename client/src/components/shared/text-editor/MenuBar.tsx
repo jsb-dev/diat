@@ -16,12 +16,28 @@ type EditorType = {
     isActive: any
 };
 
+const menuIconStyle = {
+    fill: 'white'
+};
+
+const menuStyle = {
+    height: '80dvh',
+    margin: '1rem',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    '& .MuiPaper-root': {
+        backgroundColor: 'rgba(255,255,255,0.92)',
+    },
+};
+
+const buttonStyle = {
+    color: '#252c2b',
+    width: '30px',
+}
+
 const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-    const menuIconStyle = {
-        fill: 'white'
-    };
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         anchorEl ? setAnchorEl(null) : setAnchorEl(event.currentTarget);
@@ -145,6 +161,26 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
         }
     }
 
+    const renderButton = (item: any) => {
+        return 'icon' in item ? (
+            <Button
+                disabled={!canPerformActionForType(item.type)}
+                style={isActiveForType(item.type) ? { color: '#5a9ac8' } : {}}
+                sx={buttonStyle}
+            >
+                {React.createElement(item.icon)}
+            </Button>
+        ) : (
+            <Button
+                disabled={!canPerformActionForType(item.type)}
+                style={isActiveForType(item.type) ? { color: '#5a9ac8' } : {}}
+                sx={buttonStyle}
+            >
+                {item.title}
+            </Button>
+        );
+    };
+
     return (
         <Container>
             <Tooltip
@@ -162,57 +198,25 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
-                sx={
-                    {
-                        height: '80dvh',
-                        width: '100px',
-                        margin: '1rem',
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        '& .MuiPaper-root': {
-                            backgroundColor: 'rgba(255,255,255,0.92)',
-                        },
-                    }}
+                sx={menuStyle}
             >
                 {[stylesItems, formatItems, headerSizeItems].map((items, idx) => (
                     items.map((item, innerIdx) => (
                         <MenuItem key={`${idx}-${innerIdx}`} onClick={() => { performAction(item.type); }}>
-                            <Tooltip title={item.tooltip}
-                                placement='left'
-                                arrow
-                                disableHoverListener={!canPerformActionForType(item.type)}
-                            >
-                                {
-                                    'icon' in item ?
-                                        (
-                                            <span>
-                                                <IconButton
-                                                    disabled={!canPerformActionForType(item.type)}
-                                                    style={isActiveForType(item.type) ? { color: 'blue' } : {}}
-                                                >
-                                                    {React.createElement(item.icon)}
-                                                </IconButton>
-                                            </span>
-                                        ) :
-                                        (
-                                            <span>
-                                                <Button
-                                                    disabled={!canPerformActionForType(item.type)}
-                                                    style={isActiveForType(item.type) ? { color: 'blue' } : {}}
-                                                >
-                                                    {item.title}
-                                                </Button>
-                                            </span>
-                                        )
-                                }
-
-                            </Tooltip>
+                            {
+                                canPerformActionForType(item.type) ? (
+                                    <Tooltip title={item.tooltip} placement='left' arrow>
+                                        {renderButton(item)}
+                                    </Tooltip>
+                                ) : (
+                                    renderButton(item)
+                                )
+                            }
                         </MenuItem>
                     ))
                 ))}
             </Menu>
-        </Container>
+        </Container >
     );
 
 };
