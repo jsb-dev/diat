@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 20.10.0
       - name: npm install and build (client)
-        run: npm install && npm run build
+        run: npm install && npm run dev
         working-directory: client
 
   backend-deploy:
