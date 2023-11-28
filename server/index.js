@@ -6,14 +6,14 @@ import router from './api/router.js';
 
 dotenv.config();
 
+// Database
+connection;
+
 // CORS
 const corsOptions = {
   origin: true,
   optionsSuccessStatus: 200,
 };
-
-// Database
-connection;
 
 // Express
 const app = express();
