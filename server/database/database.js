@@ -7,10 +7,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose.set('strictQuery', true);
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(MONGODB_URI);
 
 const connection = mongoose.connection;
 connection.on('error', console.error.bind(console, 'connection error:'));
