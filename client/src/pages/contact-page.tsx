@@ -7,7 +7,7 @@ import ContactForm from '@/components/shared/ContactForm';
 import SiteFooter from '@/components/shared/SiteFooter';
 import ErrorModal from '@/components/shared/ErrorModal';
 import contactContent from '@/assets/data/ContactContent.json';
-import bigImage from '@/assets/images/hanna-morris-_XXNjSziZuA-unsplash.jpg';
+import bgImage from '@/assets/images/hanna-morris-_XXNjSziZuA-unsplash.jpg';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -102,11 +102,10 @@ function ContactPage() {
                 errorMessage && <ErrorModal message={errorMessage} onClose={handleCloseModal} />
             }
             <Container component='main' className='main-content' sx={{
-                backgroundImage: `url(${bigImage.src})`,
+                backgroundImage: `url(${bgImage.src})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                backgroundAttachment: 'fixed',
             }}>
                 <Container component='section' className='section-selector'>
                     <Typography variant='h1' className='h1-selector'>

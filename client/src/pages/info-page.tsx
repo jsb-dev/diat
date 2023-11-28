@@ -71,7 +71,6 @@ function InfoPage() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed',
     }}>
       <Container component='section' className='section-selector'>
         <Typography variant='h1' className='h1-selector'>

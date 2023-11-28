@@ -48,7 +48,6 @@ function RootPage() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed',
     }}>
       <Container component='section' className='section-selector'>
         <SignupSection />
