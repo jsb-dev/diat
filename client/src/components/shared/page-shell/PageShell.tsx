@@ -107,7 +107,7 @@ const PageShell: FC<PageShellProps> = ({ content, page }) => {
           placement='bottom'
           arrow
         >
-          <Button onClick={toggleDrawer} sx={menuBtnStyle} className='primary-btn'>
+          <Button onClick={toggleDrawer} className='primary-btn' sx={menuBtnStyle}>
             <MenuRoundedIcon sx={{
               fontSize: '3rem'
             }} />
