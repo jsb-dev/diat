@@ -12,23 +12,20 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20.10.0
-      - name: Change to server directory
-        run: cd server
       - name: npm install
         run: npm install
+        working-directory: server
         env:
           CI: true
 
   backend-deploy:
     runs-on: ubuntu-latest
-    needs: build # Ensure deployment happens after build
+    needs: build
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 20.10.0
-      - name: Change to server directory
-        run: cd server
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
