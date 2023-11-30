@@ -47,16 +47,13 @@ const ContentBanner: React.FC = () => {
             ...styles.Card,
             ...((viewportIsPortable && !viewportIsVertical) && styles.PortableCard),
             backgroundColor: 'transparent',
+            margin: '2  rem 0'
         }}>
             <Box sx={commonStyles}>
-                <Typography variant='h1' sx={
-                    commonStyles
-                }>
-                    <Image src={logo} alt='DIAT Logo' priority style={{
-                        width: '80%',
-                        height: 'auto',
-                    }} />
-                </Typography>
+                <Image src={logo} alt='DIAT Logo' priority style={{
+                    width: '70%',
+                    height: 'auto',
+                }} />
             </Box>
             <CardContent sx={{ ...commonStyles, ...((viewportIsPortable) && styles.CardContent) }}>
                 <Typography variant='h4' align='center' className='h4-selector' sx={{ ...commonStyles, width: '100%', margin: viewportIsPortable ? '0 0 8dvh 0' : 0, padding: 0 }}>
@@ -70,6 +67,7 @@ const ContentBanner: React.FC = () => {
                 <Divider />
                 <Typography variant='body1' className='p-selector'>
                     Use of this website is subject to the{' '}
+                    <Divider />
                     <a
                         target="_blank"
                         href="https://www.gdprprivacynotice.com/live.php?token=zttlJJlfb14DkIjUNfn0DPBF9cLs6usX"

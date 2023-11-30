@@ -14,7 +14,21 @@ const gridContainerStyles = {
     padding: '0',
 };
 
+type Section = {
+    type: string;
+    content: string;
+};
+
 const SignupSection: React.FC = () => {
+
+    const chunkArrayInPairs = (array: Section[]): Section[][] => {
+        return array.reduce((result: Section[][], value: Section, index: number, array: Section[]) => {
+            if (index % 2 === 0) {
+                result.push(array.slice(index, index + 2));
+            }
+            return result;
+        }, []);
+    };
 
     const renderContent = (type: string, content: string) => {
         switch (type) {
@@ -57,16 +71,21 @@ const SignupSection: React.FC = () => {
                 backgroundColor: !viewportIsPortable ? 'rgba(0,0,0,0.6)' : 'transparent',
                 padding: '0',
             }}>
-                <Container>
+                <Typography component='article'>
                     <Typography variant='h1' className='h1-selector'>
                         {contentData.signupSection.title}
                     </Typography>
-                    {contentData.signupSection.sections.map((section, index) => (
-                        <div className='article-div' key={index}>
-                            {renderContent(section.type, section.content)}
-                        </div>
+                    {chunkArrayInPairs(contentData.signupSection.sections).map((pair, pairIndex) => (
+                        <Typography variant='body1' className='p-selector' key={pairIndex} sx={{
+                        }}>
+                            {pair.map((section: Section, index: number) => (
+                                <React.Fragment key={index}>
+                                    {renderContent(section.type, section.content)}
+                                </React.Fragment>
+                            ))}
+                        </Typography>
                     ))}
-                </Container>
+                </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
                 <ContentBanner />

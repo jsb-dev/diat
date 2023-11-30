@@ -4,23 +4,19 @@
     "sections": [
       {
         "type": "intro",
-        "content": "Welcome to Diat, the application revolutionizing the way you plan and document projects."
-      },
-      {
-        "type": "subheading",
-        "content": "A Visual Approach"
+        "content": "Discover"
       },
       {
         "type": "paragraph",
-        "content": "Diat takes a visual approach to project planning and documenting, integrating diagram and text elements seamlessly."
+        "content": "Diat combines rich text editing with diagram editing. It's a powerful tool for visual thinking and documentation."
       },
       {
         "type": "subheading",
-        "content": "Combined Editing"
+        "content": "Seamless Editing"
       },
       {
         "type": "paragraph",
-        "content": "Not just limited to diagrams or text, Diat combines diagram editing with document editing for a unified experience."
+        "content": "Useable in your favourite, Diat offers a seamless, performant editing experience."
       },
       {
         "type": "subheading",
@@ -28,17 +24,17 @@
       },
       {
         "type": "paragraph",
-        "content": "With Diat, collate and edit rich text documents, images, and summarised URLs in a single application."
+        "content": "Bring rich text documents, images, and summarised website articles together in an interactive, logical flow."
       }
     ]
   },
   "aboutSection": {
-    "title": "Learn More About Us",
+    "title": "Why Diat?",
     "contentParagraphs": [
-      "We are a company focused on innovation. Our mission is to provide cutting-edge solutions.",
-      "With a team of dedicated professionals, we strive for excellence in all our projects.",
-      "Our approach is client-centric, ensuring satisfaction and value.",
-      "Explore our services and discover how we can contribute to your success."
+      "Diat uses powerful, modern development technologies to deliver a seamless, performant editing experience.",
+      "Designed with user-friendliness in mind, the core philosophy of Diat is to make the process of creating and editing documents as simple and intuitive as possible.",
+      "Diat uses simple controls and a comprehensive help guide to make it easy to get started.",
+      "Take a look around and see what Diat can do for you."
     ]
   }
 }
