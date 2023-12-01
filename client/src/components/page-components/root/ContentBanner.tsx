@@ -51,7 +51,8 @@ const ContentBanner: React.FC = () => {
         }}>
             <Box sx={commonStyles}>
                 <Image src={logo} alt='DIAT Logo' priority style={{
-                    width: '70%',
+                    padding: '3rem 0 0 0',
+                    width: '60%',
                     height: 'auto',
                 }} />
             </Box>
@@ -69,8 +70,8 @@ const ContentBanner: React.FC = () => {
                     Use of this website is subject to the{' '}
                     <Divider />
                     <a
-                        target="_blank"
-                        href="https://www.gdprprivacynotice.com/live.php?token=zttlJJlfb14DkIjUNfn0DPBF9cLs6usX"
+                        target='_blank'
+                        href='https://www.gdprprivacynotice.com/live.php?token=zttlJJlfb14DkIjUNfn0DPBF9cLs6usX'
                         style={{
                             textDecoration: 'underline',
                         }}

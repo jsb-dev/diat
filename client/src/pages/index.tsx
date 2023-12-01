@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container } from '@mui/material';
+import { Container, Divider } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { updateLayout } from '@/redux/slices/uiSlice';
 import PageShell from '@/components/shared/page-shell/PageShell';
@@ -50,6 +50,8 @@ function RootPage() {
       backgroundRepeat: 'no-repeat',
     }}>
       <Container component='section' className='section-selector'>
+        <Divider sx={{ marginTop: '1rem' }}
+        />
         <SignupSection />
         <AboutSection />
       </Container>
