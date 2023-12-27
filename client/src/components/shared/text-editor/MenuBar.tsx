@@ -165,7 +165,7 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
         return 'icon' in item ? (
             <Button
                 disabled={!canPerformActionForType(item.type)}
-                style={isActiveForType(item.type) ? { color: '#5a9ac8' } : {}}
+                style={isActiveForType(item.type) ? { color: '#51c2b3de' } : {}}
                 sx={buttonStyle}
             >
                 {React.createElement(item.icon)}
@@ -173,7 +173,7 @@ const MenuBar: React.FC<{ editor: EditorType }> = ({ editor }) => {
         ) : (
             <Button
                 disabled={!canPerformActionForType(item.type)}
-                style={isActiveForType(item.type) ? { color: '#5a9ac8' } : {}}
+                style={isActiveForType(item.type) ? { color: '#51c2b3de' } : {}}
                 sx={buttonStyle}
             >
                 {item.title}

@@ -40,7 +40,7 @@ $text-pentenary-color-light: #e8f9f5d7;
   border: none;
   font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   text-decoration: none;
-  animation: fadeIn 0.8s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
   transition: none;
   border: none;
 }
@@ -54,9 +54,10 @@ $text-pentenary-color-light: #e8f9f5d7;
   transition: none;
 
   .focused-node {
-    transition: box-shadow ease-in-out 0.2s;
+    transition: box-shadow ease-in-out 0.3s;
   }
 }
+
 
 body {
   background-color: $bg-color-dark;
@@ -103,7 +104,6 @@ body {
   cursor: pointer;
   border-radius: 15px;
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, .75), inset 0 0 15px 1px rgba(255, 255, 255, .25);
-  transition: all 0.3s ease-in-out;
   * {
     font-size: 16pt;
   }
@@ -390,6 +390,7 @@ html {
   margin: 0;
   padding: 0;
   animation: none;
+  transition: all 0.3s ease-in-out;
   background-color: $bg-color-dark;
 }
 
@@ -520,6 +521,26 @@ footer,
 
 .RichTextEditor *:focus {
   outline: none;
+}
+
+.RichTextEditor li {
+  color: $text-primary-color;
+}
+
+.RichTextEditor *::-webkit-scrollbar-thumb {
+  background-color: rgb(75, 71, 80);
+  border-radius: 2rem;
+}
+
+.RichTextEditor *::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.83);
+  border-radius: 2rem;
+}
+
+.RichTextEditor *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  border-radius: 4rem;
 }
 
 #FlowContainer {
