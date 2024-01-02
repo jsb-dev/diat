@@ -62,4 +62,4 @@ Move into the `server` directory and `npm install` to install everything. It's a
 **Jacob Booth**
 
 - [Email](mailto:jsb-dev@outlook.com)
-- [YourGitHubProfile](https://github.com/jsb-dev)
+- [GitHub](https://github.com/jsb-dev)
