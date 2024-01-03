@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Head from 'next/head';
 import { Container, Divider } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { updateLayout } from '@/redux/slices/uiSlice';
@@ -61,7 +62,16 @@ function RootPage() {
     </Container >
   );
 
-  return <PageShell content={main} page={'/'} />;
+  return (
+    <>
+      <Head>
+        <title>JSB-DEV</title>
+        <meta name="description" content="A drag-and-drop diagram editor with rich text functionality and ease of use." />
+        <meta name="keywords" content="JSB-DEV, JSB, DEV, portfolio, web developer, full-stack, full stack, fullstack, web, developer, programmer, coding, coding portfolio, portfolio website, website, web developer portfolio, web developer portfolio website, web developer portfolio" />
+      </Head>
+      <PageShell content={main} page={'/'} />
+    </>
+  );
 }
 
 export default RootPage;

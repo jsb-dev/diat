@@ -1,4 +1,5 @@
 import React, { useEffect, useState, FC } from 'react';
+import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { setAuthState } from '@/redux/slices/authSlice';
@@ -129,7 +130,16 @@ const DashboardPage: FC = () => {
     </Container>
   );
 
-  return <PageShell content={main} page={'/dashboard-page'} />;
+  return (
+    <>
+      <Head>
+        <title>JSB-DEV | Dashboard</title>
+        <meta name="description" content="A drag-and-drop diagram editor with rich text functionality and ease of use." />
+        <meta name="keywords" content="JSB-DEV, JSB, DEV, portfolio, web developer, full-stack, full stack, fullstack, web, developer, programmer, coding, coding portfolio, portfolio website, website, web developer portfolio, web developer portfolio website, web developer portfolio" />
+      </Head>
+      <PageShell content={main} page={'/dashboard-page'} />
+    </>
+  );
 };
 
 export default DashboardPage;

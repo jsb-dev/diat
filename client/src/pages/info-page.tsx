@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Head from 'next/head';
 import { Container, Divider, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { updateLayout } from '@/redux/slices/uiSlice';
@@ -86,7 +87,14 @@ function InfoPage() {
     </Container>
   );
 
-  return <PageShell content={main} page={'/info-page'} />;
+  return (<>
+    <Head>
+      <title>JSB-DEV | Info</title>
+      <meta name="description" content="A drag-and-drop diagram editor with rich text functionality and ease of use." />
+      <meta name="keywords" content="JSB-DEV, JSB, DEV, portfolio, web developer, full-stack, full stack, fullstack, web, developer, programmer, coding, coding portfolio, portfolio website, website, web developer portfolio, web developer portfolio website, web developer portfolio" />
+    </Head>
+    <PageShell content={main} page={'/info-page'} />
+  </>);
 }
 
 export default InfoPage;

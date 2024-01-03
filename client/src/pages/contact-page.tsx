@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 import { Container, Divider, Box, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { updateLayout } from '@/redux/slices/uiSlice';
@@ -154,7 +155,16 @@ function ContactPage() {
         </>
     );
 
-    return <PageShell content={main} page={'/contact'} />;
-}
+    return (
+        <>
+            <Head>
+                <title>JSB-DEV | Contact</title>
+                <meta name="description" content="A drag-and-drop diagram editor with rich text functionality and ease of use." />
+                <meta name="keywords" content="JSB-DEV, JSB, DEV, portfolio, web developer, full-stack, full stack, fullstack, web, developer, programmer, coding, coding portfolio, portfolio website, website, web developer portfolio, web developer portfolio website, web developer portfolio" />
+            </Head>
+            <PageShell content={main} page={'/contact'} />
+        </>
+    );
+};
 
 export default ContactPage;
