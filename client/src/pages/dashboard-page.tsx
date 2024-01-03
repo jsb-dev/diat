@@ -133,9 +133,9 @@ const DashboardPage: FC = () => {
   return (
     <>
       <Head>
-        <title>JSB-DEV | Dashboard</title>
+        <title>Diat | Dashboard</title>
         <meta name="description" content="A drag-and-drop diagram editor with rich text functionality and ease of use." />
-        <meta name="keywords" content="JSB-DEV, JSB, DEV, portfolio, web developer, full-stack, full stack, fullstack, web, developer, programmer, coding, coding portfolio, portfolio website, website, web developer portfolio, web developer portfolio website, web developer portfolio" />
+        <meta name="keywords" content="Diat, portfolio, web developer, full-stack, full stack, fullstack, web, developer, programmer, coding, coding portfolio, portfolio website, website, web developer portfolio, web developer portfolio website, web developer portfolio" />
       </Head>
       <PageShell content={main} page={'/dashboard-page'} />
     </>
